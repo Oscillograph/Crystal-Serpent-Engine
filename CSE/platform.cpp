@@ -3,26 +3,25 @@
 namespace CSE
 {
 	// default settings
-	uint32_t Platform::m_PlatformFlags = SDL_INIT_EVERYTHING;
-	uint32_t Platform::m_RendererFlags = SDL_WINDOW_RESIZABLE + SDL_WINDOW_SHOWN + SDL_WINDOW_OPENGL;
-	// uint32_t Platform::m_RendererFlags = SDL_WINDOW_RESIZABLE + SDL_WINDOW_SHOWN;
-	uint32_t Platform::m_WindowFlags = SDL_RENDERER_ACCELERATED + SDL_RENDERER_PRESENTVSYNC + SDL_RENDERER_TARGETTEXTURE;
-	uint32_t Platform::m_ImgFlags = IMG_INIT_PNG + IMG_INIT_JPG;
+	uint32_t Platform::m_PlatformFlags = 0;
+	uint32_t Platform::m_WindowFlags = 0;
+	uint32_t Platform::m_RendererFlags = 0;
+	uint32_t Platform::m_ImgFlags = 0;
 	
 	SDL_Event* Platform::m_EventListener = nullptr;
 	
 	int Platform::InitDefault()
 	{
+		m_PlatformFlags = SDL_INIT_EVERYTHING;
+		m_WindowFlags = SDL_WINDOW_RESIZABLE + SDL_WINDOW_SHOWN + SDL_WINDOW_OPENGL;
+		m_RendererFlags = SDL_RENDERER_ACCELERATED + SDL_RENDERER_PRESENTVSYNC + SDL_RENDERER_TARGETTEXTURE; 
+		m_ImgFlags = IMG_INIT_PNG + IMG_INIT_JPG;
+		
 		return Init(m_PlatformFlags, m_RendererFlags, m_WindowFlags, m_ImgFlags);
 	}
 	
 	int Platform::Init(uint32_t platformFlags, uint32_t rendererFlags, uint32_t winFlags, uint32_t imgFlags)
 	{
-		m_PlatformFlags = platformFlags;
-		m_RendererFlags = rendererFlags;
-		m_WindowFlags = winFlags;
-		m_ImgFlags = imgFlags;
-		
 		// CSE_CORE_LOG("Renderer flags on Init: ", m_RendererFlags);
 		
 		/*
@@ -70,8 +69,20 @@ namespace CSE
 		m_EventListener = new SDL_Event;
 		CSE_CORE_LOG("SDL events listener online.");
 		
-		// CSE_CORE_LOG("Number of available video drivers: ", SDL_GetNumRenderDrivers());
-		// SDL_GetRendererInfo();
+		/*
+		int index = SDL_GetNumRenderDrivers();
+		CSE_CORE_LOG("Total video drivers availiable: ", index);
+		for (int i = 0; i < index; i++)
+		{
+			SDL_RendererInfo* info;
+			if (SDL_GetRenderDriverInfo(i, info) >= 0)
+			{
+				CSE_CORE_LOG("Render driver info: #", i);
+				CSE_CORE_LOG("Name: ", info->name);
+				CSE_CORE_LOG(" ");
+			}
+		}
+		*/
 		
 		return 0;
 	}
@@ -97,33 +108,20 @@ namespace CSE
 	
 	SDL_Renderer* Platform::InitRenderer(SDL_Window* window)
 	{
-		int index = SDL_GetNumRenderDrivers();
-		CSE_CORE_LOG("Total render drivers availiable: ", index);
-		for (int i = 0; i < index; i++)
-		{
-			SDL_RendererInfo* info;
-			if (SDL_GetRenderDriverInfo(i, info) >= 0)
-			{
-				CSE_CORE_LOG("Render driver info: #", i);
-				CSE_CORE_LOG("Name: ", info->name);
-				CSE_CORE_LOG(" ");
-			}
-		}
-		// CSE_CORE_LOG("Renderer flags on InitRenderer: ", m_RendererFlags);
 		SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, m_RendererFlags);
-		// CSE_CORE_LOG("Adress of a window: ", window);
-		if (renderer == NULL)
-		{
-			CSE_CORE_LOG("Renderer could not be created! SDL Error: ", SDL_GetError());
-			std::exit(-5);
-		}
+		CSE_CORE_ASSERT(renderer != NULL, "Renderer could not be created! SDL Error: ", SDL_GetError());
+		
+		CSE_CORE_LOG("Renderer initialized.");
 		return renderer;
 	}
 	
 	int Platform::Shutdown()
 	{
-		delete m_EventListener;
-		m_EventListener = nullptr;
+		if (m_EventListener != nullptr)
+		{
+			delete m_EventListener;
+			m_EventListener = nullptr;
+		}
 		
 		// quit systems
 		Mix_Quit();

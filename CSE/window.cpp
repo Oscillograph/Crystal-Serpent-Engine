@@ -7,7 +7,7 @@ namespace CSE
 		Open(
 			{CSE::EngineInfo::Name, 0, 0, 600, 480, 1},
 			{1.0f, 1.0f, 1.0f},
-			(SDL_RENDERER_ACCELERATED + SDL_RENDERER_PRESENTVSYNC + SDL_RENDERER_TARGETTEXTURE)
+			(SDL_WINDOW_RESIZABLE + SDL_WINDOW_SHOWN + SDL_WINDOW_OPENGL)
 			);
 	}
 	
@@ -16,7 +16,7 @@ namespace CSE
 		Open(
 			prefs,
 			{1.0f, 1.0f, 1.0f},
-			(SDL_RENDERER_ACCELERATED + SDL_RENDERER_PRESENTVSYNC + SDL_RENDERER_TARGETTEXTURE)
+			(SDL_WINDOW_RESIZABLE + SDL_WINDOW_SHOWN + SDL_WINDOW_OPENGL)
 			);
 	}
 	
@@ -44,9 +44,9 @@ namespace CSE
 			winFlags
 			);
 		
-		// CSE_CORE_LOG("Adress of a native window: ", m_NativeWindow);
 		m_Renderer = Platform::InitRenderer(m_NativeWindow);
 		m_WindowSurface = Platform::GetWindowSurface(m_NativeWindow);
+		m_Events = Platform::GetEventListener();
 		
 		CSE_CORE_LOG("Window opened.");
 	}

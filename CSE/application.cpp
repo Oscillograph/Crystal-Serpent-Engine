@@ -11,7 +11,13 @@ namespace CSE
 	Application::Application(const WindowPrefs& prefs)
 	{
 		Init();
+		
 		m_Window = new Window(prefs);
+		
+		m_Events = Platform::GetEventListener();
+		
+		// initialize randomizer
+		srand(SDL_GetTicks64());
 	}
 	
 	Application::~Application()
@@ -30,15 +36,12 @@ namespace CSE
 		CSE_CORE_LOG("Internal systems pointers deleted.");
 		
 		Platform::Shutdown();
+		CSE_CORE_LOG("Platform shutdown complete.");
 	}
 	
 	int Application::Init()
 	{
 		Platform::InitDefault();
-		m_Events = Platform::GetEventListener();
-		
-		// initialize randomizer
-		srand(SDL_GetTicks64());
 	}
 	
 	int Application::Run()
@@ -52,6 +55,14 @@ namespace CSE
 				if (m_Window->GetEvents()->type == SDL_QUIT){
 					m_Quit = true;
 					break;
+				}
+				
+				if (m_Window->GetEvents()->type == SDL_KEYUP){
+					if (m_Window->GetEvents()->key.keysym.scancode == SDLK_ESCAPE)
+					{
+						m_Quit = true;
+						break;
+					}
 				}
 			}
 			// 2. Events system
