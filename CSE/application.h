@@ -3,7 +3,8 @@
 
 #include <CSE/core.h>
 #include <CSE/platform.h> // SDL
-#include <CSE/window.h> // CSE interfaces are based on gui 
+#include <CSE/window.h> // CSE interfaces are based on gui
+#include <CSE/renderer.h> // graphics
 
 namespace CSE
 {
