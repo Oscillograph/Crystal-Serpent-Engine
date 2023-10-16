@@ -36,10 +36,13 @@ namespace CSE
 			// 5. World progress system
 			// 		- physics and other world rules subsystems management
 			//    control time flow and then update world
-			// 6. Resource management system
+			// 6. Asset management system
 			// 7. Sound system
 			// 8. Show debug information as text over the screen
 			// 9. Graphic system
+			SDL_SetRenderDrawColor(m_Window->GetRenderer(), 30, 50, 90, 255);
+			SDL_RenderClear(m_Window->GetRenderer());
+			SDL_RenderPresent(m_Window->GetRenderer());
 			// 10. File I/O system
 			// 11. Log system
 			// 12. FPS Count

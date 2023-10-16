@@ -2,8 +2,6 @@
 
 int main (int argv, char** argc)
 {
-	std::cout << "Hello, world!\n";
-	
 	CSE_CORE_LOG("This is an engine logger.");
 	CSE_LOG("And this is an app logger.");
 	

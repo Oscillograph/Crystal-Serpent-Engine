@@ -27,16 +27,16 @@ clean: clean-custom
 $(BIN): $(OBJ)
 	$(CPP) $(LINKOBJ) -o $(BIN) $(LIBS)
 
-CSE/application.o: CSE/application.cpp CSE/application.h CSE/core.h CSE/utils/utils.h CSE/common.h CSE/logger.h CSE/window.h CSE/protocore.h
+CSE/application.o: CSE/application.cpp CSE/application.h CSE/window.h
 	$(CPP) -c CSE/application.cpp -o CSE/application.o $(CXXFLAGS) 
 
 main.o: main.cpp CSE/application.h CSE/core.h CSE/utils/utils.h CSE/common.h CSE/logger.h cse.h CSE/window.h CSE/protocore.h
 	$(CPP) -c main.cpp -o main.o $(CXXFLAGS) 
 
-CSE/window.o: CSE/window.cpp CSE/core.h CSE/utils/utils.h CSE/common.h CSE/logger.h CSE/window.h CSE/protocore.h
+CSE/window.o: CSE/window.cpp CSE/window.h
 	$(CPP) -c CSE/window.cpp -o CSE/window.o $(CXXFLAGS) 
 
-CSE/logger.o: CSE/logger.cpp CSE/logger.h
+CSE/logger.o: CSE/logger.cpp CSE/utils/utils.h CSE/common.h CSE/logger.h CSE/protocore.h
 	$(CPP) -c CSE/logger.cpp -o CSE/logger.o $(CXXFLAGS) 
 
 Crystal_Serpent_Engine_private.res: Crystal_Serpent_Engine_private.rc 

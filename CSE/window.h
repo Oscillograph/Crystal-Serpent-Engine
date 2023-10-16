@@ -35,6 +35,8 @@ namespace CSE
 		void Close();
 		
 		inline SDL_Event* GetEvents() { return m_Events; }
+		inline SDL_Renderer* GetRenderer() { return m_Renderer; }
+		inline SDL_Window* GetWindow() { return m_Window; }
 	
 	private:
 		WindowPrefs m_Prefs;

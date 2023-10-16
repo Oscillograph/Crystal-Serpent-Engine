@@ -12,14 +12,7 @@ namespace CSE
 	class Logger
 	{
 	public:
-		static void Reset();
 		static void Flush(int mode = 0, int color = -1);
-		
-		template <typename T>
-		inline static void u8add(T t) { m_u8stream << t; }
-		
-		template <typename T>
-		inline static void u32add(T t) { m_u32stream << t; }
 		
 		template<typename... Args>
 		inline static void Text(Args... args)
@@ -28,7 +21,6 @@ namespace CSE
 			m_u32string = U""; // clear utf32 string
 			
 			// add args to utf8 string stream
-			// int dummyLambda[] = { 0, ((void) u8add(std::forward<Args>(args)),0)... };
 			m_u8stream << "[" << GetDateAndTime() << "] ";
 			(u8add(std::forward<Args>(args)), ...);
 			m_u8stream << "\n";
@@ -41,6 +33,14 @@ namespace CSE
 		}
 		
 	private:
+		static void Reset();
+		
+		template <typename T>
+		inline static void u8add(T t) { m_u8stream << t; }
+		
+		template <typename T>
+		inline static void u32add(T t) { m_u32stream << t; }
+		
 		static std::stringstream m_u8stream;
 		static std::string m_u8string;
 		static std::u32string m_u32string;
