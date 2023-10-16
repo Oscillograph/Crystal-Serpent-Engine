@@ -1,0 +1,15 @@
+/Makefile.win
+*.bak
+*.gch
+*.o
+*.bookmarks
+*.debug
+*.dev
+*.exe
+/app.ico
+*.layout
+/Crystal_Serpent_Engine_private.h
+/Crystal_Serpent_Engine_private.rc
+/Crystal_Serpent_Engine_private.res
+/main.s
+
