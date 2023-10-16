@@ -1,6 +1,7 @@
 ## 0.2.2 ##
 Changelog:
 + Separated SDL platform from Application and Window classes;
++ Added a Renderer abstraction;
 
 ## 0.2.1 ##
 Made a decision to rework the engine completely, using my new bag of experience gained while redeveloping The Cherno's Hazel2D.
