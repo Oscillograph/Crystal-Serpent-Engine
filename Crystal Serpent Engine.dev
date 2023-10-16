@@ -1,7 +1,7 @@
 [Project]
 filename = Crystal Serpent Engine.dev
 name = Crystal Serpent Engine
-UnitCount = 15
+UnitCount = 17
 Type = 1
 Ver = 3
 Includes = C:/Dev-Cpp/SDL/include/SDL2;%APP_PATH%/projects/Crystal Serpent Engine
@@ -44,7 +44,7 @@ UseUTF8 = 1
 
 
 [Unit1]
-FileName = CSE/core.h
+FileName = CSE/audio.h
 CompileCpp = 0
 Folder = Headers
 Compile = 0
@@ -77,9 +77,9 @@ SyncProduct = 1
 
 
 [Unit2]
-FileName = CSE/utils/utils.h
+FileName = CSE/application.h
 CompileCpp = 0
-Folder = Headers/CSE/utils
+Folder = Headers
 Compile = 0
 Link = 0
 Priority = 1000
@@ -90,7 +90,7 @@ RealEncoding = ASCII
 
 
 [Unit3]
-FileName = CSE/common.h
+FileName = CSE/core.h
 CompileCpp = 0
 Folder = Headers
 Compile = 0
@@ -103,9 +103,9 @@ RealEncoding = UTF-8
 
 
 [Unit4]
-FileName = CSE/protocore.h
+FileName = CSE/platform.h
 CompileCpp = 0
-Folder = Headers
+Folder = Headers/CSE
 Compile = 0
 Link = 0
 Priority = 1000
@@ -116,19 +116,6 @@ RealEncoding = ASCII
 
 
 [Unit5]
-FileName = main.cpp
-CompileCpp = 1
-Folder = Sources
-Compile = 1
-Link = 1
-Priority = 1000
-OverrideBuildCmd = 0
-BuildCmd = 
-FileEncoding = PROJECT
-RealEncoding = UTF-8
-
-
-[Unit6]
 FileName = CSE/application.cpp
 CompileCpp = 1
 Folder = Sources/CSE
@@ -138,10 +125,49 @@ Priority = 1000
 OverrideBuildCmd = 0
 BuildCmd = 
 FileEncoding = PROJECT
-RealEncoding = UTF-8
+RealEncoding = ASCII
+
+
+[Unit6]
+FileName = CSE/utils/utils.h
+CompileCpp = 0
+Folder = Headers/CSE/utils
+Compile = 0
+Link = 0
+Priority = 1000
+OverrideBuildCmd = 0
+BuildCmd = 
+FileEncoding = PROJECT
+RealEncoding = ASCII
 
 
 [Unit7]
+FileName = CSE/platform.cpp
+CompileCpp = 1
+Folder = Sources/CSE
+Compile = 1
+Link = 1
+Priority = 1000
+OverrideBuildCmd = 0
+BuildCmd = 
+FileEncoding = PROJECT
+RealEncoding = ASCII
+
+
+[Unit8]
+FileName = CSE/common.h
+CompileCpp = 0
+Folder = Headers
+Compile = 0
+Link = 0
+Priority = 1000
+OverrideBuildCmd = 0
+BuildCmd = 
+FileEncoding = PROJECT
+RealEncoding = UTF-8
+
+
+[Unit9]
 FileName = CSE/renderer.h
 CompileCpp = 0
 Folder = Headers
@@ -154,20 +180,33 @@ FileEncoding = PROJECT
 RealEncoding = ASCII
 
 
-[Unit8]
-FileName = CSE/logger.cpp
+[Unit10]
+FileName = .gitignore
 CompileCpp = 1
-Folder = Sources/CSE
+Folder = Others
+Compile = 0
+Link = 0
+Priority = 1000
+OverrideBuildCmd = 0
+BuildCmd = 
+FileEncoding = PROJECT
+RealEncoding = ASCII
+
+
+[Unit11]
+FileName = main.cpp
+CompileCpp = 1
+Folder = Sources
 Compile = 1
 Link = 1
 Priority = 1000
 OverrideBuildCmd = 0
 BuildCmd = 
 FileEncoding = PROJECT
-RealEncoding = UTF-8
+RealEncoding = ASCII
 
 
-[Unit9]
+[Unit12]
 FileName = CSE/window.cpp
 CompileCpp = 1
 Folder = Sources
@@ -180,20 +219,7 @@ FileEncoding = PROJECT
 RealEncoding = ASCII
 
 
-[Unit10]
-FileName = CSE/window.h
-CompileCpp = 0
-Folder = Headers
-Compile = 0
-Link = 0
-Priority = 1000
-OverrideBuildCmd = 0
-BuildCmd = 
-FileEncoding = PROJECT
-RealEncoding = UTF-8
-
-
-[Unit11]
+[Unit13]
 FileName = CSE/logger.h
 CompileCpp = 0
 Folder = Headers
@@ -203,10 +229,10 @@ Priority = 1000
 OverrideBuildCmd = 0
 BuildCmd = 
 FileEncoding = PROJECT
-RealEncoding = UTF-8
+RealEncoding = ASCII
 
 
-[Unit12]
+[Unit14]
 FileName = cse.h
 CompileCpp = 0
 Folder = Headers
@@ -219,12 +245,12 @@ FileEncoding = PROJECT
 RealEncoding = UTF-8
 
 
-[Unit13]
-FileName = CSE/application.h
-CompileCpp = 0
-Folder = Headers
-Compile = 0
-Link = 0
+[Unit15]
+FileName = CSE/logger.cpp
+CompileCpp = 1
+Folder = Sources/CSE
+Compile = 1
+Link = 1
 Priority = 1000
 OverrideBuildCmd = 0
 BuildCmd = 
@@ -232,8 +258,8 @@ FileEncoding = PROJECT
 RealEncoding = UTF-8
 
 
-[Unit14]
-FileName = CSE/audio.h
+[Unit16]
+FileName = CSE/window.h
 CompileCpp = 0
 Folder = Headers
 Compile = 0
@@ -245,20 +271,7 @@ FileEncoding = PROJECT
 RealEncoding = ASCII
 
 
-[Unit15]
-FileName = .gitignore
-CompileCpp = 0
-Folder = Others
-Compile = 0
-Link = 0
-Priority = 1000
-OverrideBuildCmd = 0
-BuildCmd = 
-FileEncoding = PROJECT
-RealEncoding = ASCII
-
-
-[Unit16]
+[Unit17]
 FileName = CSE/protocore.h
 CompileCpp = 0
 Folder = Headers
@@ -268,7 +281,7 @@ Priority = 1000
 OverrideBuildCmd = 0
 BuildCmd = 
 FileEncoding = PROJECT
-RealEncoding = ASCII
+RealEncoding = UTF-8
 
 
 [CompilerSettings]

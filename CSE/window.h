@@ -2,15 +2,11 @@
 #define CSE_WINDOW_H
 
 #include <CSE/core.h>
-
-// Simple Direct media Library
-#include <SDL.h>
-#include <SDL_image.h>
-#include <SDL_mixer.h>
+#include <CSE/platform.h>
 
 namespace CSE 
 {
-	struct ScaleWindow {
+	struct WindowScale {
 		float x;
 		float y;
 		float z;
@@ -28,24 +24,27 @@ namespace CSE
 	class Window
 	{
 	public:
-		Window(const WindowPrefs& prefs = {CSE::EngineInfo::Name, 0, 0, 600, 480, 1});
+		Window();
+		Window(const WindowPrefs& prefs);
+		Window(const WindowPrefs& prefs, const WindowScale& scale, uint32_t winFlags);
 		~Window();
 		
-		void Init(const WindowPrefs& prefs);
+		void Open(const WindowPrefs& prefs, const WindowScale& scale, uint32_t winFlags);
 		void Close();
 		
 		inline SDL_Event* GetEvents() { return m_Events; }
 		inline SDL_Renderer* GetRenderer() { return m_Renderer; }
-		inline SDL_Window* GetWindow() { return m_Window; }
+		inline SDL_Surface* GetSurface() { return m_WindowSurface; }
+		inline SDL_Window* GetNativeWindow() { return m_NativeWindow; }
 	
 	private:
 		WindowPrefs m_Prefs;
-		ScaleWindow m_Scale;
+		WindowScale m_Scale;
 		
-		SDL_Event* m_Events; // event queue
-		SDL_Window* m_Window; // the window
-		SDL_Renderer* m_Renderer; // the window renderer
-		SDL_Surface* m_WindowSurface; // the window surface
+		SDL_Event* m_Events = nullptr; // event queue
+		SDL_Window* m_NativeWindow = nullptr; // the window
+		SDL_Renderer* m_Renderer = nullptr; // the window renderer
+		SDL_Surface* m_WindowSurface = nullptr; // the window surface
 	};
 }
 

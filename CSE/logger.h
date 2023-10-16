@@ -3,6 +3,7 @@
 
 #include <CSE/protocore.h>
 
+// comment this line if you want something simple like std::cout
 #define CSE_LOGGER_CLASS
 
 namespace CSE
@@ -51,19 +52,19 @@ namespace CSE
 #ifndef CSE_LOGGER_CLASS
 	#define CSE_CORE_LOG(...)			std::cout << "CSE: " << __VA_ARGS__ << "\n";
 	#define CSE_CORE_DEBUG(...)			std::cout << "CSE: " << __VA_ARGS__ << "\n";
-	#define CSE_CORE_ASSERT(x, ...)		{if (!(x)) CSE_CORE_LOG(__VA_ARGS__);}
+	#define CSE_CORE_ASSERT(x, ...)		{ if (!(x)) { CSE_CORE_LOG(__VA_ARGS__); std::exit(); } }
 
 	#define CSE_LOG(...) 				std::cout << "App: " << __VA_ARGS__ << "\n";
 	#define CSE_DEBUG(...)				std::cout << "App: " << __VA_ARGS__ << "\n";
-	#define CSE_ASSERT(x, ...)			{if (!(x)) CSE_LOG(__VA_ARGS__);}
+	#define CSE_ASSERT(x, ...)			{ if (!(x)) { CSE_LOG(__VA_ARGS__); std::exit(); } }
 #else
 	#define CSE_CORE_LOG(...)			::CSE::Logger::Text("CSE: ", __VA_ARGS__); ::CSE::Logger::Flush(0, 0);
 	#define CSE_CORE_DEBUG(...)			::CSE::Logger::Text("CSE: ", __VA_ARGS__); ::CSE::Logger::Flush(1, 0);
-	#define CSE_CORE_ASSERT(x, ...)		{if (!(x)) CSE_CORE_LOG(__VA_ARGS__);}
+	#define CSE_CORE_ASSERT(x, ...)		{ if (!(x)) { CSE_CORE_LOG(__VA_ARGS__); std::exit(-4); } }
 
 	#define CSE_LOG(...)				::CSE::Logger::Text("App: ", __VA_ARGS__); ::CSE::Logger::Flush(0, 1);
 	#define CSE_DEBUG(...)				::CSE::Logger::Text("App: ", __VA_ARGS__); ::CSE::Logger::Flush(1, 1);
-	#define CSE_ASSERT(x, ...)			{if (!(x)) CSE_LOG(__VA_ARGS__);}
+	#define CSE_ASSERT(x, ...)			{ if (!(x)) { CSE_LOG(__VA_ARGS__); std::exit(-4); } }
 #endif
 
 #endif

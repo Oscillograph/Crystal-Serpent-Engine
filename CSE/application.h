@@ -2,7 +2,8 @@
 #define CSE_APPLICATION_H
 
 #include <CSE/core.h>
-#include <CSE/window.h>
+#include <CSE/platform.h> // SDL
+#include <CSE/window.h> // CSE interfaces are based on gui 
 
 namespace CSE
 {
@@ -13,11 +14,13 @@ namespace CSE
 		Application();
 		Application(const WindowPrefs& prefs = {CSE::EngineInfo::Name, 0, 0, 600, 480, 1});
 		~Application();
+		int Init();
 		int Run();
 		
 	private:
 		bool m_Quit = false;
 		Window* m_Window = nullptr;
+		SDL_Event* m_Events = nullptr;
 	};
 		
 }

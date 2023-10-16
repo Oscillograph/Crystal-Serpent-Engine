@@ -4,17 +4,41 @@ namespace CSE
 {
 	Application::Application()
 	{
+		Init();
 		m_Window = new Window();
 	}
 	
 	Application::Application(const WindowPrefs& prefs)
 	{
-		m_Window = new Window(prefs); 
+		Init();
+		m_Window = new Window(prefs);
 	}
 	
 	Application::~Application()
 	{
-		delete m_Window;
+		if (m_Window != nullptr)
+		{
+			delete m_Window;
+			m_Window = nullptr;
+		}
+		
+		if (m_Events != nullptr)
+		{
+			delete m_Events;
+			m_Events = nullptr;
+		}
+		CSE_CORE_LOG("Internal systems pointers deleted.");
+		
+		Platform::Shutdown();
+	}
+	
+	int Application::Init()
+	{
+		Platform::InitDefault();
+		m_Events = Platform::GetEventListener();
+		
+		// initialize randomizer
+		srand(SDL_GetTicks64());
 	}
 	
 	int Application::Run()
