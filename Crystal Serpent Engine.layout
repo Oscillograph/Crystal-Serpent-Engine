@@ -1,0 +1,115 @@
+[
+    {
+        "caretX": 1,
+        "caretY": 7,
+        "filename": "C:/Temp/RedPanda-CPP/projects/Crystal Serpent Engine/CSE/core.h",
+        "focused": false,
+        "isOpen": false,
+        "leftChar": 1,
+        "topLine": 1
+    },
+    {
+        "caretX": 9,
+        "caretY": 8,
+        "filename": "C:/Temp/RedPanda-CPP/projects/Crystal Serpent Engine/CSE/utils/utils.h",
+        "focused": false,
+        "isOpen": false,
+        "leftChar": 1,
+        "topLine": 1
+    },
+    {
+        "caretX": 1,
+        "caretY": 34,
+        "filename": "C:/Temp/RedPanda-CPP/projects/Crystal Serpent Engine/CSE/common.h",
+        "focused": false,
+        "isOpen": false,
+        "leftChar": 1,
+        "topLine": 18
+    },
+    {
+        "caretX": 43,
+        "caretY": 4,
+        "filename": "C:/Temp/RedPanda-CPP/projects/Crystal Serpent Engine/CSE/protocore.h",
+        "focused": false,
+        "isOpen": false,
+        "leftChar": 1,
+        "topLine": 1
+    },
+    {
+        "caretX": 13,
+        "caretY": 12,
+        "filename": "C:/Temp/RedPanda-CPP/projects/Crystal Serpent Engine/main.cpp",
+        "focused": false,
+        "isOpen": true,
+        "leftChar": 1,
+        "order": 0,
+        "topLine": 1
+    },
+    {
+        "caretX": 5,
+        "caretY": 1,
+        "filename": "C:/Temp/RedPanda-CPP/projects/Crystal Serpent Engine/CSE/application.cpp",
+        "focused": false,
+        "isOpen": true,
+        "leftChar": 1,
+        "order": 3,
+        "topLine": 1
+    },
+    {
+        "caretX": 18,
+        "caretY": 23,
+        "filename": "C:/Temp/RedPanda-CPP/projects/Crystal Serpent Engine/CSE/logger.cpp",
+        "focused": false,
+        "isOpen": true,
+        "leftChar": 1,
+        "order": 2,
+        "topLine": 16
+    },
+    {
+        "caretX": 35,
+        "caretY": 16,
+        "filename": "C:/Temp/RedPanda-CPP/projects/Crystal Serpent Engine/CSE/window.cpp",
+        "focused": false,
+        "isOpen": true,
+        "leftChar": 1,
+        "topLine": 1
+    },
+    {
+        "caretX": 1,
+        "caretY": 5,
+        "filename": "C:/Temp/RedPanda-CPP/projects/Crystal Serpent Engine/CSE/window.h",
+        "focused": true,
+        "isOpen": true,
+        "leftChar": 1,
+        "order": 4,
+        "topLine": 1
+    },
+    {
+        "caretX": 93,
+        "caretY": 64,
+        "filename": "C:/Temp/RedPanda-CPP/projects/Crystal Serpent Engine/CSE/logger.h",
+        "focused": false,
+        "isOpen": true,
+        "leftChar": 1,
+        "order": 1,
+        "topLine": 45
+    },
+    {
+        "caretX": 28,
+        "caretY": 5,
+        "filename": "C:/Temp/RedPanda-CPP/projects/Crystal Serpent Engine/cse.h",
+        "focused": false,
+        "isOpen": false,
+        "leftChar": 1,
+        "topLine": 1
+    },
+    {
+        "caretX": 7,
+        "caretY": 25,
+        "filename": "C:/Temp/RedPanda-CPP/projects/Crystal Serpent Engine/CSE/application.h",
+        "focused": false,
+        "isOpen": false,
+        "leftChar": 1,
+        "topLine": 15
+    }
+]

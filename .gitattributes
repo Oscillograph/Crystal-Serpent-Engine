@@ -1,0 +1,26 @@
+* binary
+
+*.txt  text diff=cpp eol=crlf
+*.html text diff=cpp eol=crlf
+*.xml  text diff=cpp eol=crlf
+*.c    text diff=cpp eol=crlf
+*.h    text diff=cpp eol=crlf
+*.hpp  text diff=cpp eol=crlf
+*.cpp  text diff=cpp eol=crlf
+
+# Git
+.gitattributes text diff=cpp 
+.gitignore     text diff=cpp
+*.md           text diff=cpp
+
+# Other
+AUTHORS   text diff=cpp
+ChangeLog text diff=cpp
+CHANGES   text diff=cpp
+COPYING   text diff=cpp
+LICENSE   text diff=cpp
+NEWS      text diff=cpp
+PATENTS   text diff=cpp
+README    text diff=cpp
+VERSION   text diff=cpp
+Makefile  text diff=cpp
