@@ -2,23 +2,42 @@
 # CRYSTAL SERPENT ENGINE #
 Crystal Serpent Engine v0.2.1 is aimed to be a game engine built on SDL.
 
-The engine is designed to be used a header file. The common way to use it looks like this:
+The engine is designed to be used through a header file. The common way to use it looks like this:
+1. Include "./cse.h"
+2. Set up layers:
 ```
-#include "./cse.h"
-
-int main (int argv, char** argc)
+class Layer1 : public CSE::Layer
 {
-	CSE_CORE_LOG("This is an engine logger.");
-	CSE_LOG("And this is an app logger.");
+public:
+	Layer1()
+	: CSE::Layer("#1")
+	{};
 	
-	// create a singleton app
-	auto* app = new CSE::Application({"My First App", 100, 100, 400, 400, 1});
-	app->Run(); // run its game cycle
-	
-	delete app;
-	return 0;
+	~Layer1() {};
+};
+```
+3. Set up the app class:
+```
+class App : public CSE::Application
+{
+public:
+	App(const CSE::WindowPrefs& prefs)
+		: CSE::Application(prefs) 
+	{
+		AttachLayer(new Layer1());
+		AttachLayer(new Layer2());
+	};
+	~App() {};
+};
+```
+4. Set up the starting window:
+```
+CSE::Application* CSE::CreateApplication()
+{
+	return new App({"My First App", 100, 100, 400, 400, 1});
 }
 ```
+5. That's it! You're ready to create.
 
 ## Build notes ##
 The engine is built using TDM-GCC via Red Panda C++ IDE.
