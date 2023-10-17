@@ -75,7 +75,7 @@ namespace CSE
 #define BIT(x) (1 << x)
 
 // FPS macros				ms between frames 
-#define CSE_FPSNOLIMIT		0.0f
+#define CSE_FPSNOLIMIT		0.0001f
 #define CSE_FPS120			0.0083f
 #define CSE_FPS90			0.0111f
 #define CSE_FPS60			0.0167f

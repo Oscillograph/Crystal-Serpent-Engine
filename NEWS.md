@@ -5,6 +5,9 @@ Changelog:
 + Added layers and LayerStack abstractions to organize window content;
 + Changed the engine entry point so that a custom app class can be set up;
 + Due to the previous change, the function int main() moved into cse/application.cpp;
++ Reimplemented Texture class from CSE v0.1.1;
++ Renderer can display textures now;
++ FPS limit;
 
 ## 0.2.1 ##
 Made a decision to rework the engine completely, using my new bag of experience gained while redeveloping The Cherno's Hazel2D.

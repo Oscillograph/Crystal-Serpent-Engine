@@ -31,6 +31,8 @@ namespace CSE {
 		
 		int GetWidth();
 		int GetHeight();
+		inline SDL_Texture* GetTexture() { return m_Texture; }
+		inline SDL_Surface* GetSurface() { return m_Surface; }
 		
 		// shamelessly took from Lazy Foo's tutorials
 		uint32_t* GetPixels32();

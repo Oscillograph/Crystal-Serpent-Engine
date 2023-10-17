@@ -24,6 +24,8 @@ namespace CSE
 		int Init();
 		int Run();
 		
+		void LimitFPS(float fps);
+		
 		// layers functionality
 		// TODO: Move it into a window
 		bool AttachLayer(Layer* layer);
@@ -49,6 +51,10 @@ namespace CSE
 		
 	private:
 		static Application* m_ApplicationInstance;
+		
+		uint64_t m_TimeLastFrame = 0; // SDL_GetTicks64()
+		uint64_t m_TimeThisFrame = 0;
+		float m_TimeDeltaLimit = 0.0f;
 	};
 	
 	Application* CreateApplication();

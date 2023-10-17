@@ -58,11 +58,24 @@ namespace CSE
 		Platform::InitDefault();
 	}
 	
+	void Application::LimitFPS(float fps)
+	{
+		m_TimeDeltaLimit = (fps * 1000);
+	}
+	
 	int Application::Run()
 	{
 		Renderer::SetActiveRenderer(m_Window->GetRenderer());
+		Renderer::SetBackgroundColor({30, 50, 90, 255});
 		
-		CSE_CORE_LOG("Entering the main loop");
+		Texture* broscillograph = new Texture("./CSE/assets/Sprites.png", Renderer::GetActiveRenderer());
+		SDL_FRect stretchBro = {0, 0, 320, 240};
+		
+		CSE_CORE_LOG("Starting FPS timer.");
+		m_TimeLastFrame = 0;
+		m_TimeThisFrame = 0;
+		
+		CSE_CORE_LOG("Entering the main loop.");
 		while (m_Running){
 			// 0. Start collecting debug information
 			// 1. Input management system
@@ -74,7 +87,7 @@ namespace CSE
 				}
 				
 				if (m_Window->GetEvents()->type == SDL_KEYUP){
-					if (m_Window->GetEvents()->key.keysym.scancode == SDLK_ESCAPE)
+					if (m_Window->GetEvents()->key.keysym.scancode == SDL_SCANCODE_ESCAPE)
 					{
 						m_Running = false;
 						break;
@@ -100,8 +113,24 @@ namespace CSE
 			// 7. Sound system
 			// 8. Show debug information as text over the screen
 			// 9. Graphic system
-			Renderer::SetBackgroundColor({30, 50, 90, 255});
-			Renderer::ClearScreen();
+			m_TimeThisFrame = SDL_GetTicks64();
+			if (m_TimeThisFrame - m_TimeLastFrame >= (uint64_t)m_TimeDeltaLimit)
+			{
+				if (m_TimeDeltaLimit > 0.1f)
+				{
+					CSE_CORE_LOG("FPS: ", (uint64_t)round(1000 / m_TimeDeltaLimit));
+				} else {
+					CSE_CORE_LOG("FPS: ", (uint64_t)round((float)1000 / (m_TimeThisFrame - m_TimeLastFrame)));
+				}
+				
+				Renderer::ClearScreen();
+				
+				Renderer::DrawTexture(broscillograph->GetTexture(), &stretchBro, NULL, 1.0f, 1.0f);
+				Renderer::Update();
+				
+				m_TimeLastFrame = m_TimeThisFrame;
+			}
+			
 			// 10. File I/O system
 			// 11. Log system
 			// 12. FPS Count

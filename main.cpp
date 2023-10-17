@@ -41,6 +41,7 @@ public:
 	{
 		AttachLayer(new Layer1());
 		AttachLayer(new Layer2());
+		LimitFPS(CSE_FPS60);
 	};
 	~App() {};
 };
