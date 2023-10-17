@@ -1,16 +1,41 @@
 #include "./cse.h"
 
-int main (int argv, char** argc)
+
+class Layer1 : public CSE::Layer
 {
-	CSE_CORE_LOG("This is an engine logger.");
-	CSE_LOG("And this is an app logger.");
+public:
+	Layer1()
+	: CSE::Layer("#1")
+	{};
 	
-	auto* app = new CSE::Application({"My First App", 100, 100, 400, 400, 1});
-	CSE_LOG("App set up.");
-	app->Run();
-	CSE_LOG("Exit from App main loop.");
-	delete app;
-	CSE_LOG("App logger out.");
+	~Layer1() {};
+};
+
+class Layer2 : public CSE::Layer
+{
+public:
+	Layer2()
+	: CSE::Layer("#2")
+	{};
 	
-	return 0;
+	~Layer2() {};
+};
+
+class App : public CSE::Application
+{
+public:
+	App(const CSE::WindowPrefs& prefs)
+		: CSE::Application(prefs) 
+	{
+		AttachLayer(new Layer1());
+		AttachLayer(new Layer2());
+	};
+	~App() {};
+private:
+	
+};
+
+CSE::Application* CSE::CreateApplication()
+{
+	return new App({"My First App", 100, 100, 400, 400, 1});
 }

@@ -2,6 +2,9 @@
 
 namespace CSE
 {
+	Application* Application::m_ApplicationInstance = nullptr;
+	// extern Application* CreateApplication();
+	
 	Application::Application()
 	{
 		Init();
@@ -39,8 +42,19 @@ namespace CSE
 		CSE_CORE_LOG("Platform shutdown complete.");
 	}
 	
+	bool Application::AttachLayer(Layer* layer)
+	{
+		return m_LayerStack.Attach(layer);
+	}
+	
+	bool Application::DetachLayer(Layer* layer)
+	{
+		return m_LayerStack.Detach(layer);
+	}
+	
 	int Application::Init()
 	{
+		CSE_CORE_ASSERT((m_ApplicationInstance == nullptr), "This application already exists!");
 		Platform::InitDefault();
 	}
 	
@@ -49,21 +63,30 @@ namespace CSE
 		Renderer::SetActiveRenderer(m_Window->GetRenderer());
 		
 		CSE_CORE_LOG("Entering the main loop");
-		while (!m_Quit){
+		while (m_Running){
 			// 0. Start collecting debug information
 			// 1. Input management system
 			while (SDL_PollEvent(m_Window->GetEvents()))
 			{
 				if (m_Window->GetEvents()->type == SDL_QUIT){
-					m_Quit = true;
+					m_Running = false;
 					break;
 				}
 				
 				if (m_Window->GetEvents()->type == SDL_KEYUP){
 					if (m_Window->GetEvents()->key.keysym.scancode == SDLK_ESCAPE)
 					{
-						m_Quit = true;
+						m_Running = false;
 						break;
+					}
+				}
+				
+				for (Layer* layer : m_LayerStack)
+				{
+					if (layer->IsEnabled())
+					{
+						if (layer->OnEvent(m_Window->GetEvents()))
+							break;
 					}
 				}
 			}
@@ -82,10 +105,27 @@ namespace CSE
 			// 10. File I/O system
 			// 11. Log system
 			// 12. FPS Count
-			
-			// CSE_LOG("This is a main loop");
-			if (m_Quit)
-				return 0;
 		}
+		CSE_CORE_LOG("Exit from App main loop.");
+		return 0;
 	}
 }
+
+// ======================== ENTRY POINT ======================== //
+extern CSE::Application* CSE::CreateApplication();
+
+int main (int argv, char** argc)
+{
+	CSE_CORE_LOG("This is an engine logger.");
+	CSE_LOG("And this is an app logger.");
+	
+	// auto* app = new CSE::Application({"My First App", 100, 100, 400, 400, 1});
+	auto app = CSE::CreateApplication();
+	CSE_LOG("App set up.");
+	app->Run();
+	delete app;
+	CSE_LOG("App destroyed.");
+	
+	return 0;
+}
+// ======================== ENTRY POINT ======================== //
