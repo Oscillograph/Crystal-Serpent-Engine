@@ -22,7 +22,7 @@ namespace CSE
 			m_u32string = U""; // clear utf32 string
 			
 			// add args to utf8 string stream
-			m_u8stream << "[" << GetDateAndTime() << "] ";
+			m_u8stream << "[" << Utils::GetDateAndTime() << "] ";
 			(u8add(std::forward<Args>(args)), ...);
 			m_u8stream << "\n";
 			m_u8string = m_u8stream.str();

@@ -59,5 +59,3 @@ Crystal Serpent Engine/CSE/common.h
 + **C++17** (almost everything)
 + **SDL 2.28.4** (windowing, events listening, rendering, sounds)
 + **GLM** (math library)
-+ **Dear ImGui** (OpenGL GUI library)
-+ **YaML** (objects serialization and deserialization)

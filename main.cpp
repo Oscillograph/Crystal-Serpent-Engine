@@ -5,34 +5,44 @@ class Layer1 : public CSE::Layer
 {
 public:
 	Layer1()
-	: CSE::Layer("#1")
+	: CSE::Layer("Game")
 	{};
 	
 	~Layer1() {};
+	
+	bool OnEvent(SDL_Event* event)
+	{
+		CSE_LOG("Layer ", GetName(), " stopped event: ", event->type);
+		return true;
+	}
 };
 
 class Layer2 : public CSE::Layer
 {
 public:
 	Layer2()
-	: CSE::Layer("#2")
+	: CSE::Layer("GUI")
 	{};
 	
 	~Layer2() {};
+	
+	bool OnEvent(SDL_Event* event)
+	{
+		CSE_LOG("Layer ", GetName(), " stopped event: ", event->type);
+		return true;
+	}
 };
 
 class App : public CSE::Application
 {
 public:
 	App(const CSE::WindowPrefs& prefs)
-		: CSE::Application(prefs) 
+	: CSE::Application(prefs) 
 	{
 		AttachLayer(new Layer1());
 		AttachLayer(new Layer2());
 	};
 	~App() {};
-private:
-	
 };
 
 CSE::Application* CSE::CreateApplication()

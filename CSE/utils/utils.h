@@ -5,18 +5,21 @@
 
 namespace CSE
 {
-	static std::string GetDateAndTime() 
+	namespace Utils
 	{
-		time_t 		timeNow = time(0);
-		tm  		timeStruct;
-		char 		charBuffer[80];
-		
-		// get current time
-		timeStruct = *localtime(&timeNow);
-		// convert it to a string
-		strftime(charBuffer, sizeof(charBuffer), "%Y.%m.%d - %X", &timeStruct);
-		
-		return charBuffer;
+		static std::string GetDateAndTime() 
+		{
+			time_t 		timeNow = time(0);
+			tm  		timeStruct;
+			char 		charBuffer[80];
+			
+			// get current time
+			timeStruct = *localtime(&timeNow);
+			// convert it to a string
+			strftime(charBuffer, sizeof(charBuffer), "%Y.%m.%d - %X", &timeStruct);
+			
+			return charBuffer;
+		}
 	}
 }
 
