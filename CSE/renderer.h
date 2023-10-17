@@ -4,6 +4,9 @@
 #include <CSE/core.h>
 #include <CSE/platform.h>
 
+// bricks of the renderer system
+#include <CSE/systems/renderer/texture.h>
+
 namespace CSE
 {
 	class Renderer
