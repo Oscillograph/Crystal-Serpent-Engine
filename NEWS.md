@@ -2,6 +2,9 @@
 Changelog:
 + Separated SDL platform from Application and Window classes;
 + Added a Renderer abstraction;
++ Added layers and LayerStack abstractions to organize window content;
++ Changed the engine entry point so that a custom app class can be set up;
++ Due to the previous change, the function int main() moved into cse/application.cpp;
 
 ## 0.2.1 ##
 Made a decision to rework the engine completely, using my new bag of experience gained while redeveloping The Cherno's Hazel2D.
