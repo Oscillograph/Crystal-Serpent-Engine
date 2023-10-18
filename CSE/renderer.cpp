@@ -17,7 +17,6 @@ namespace CSE
 	void Renderer::ClearScreen()
 	{
 		SDL_RenderClear(m_Renderer);
-		SDL_RenderPresent(m_Renderer);
 	}
 	
 	uint32_t Renderer::GetPixel(SDL_Surface *surface, int x, int y)
