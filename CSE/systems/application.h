@@ -4,12 +4,12 @@
 #include <CSE/core.h>
 
 // platform-dependent systems
-#include <CSE/platform.h> // SDL
-#include <CSE/window.h> // CSE interfaces are based on gui
-#include <CSE/renderer.h> // graphics
+#include <CSE/systems/platform.h> // SDL
+#include <CSE/systems/window.h> // CSE interfaces are based on gui
+#include <CSE/systems/renderer.h> // graphics
 
 // architecture abstractions
-#include <CSE/layer.h>
+#include <CSE/systems/layer.h>
 
 namespace CSE
 {

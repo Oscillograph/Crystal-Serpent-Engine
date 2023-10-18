@@ -2,7 +2,7 @@
 #define CSE_RENDERER_H
 
 #include <CSE/core.h>
-#include <CSE/platform.h>
+#include <CSE/systems/platform.h>
 
 // bricks of the renderer system
 #include <CSE/systems/renderer/texture.h>

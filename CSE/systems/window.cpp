@@ -1,4 +1,4 @@
-#include <CSE/window.h>
+#include <CSE/systems/window.h>
 
 namespace CSE
 {

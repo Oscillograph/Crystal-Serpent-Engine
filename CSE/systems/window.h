@@ -2,7 +2,7 @@
 #define CSE_WINDOW_H
 
 #include <CSE/core.h>
-#include <CSE/platform.h>
+#include <CSE/systems/platform.h>
 
 namespace CSE 
 {
