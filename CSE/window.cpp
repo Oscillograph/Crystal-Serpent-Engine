@@ -73,4 +73,10 @@ namespace CSE
 		}
 		CSE_CORE_LOG("Window destroyed.");
 	}
+	
+	void Window::SetTitle(const std::string& title)
+	{
+		// SDL_GetWindowTitle(m_NativeWindow);
+		SDL_SetWindowTitle(m_NativeWindow, title.c_str());
+	}
 }

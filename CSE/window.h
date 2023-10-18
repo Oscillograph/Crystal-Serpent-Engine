@@ -32,6 +32,9 @@ namespace CSE
 		void Open(const WindowPrefs& prefs, const WindowScale& scale, uint32_t winFlags);
 		void Close();
 		
+		void SetTitle(const std::string& title);
+		inline std::string GetTitle() { return m_Prefs.title; }
+		
 		inline SDL_Event* GetEvents() { return m_Events; }
 		inline SDL_Renderer* GetRenderer() { return m_Renderer; }
 		inline SDL_Surface* GetSurface() { return m_WindowSurface; }

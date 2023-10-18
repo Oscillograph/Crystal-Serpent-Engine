@@ -116,12 +116,17 @@ namespace CSE
 			m_TimeThisFrame = SDL_GetTicks64();
 			if (m_TimeThisFrame - m_TimeLastFrame >= (uint64_t)m_TimeDeltaLimit)
 			{
+				uint64_t fpsCount;
 				if (m_TimeDeltaLimit > 0.1f)
 				{
-					CSE_CORE_LOG("FPS: ", (uint64_t)round(1000 / m_TimeDeltaLimit));
+					fpsCount = (uint64_t)round(1000 / m_TimeDeltaLimit);
 				} else {
-					CSE_CORE_LOG("FPS: ", (uint64_t)round((float)1000 / (m_TimeThisFrame - m_TimeLastFrame)));
+					fpsCount = (uint64_t)round((float)1000 / (m_TimeThisFrame - m_TimeLastFrame));
 				}
+				// CSE_CORE_LOG("FPS: ", fpsCount);
+				std::stringstream newTitle;
+				newTitle << m_Window->GetTitle() << " - FPS: " << fpsCount;
+				m_Window->SetTitle(newTitle.str().c_str());
 				
 				Renderer::ClearScreen();
 				

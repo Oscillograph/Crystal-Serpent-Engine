@@ -48,5 +48,5 @@ public:
 
 CSE::Application* CSE::CreateApplication()
 {
-	return new App({"My First App", 100, 100, 400, 400, 1});
+	return new App({"Моё первое приложение", 100, 100, 400, 400, 1});
 }
