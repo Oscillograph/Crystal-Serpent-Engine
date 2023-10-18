@@ -18,7 +18,6 @@ namespace CSE
 		int y;
 		int width;
 		int height;
-		int layers;
 	};
 	
 	class Window
@@ -31,6 +30,12 @@ namespace CSE
 		
 		void Open(const WindowPrefs& prefs, const WindowScale& scale, uint32_t winFlags);
 		void Close();
+		
+		inline WindowPrefs GetPrefs() { return m_Prefs; }
+		
+		inline void SetScale(const WindowScale& scale) { m_Scale = scale; }
+		inline WindowScale GetScale() { return m_Scale; }
+		
 		
 		// Set a title but don't save in prefs.
 		// Useful when a title updates frequently.

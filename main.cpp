@@ -41,12 +41,12 @@ public:
 	{
 		AttachLayer(new Layer1());
 		AttachLayer(new Layer2());
-		LimitFPS(CSE_FPS10);
+		LimitFPS(CSE_FPS60);
 	};
 	~App() {};
 };
 
 CSE::Application* CSE::CreateApplication()
 {
-	return new App({"Моё первое приложение", 100, 100, 400, 400, 1});
+	return new App({"CSE: Тест", 100, 100, 320, 240});
 }

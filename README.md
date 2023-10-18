@@ -1,6 +1,6 @@
 # ! WORK IN PROGRESS ! #
 # CRYSTAL SERPENT ENGINE #
-Crystal Serpent Engine v0.2.1 is aimed to be a game engine built on SDL.
+Crystal Serpent Engine is aimed to be a game engine based on SDL.
 
 The engine is designed to be used through a header file. The common way to use it looks like this:
 1. Include "./cse.h"
@@ -25,7 +25,6 @@ public:
 		: CSE::Application(prefs) 
 	{
 		AttachLayer(new Layer1());
-		AttachLayer(new Layer2());
 		LimitFPS(CSE_FPS60);
 	};
 	~App() {};

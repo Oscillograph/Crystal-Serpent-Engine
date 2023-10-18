@@ -18,7 +18,7 @@ namespace CSE
 	{
 	public:
 		Application();
-		Application(const WindowPrefs& prefs = {CSE::EngineInfo::Name, 0, 0, 600, 480, 1});
+		Application(const WindowPrefs& prefs = {CSE::EngineInfo::Name, 0, 0, 620, 480});
 		virtual ~Application();
 		
 		int Init();

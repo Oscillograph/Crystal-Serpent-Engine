@@ -21,7 +21,12 @@ namespace CSE
 		// m_Events = Platform::GetEventListener();
 		
 		// initialize randomizer
-		srand(SDL_GetTicks64());
+		tm randomTime;
+		srand(
+			randomTime.tm_sec + 60*randomTime.tm_min + 
+			60*60*randomTime.tm_hour + 60*60*24*randomTime.tm_mday + 
+			60*60*24*30*randomTime.tm_mon + 60*60*24*30*12*randomTime.tm_year
+			);
 	}
 	
 	Application::~Application()
@@ -70,8 +75,7 @@ namespace CSE
 		Renderer::SetActiveRenderer(m_Window->GetRenderer());
 		Renderer::SetBackgroundColor({30, 50, 90, 255});
 		
-		Texture* broscillograph = new Texture("./CSE/assets/Sprites.png", Renderer::GetActiveRenderer());
-		SDL_FRect stretchBro = {0, 0, 320, 240};
+		Texture* broscillograph = new Texture("./CSE/assets/CSE_logo.png", Renderer::GetActiveRenderer());
 		
 		CSE_CORE_LOG("Starting FPS timer.");
 		m_TimeLastFrame = 0;
@@ -96,6 +100,17 @@ namespace CSE
 						m_Running = false;
 						break;
 					}
+				}
+				
+				if (event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
+				{
+					int newWidth, newHeight;
+					SDL_GetWindowSize(m_Window->GetNativeWindow(), &newWidth, &newHeight);
+					m_Window->SetScale({
+						(float)newWidth / m_Window->GetPrefs().width,
+						(float)newHeight / m_Window->GetPrefs().height,
+						1.0f
+					});
 				}
 				
 				for (Layer* layer : m_LayerStack)
@@ -134,11 +149,27 @@ namespace CSE
 					}
 				}
 				
-				// CSE_CORE_LOG("FPS: ", fpsCount);
 				m_Window->ShowFPSInTitle(fpsCount);
 				
 				Renderer::ClearScreen();
-				Renderer::DrawTexture(broscillograph->GetTexture(), &stretchBro, NULL, 1.0f, 1.0f);
+				
+				SDL_FRect stretchBro = {
+					0, 
+					0, 
+					m_Window->GetPrefs().width, 
+					m_Window->GetPrefs().height
+				};
+				
+				SDL_Rect srcRect = {0, 0, 80, 30};
+				
+				Renderer::DrawTexture(
+					broscillograph->GetTexture(), 
+					&stretchBro, 
+					NULL, 
+					m_Window->GetScale().x, 
+					m_Window->GetScale().y
+				);
+				
 				Renderer::Update();
 				
 				m_TimeLastFrame = m_TimeThisFrame;

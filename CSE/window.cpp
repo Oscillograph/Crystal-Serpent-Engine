@@ -5,7 +5,7 @@ namespace CSE
 	Window::Window()
 	{
 		Open(
-			{CSE::EngineInfo::Name, 0, 0, 600, 480, 1},
+			{CSE::EngineInfo::Name, 0, 0, 600, 480},
 			{1.0f, 1.0f, 1.0f},
 			(SDL_WINDOW_RESIZABLE + SDL_WINDOW_SHOWN + SDL_WINDOW_OPENGL)
 			);

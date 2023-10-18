@@ -9,6 +9,7 @@ Changelog:
 + Renderer can display textures now;
 + FPS limit;
 + Window title can be changed;
++ Added to assets folder: CSE logo, SDL logo;
 
 ## 0.2.1 ##
 Made a decision to rework the engine completely, using my new bag of experience gained while redeveloping The Cherno's Hazel2D.
