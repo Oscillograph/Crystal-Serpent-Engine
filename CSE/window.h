@@ -32,8 +32,21 @@ namespace CSE
 		void Open(const WindowPrefs& prefs, const WindowScale& scale, uint32_t winFlags);
 		void Close();
 		
-		void SetTitle(const std::string& title);
-		inline std::string GetTitle() { return m_Prefs.title; }
+		// Set a title but don't save in prefs.
+		// Useful when a title updates frequently.
+		void SetTitle(const std::string& title); 
+		
+		// Set a title and save in prefs.
+		// Useful when a title is not to be updated frequently.
+		void NewTitle(const std::string& title);
+		
+		// Get title from prefs (not the current one).
+		inline std::string GetBaseTitle() { return m_Prefs.title; }
+		
+		// Get title from the titlebar.
+		inline std::string GetTitle() { return std::string(SDL_GetWindowTitle(m_NativeWindow)); }
+		
+		void ShowFPSInTitle(uint64_t fpsCount);
 		
 		inline SDL_Event* GetEvents() { return m_Events; }
 		inline SDL_Renderer* GetRenderer() { return m_Renderer; }

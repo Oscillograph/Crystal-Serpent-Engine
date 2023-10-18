@@ -46,7 +46,8 @@ namespace CSE
 		
 		m_Renderer = Platform::InitRenderer(m_NativeWindow);
 		m_WindowSurface = Platform::GetWindowSurface(m_NativeWindow);
-		m_Events = Platform::GetEventListener();
+		// m_Events = Platform::GetEventListener();
+		m_Events = nullptr;
 		
 		CSE_CORE_LOG("Window opened.");
 	}
@@ -76,7 +77,26 @@ namespace CSE
 	
 	void Window::SetTitle(const std::string& title)
 	{
-		// SDL_GetWindowTitle(m_NativeWindow);
 		SDL_SetWindowTitle(m_NativeWindow, title.c_str());
+	}
+	
+	void Window::NewTitle(const std::string& title)
+	{
+		SetTitle(title);
+		m_Prefs.title = title;
+	}
+	
+	void Window::ShowFPSInTitle(uint64_t fpsCount)
+	{
+		// TODO: find a way around stringstream leaking memory per << operator.
+		// std::stringstream newTitle;
+		// newTitle.str(std::string());
+		// newTitle << GetBaseTitle() << " - FPS: " << fpsCount;
+		// SetTitle(newTitle.str());
+		
+		char newTitle[512];
+		sprintf(newTitle, "%s - FPS: %d", m_Prefs.title.c_str(), fpsCount);
+		std::string fpsString(newTitle);
+		SetTitle(fpsString);
 	}
 }

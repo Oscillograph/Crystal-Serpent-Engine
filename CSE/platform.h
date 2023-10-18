@@ -19,7 +19,8 @@ namespace CSE
 		static SDL_Renderer* InitRenderer(SDL_Window* window);
 		static SDL_Window* CreateWindow(const char* title, int x, int y, int width, int height, uint32_t winFlags);
 		static SDL_Surface* GetWindowSurface(SDL_Window* window);
-		inline static SDL_Event* GetEventListener() { return m_EventListener; }
+		// inline static SDL_Event* GetEventListener() { return m_EventListener; }
+		inline static SDL_Event* GetEventListener() { return new SDL_Event; }
 		static int Shutdown();
 		
 	private:

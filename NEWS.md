@@ -8,6 +8,7 @@ Changelog:
 + Reimplemented Texture class from CSE v0.1.1;
 + Renderer can display textures now;
 + FPS limit;
++ Window title can be changed;
 
 ## 0.2.1 ##
 Made a decision to rework the engine completely, using my new bag of experience gained while redeveloping The Cherno's Hazel2D.

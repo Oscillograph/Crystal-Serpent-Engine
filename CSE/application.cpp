@@ -17,7 +17,8 @@ namespace CSE
 		
 		m_Window = new Window(prefs);
 		
-		m_Events = Platform::GetEventListener();
+		m_Events = nullptr;
+		// m_Events = Platform::GetEventListener();
 		
 		// initialize randomizer
 		srand(SDL_GetTicks64());
@@ -63,6 +64,7 @@ namespace CSE
 		m_TimeDeltaLimit = (fps * 1000);
 	}
 	
+	
 	int Application::Run()
 	{
 		Renderer::SetActiveRenderer(m_Window->GetRenderer());
@@ -79,15 +81,17 @@ namespace CSE
 		while (m_Running){
 			// 0. Start collecting debug information
 			// 1. Input management system
-			while (SDL_PollEvent(m_Window->GetEvents()))
+			// 2. Events system
+			SDL_Event event;
+			while (SDL_PollEvent(&event))
 			{
-				if (m_Window->GetEvents()->type == SDL_QUIT){
+				if (event.type == SDL_QUIT){
 					m_Running = false;
 					break;
 				}
 				
-				if (m_Window->GetEvents()->type == SDL_KEYUP){
-					if (m_Window->GetEvents()->key.keysym.scancode == SDL_SCANCODE_ESCAPE)
+				if (event.type == SDL_KEYUP){
+					if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE)
 					{
 						m_Running = false;
 						break;
@@ -98,12 +102,11 @@ namespace CSE
 				{
 					if (layer->IsEnabled())
 					{
-						if (layer->OnEvent(m_Window->GetEvents()))
+						if (layer->OnEvent(&event))
 							break;
 					}
 				}
 			}
-			// 2. Events system
 			// 3. App Reaction system
 			// 4. Game Object Management System (GOMS)
 			// 5. World progress system
@@ -113,34 +116,44 @@ namespace CSE
 			// 7. Sound system
 			// 8. Show debug information as text over the screen
 			// 9. Graphic system
+			 
 			m_TimeThisFrame = SDL_GetTicks64();
-			if (m_TimeThisFrame - m_TimeLastFrame >= (uint64_t)m_TimeDeltaLimit)
+			m_TimeDelta = (float)(m_TimeThisFrame - m_TimeLastFrame);
+			if (m_TimeDelta >= m_TimeDeltaLimit)
 			{
-				uint64_t fpsCount;
+				
 				if (m_TimeDeltaLimit > 0.1f)
 				{
 					fpsCount = (uint64_t)round(1000 / m_TimeDeltaLimit);
 				} else {
-					fpsCount = (uint64_t)round((float)1000 / (m_TimeThisFrame - m_TimeLastFrame));
+					if (m_TimeDelta > 0.0f)
+					{
+						fpsCount = (uint64_t)round(1000 / m_TimeDelta);
+					} else {
+						fpsCount = 9001; // it's over nine thousand!
+					}
 				}
+				
 				// CSE_CORE_LOG("FPS: ", fpsCount);
-				std::stringstream newTitle;
-				newTitle << m_Window->GetTitle() << " - FPS: " << fpsCount;
-				m_Window->SetTitle(newTitle.str().c_str());
+				m_Window->ShowFPSInTitle(fpsCount);
 				
 				Renderer::ClearScreen();
-				
 				Renderer::DrawTexture(broscillograph->GetTexture(), &stretchBro, NULL, 1.0f, 1.0f);
 				Renderer::Update();
 				
 				m_TimeLastFrame = m_TimeThisFrame;
 			}
 			
+			
 			// 10. File I/O system
 			// 11. Log system
 			// 12. FPS Count
 		}
 		CSE_CORE_LOG("Exit from App main loop.");
+		
+		delete broscillograph; 
+		broscillograph = nullptr;
+		
 		return 0;
 	}
 }

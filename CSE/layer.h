@@ -49,6 +49,8 @@ namespace CSE
 		bool Attach(Layer* layer);
 		bool Detach(Layer* layer);
 		
+		inline const std::vector<Layer*>& GetContents() const { return m_Layers; }
+		
 		std::vector<Layer*>::iterator begin() { return m_Layers.begin(); }
 		std::vector<Layer*>::iterator end()   { return m_Layers.end();   }
 		

@@ -49,11 +49,13 @@ namespace CSE
 		
 		SDL_Event* m_Events = nullptr; // TODO: separate and wrap into a custom Event class
 		
-	private:
+	protected:
 		static Application* m_ApplicationInstance;
 		
-		uint64_t m_TimeLastFrame = 0; // SDL_GetTicks64()
+		uint64_t m_TimeLastFrame = 0;
 		uint64_t m_TimeThisFrame = 0;
+		uint64_t fpsCount;
+		float m_TimeDelta = 0;
 		float m_TimeDeltaLimit = 0.0f;
 	};
 	
