@@ -99,4 +99,14 @@ namespace CSE
 		std::string fpsString(newTitle);
 		SetTitle(fpsString);
 	}
+	
+	bool Window::AttachLayer(Layer* layer)
+	{
+		return m_LayerStack.Attach(layer);
+	}
+	
+	bool Window::DetachLayer(Layer* layer)
+	{
+		return m_LayerStack.Detach(layer);
+	}
 }

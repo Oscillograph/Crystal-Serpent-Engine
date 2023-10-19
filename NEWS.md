@@ -1,3 +1,7 @@
+## 0.2.3 ##
+Changelog:
++ Moved LayerStack to the Window class so that each window can have its own pack of layers;
+
 ## 0.2.2 ##
 Changelog:
 + Separated SDL platform from Application and Window classes;
@@ -10,7 +14,7 @@ Changelog:
 + FPS limit;
 + Window title can be changed;
 + Added to assets folder: CSE logo, SDL logo;
-+ Reorganized files in CSE folder;
++ Reorganized files in CSE folder.
 
 ## 0.2.1 ##
 Made a decision to rework the engine completely, using my new bag of experience gained while redeveloping The Cherno's Hazel2D.

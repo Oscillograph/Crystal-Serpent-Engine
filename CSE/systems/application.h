@@ -27,9 +27,9 @@ namespace CSE
 		void LimitFPS(float fps);
 		
 		// layers functionality
-		// TODO: Move it into a window
-		bool AttachLayer(Layer* layer);
-		bool DetachLayer(Layer* layer);
+		// TODO: DANGER! one layer can be attached to two different windows. Need smart pointers.
+		bool AttachLayer(Window* window, Layer* layer);
+		bool DetachLayer(Window* window, Layer* layer);
 		
 		// only one application allowed to run at a time
 		inline static Application* Get() { return m_ApplicationInstance; }
@@ -40,8 +40,6 @@ namespace CSE
 		}
 		
 	protected:
-		LayerStack m_LayerStack;
-		
 		bool m_Running = true;
 		
 		// assume now we have only one window, but remember: that's not the limit!

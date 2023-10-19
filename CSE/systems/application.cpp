@@ -48,14 +48,14 @@ namespace CSE
 		CSE_CORE_LOG("Platform shutdown complete.");
 	}
 	
-	bool Application::AttachLayer(Layer* layer)
+	bool Application::AttachLayer(Window* window, Layer* layer)
 	{
-		return m_LayerStack.Attach(layer);
+		return window->AttachLayer(layer);
 	}
 	
-	bool Application::DetachLayer(Layer* layer)
+	bool Application::DetachLayer(Window* window, Layer* layer)
 	{
-		return m_LayerStack.Detach(layer);
+		return window->DetachLayer(layer);
 	}
 	
 	int Application::Init()
@@ -113,7 +113,7 @@ namespace CSE
 					});
 				}
 				
-				for (Layer* layer : m_LayerStack)
+				for (Layer* layer : m_Window->GetLayers())
 				{
 					if (layer->IsEnabled())
 					{

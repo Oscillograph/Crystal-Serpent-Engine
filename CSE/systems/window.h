@@ -3,6 +3,7 @@
 
 #include <CSE/core.h>
 #include <CSE/systems/platform.h>
+#include <CSE/systems/layer.h>
 
 namespace CSE 
 {
@@ -57,6 +58,11 @@ namespace CSE
 		inline SDL_Renderer* GetRenderer() { return m_Renderer; }
 		inline SDL_Surface* GetSurface() { return m_WindowSurface; }
 		inline SDL_Window* GetNativeWindow() { return m_NativeWindow; }
+		
+		// Layers operation
+		inline LayerStack& GetLayers() { return m_LayerStack; }
+		bool AttachLayer(Layer* layer);
+		bool DetachLayer(Layer* layer);
 	
 	private:
 		WindowPrefs m_Prefs;
@@ -66,6 +72,8 @@ namespace CSE
 		SDL_Window* m_NativeWindow = nullptr; // the window
 		SDL_Renderer* m_Renderer = nullptr; // the window renderer
 		SDL_Surface* m_WindowSurface = nullptr; // the window surface
+		
+		LayerStack m_LayerStack;
 	};
 }
 
