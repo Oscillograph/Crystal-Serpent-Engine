@@ -61,8 +61,8 @@ namespace CSE
 		
 		// Layers operation
 		inline LayerStack& GetLayers() { return m_LayerStack; }
-		bool AttachLayer(Layer* layer);
-		bool DetachLayer(Layer* layer);
+		bool AttachLayer(Ref<Layer> layer);
+		bool DetachLayer(Ref<Layer> layer);
 	
 	private:
 		WindowPrefs m_Prefs;

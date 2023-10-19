@@ -28,8 +28,8 @@ namespace CSE
 		
 		// layers functionality
 		// TODO: DANGER! one layer can be attached to two different windows. Need smart pointers.
-		bool AttachLayer(Window* window, Layer* layer);
-		bool DetachLayer(Window* window, Layer* layer);
+		bool AttachLayer(Window* window, Ref<Layer> layer);
+		bool DetachLayer(Window* window, Ref<Layer> layer);
 		
 		// only one application allowed to run at a time
 		inline static Application* Get() { return m_ApplicationInstance; }

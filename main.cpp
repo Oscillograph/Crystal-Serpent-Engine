@@ -1,6 +1,6 @@
 #include "./cse.h"
 
-// Layers of the main (default) window which is created with the application start
+// Layers of the main (default) window, which is created with the application start.
 class Layer1 : public CSE::Layer
 {
 public:
@@ -39,8 +39,10 @@ public:
 	App(const CSE::WindowPrefs& prefs)
 	: CSE::Application(prefs) 
 	{
-		AttachLayer(m_Window, new Layer1());
-		AttachLayer(m_Window, new Layer2());
+		CSE::Ref<CSE::Layer> layer1(new Layer1());
+		CSE::Ref<CSE::Layer> layer2(new Layer2());
+		AttachLayer(m_Window, layer1);
+		AttachLayer(m_Window, layer2);
 		LimitFPS(CSE_FPS60);
 	};
 	~App() {};

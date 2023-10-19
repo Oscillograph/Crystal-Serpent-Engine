@@ -46,16 +46,16 @@ namespace CSE
 		LayerStack();
 		~LayerStack();
 		
-		bool Attach(Layer* layer);
-		bool Detach(Layer* layer);
+		bool Attach(Ref<Layer> layer);
+		bool Detach(Ref<Layer> layer);
 		
-		inline const std::vector<Layer*>& GetContents() const { return m_Layers; }
+		inline const std::vector<Ref<Layer>>& GetContents() const { return m_Layers; }
 		
-		std::vector<Layer*>::iterator begin() { return m_Layers.begin(); }
-		std::vector<Layer*>::iterator end()   { return m_Layers.end();   }
+		std::vector<Ref<Layer>>::iterator begin() { return m_Layers.begin(); }
+		std::vector<Ref<Layer>>::iterator end()   { return m_Layers.end();   }
 		
 	protected:
-		std::vector<Layer*> m_Layers;
+		std::vector<Ref<Layer>> m_Layers;
 		uint32_t m_LayerInsertIndex = 0;
 	};
 }

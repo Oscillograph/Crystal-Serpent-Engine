@@ -100,12 +100,12 @@ namespace CSE
 		SetTitle(fpsString);
 	}
 	
-	bool Window::AttachLayer(Layer* layer)
+	bool Window::AttachLayer(Ref<Layer> layer)
 	{
 		return m_LayerStack.Attach(layer);
 	}
 	
-	bool Window::DetachLayer(Layer* layer)
+	bool Window::DetachLayer(Ref<Layer> layer)
 	{
 		return m_LayerStack.Detach(layer);
 	}

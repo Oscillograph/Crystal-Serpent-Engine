@@ -10,20 +10,22 @@ namespace CSE
 	
 	LayerStack::~LayerStack()
 	{
-		for (Layer* layer : m_Layers)
+		/*
+		for (Ref<Layer> layer : m_Layers)
 		{
 			delete layer;
 		}
+		*/
 	}
 	
-	bool LayerStack::Attach(Layer* layer)
+	bool LayerStack::Attach(Ref<Layer> layer)
 	{
 		m_Layers.emplace(m_Layers.begin() + m_LayerInsertIndex, layer);
 		m_LayerInsertIndex++;
 		return layer->OnAttach();
 	}
 	
-	bool LayerStack::Detach(Layer* layer)
+	bool LayerStack::Detach(Ref<Layer> layer)
 	{
 		auto it = std::find(m_Layers.begin(), m_Layers.end(), layer);
 		if (it != m_Layers.end())

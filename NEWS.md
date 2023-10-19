@@ -1,6 +1,7 @@
 ## 0.2.3 ##
 Changelog:
 + Moved LayerStack to the Window class so that each window can have its own pack of layers;
++ Changed Layer pointers to shared pointers across application, window and layer files;
 
 ## 0.2.2 ##
 Changelog:
