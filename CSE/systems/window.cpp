@@ -48,6 +48,7 @@ namespace CSE
 		m_WindowSurface = Platform::GetWindowSurface(m_NativeWindow);
 		// m_Events = Platform::GetEventListener();
 		m_Events = nullptr;
+		m_NativeWindowID = SDL_GetWindowID(m_NativeWindow);
 		
 		CSE_CORE_LOG("Window opened.");
 	}
@@ -59,20 +60,20 @@ namespace CSE
 			SDL_FreeSurface(m_WindowSurface);
 			m_WindowSurface = nullptr;
 		}
-		CSE_CORE_LOG("Window surface memory freed.");
+		CSE_CORE_LOG("Window", m_Prefs.title, " surface memory freed.");
 		
 		// destroy renderer and the window
 		if (m_Renderer != nullptr){
 			SDL_DestroyRenderer(m_Renderer);
 			m_Renderer = nullptr;
 		}
-		CSE_CORE_LOG("Window renderer destroyed.");
+		CSE_CORE_LOG("Window", m_Prefs.title, " renderer destroyed.");
 		
 		if (m_NativeWindow != nullptr){
 			SDL_DestroyWindow(m_NativeWindow);
 			m_NativeWindow = nullptr;
 		}
-		CSE_CORE_LOG("Window destroyed.");
+		CSE_CORE_LOG("Window", m_Prefs.title, " destroyed.");
 	}
 	
 	void Window::SetTitle(const std::string& title)

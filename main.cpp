@@ -43,9 +43,19 @@ public:
 		CSE::Ref<CSE::Layer> layer2(new Layer2());
 		AttachLayer(m_Window, layer1);
 		AttachLayer(m_Window, layer2);
+		
+		// m_Window2 = new CSE::Window({"CSE: Второе окно", 400, 100, 320, 240});
+		// AttachLayer(m_Window2, layer1);
+		// AttachLayer(m_Window2, layer2);
 		LimitFPS(CSE_FPS60);
 	};
-	~App() {};
+	~App() 
+	{
+		// delete m_Window2;
+	};
+	
+private:
+	// CSE::Window* m_Window2;
 };
 
 CSE::Application* CSE::CreateApplication()

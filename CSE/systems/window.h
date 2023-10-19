@@ -58,6 +58,7 @@ namespace CSE
 		inline SDL_Renderer* GetRenderer() { return m_Renderer; }
 		inline SDL_Surface* GetSurface() { return m_WindowSurface; }
 		inline SDL_Window* GetNativeWindow() { return m_NativeWindow; }
+		inline uint32_t GetNativeWindowID() { return m_NativeWindowID; }
 		
 		// Layers operation
 		inline LayerStack& GetLayers() { return m_LayerStack; }
@@ -67,6 +68,7 @@ namespace CSE
 	private:
 		WindowPrefs m_Prefs;
 		WindowScale m_Scale;
+		uint32_t m_NativeWindowID; // SDL_GetWindowID()
 		
 		SDL_Event* m_Events = nullptr; // event queue
 		SDL_Window* m_NativeWindow = nullptr; // the window
