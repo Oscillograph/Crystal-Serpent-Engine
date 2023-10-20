@@ -93,6 +93,7 @@ namespace CSE
 		void Pop(Window* window);
 		
 		inline const std::vector<Window*>& GetContents() const { return m_Windows; }
+		inline size_t Size() { return m_Windows.size(); }
 		
 		std::vector<Window*>::iterator begin() { return m_Windows.begin(); }
 		std::vector<Window*>::iterator end()   { return m_Windows.end();   }

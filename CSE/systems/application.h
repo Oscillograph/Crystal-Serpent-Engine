@@ -10,6 +10,7 @@
 
 // architecture abstractions
 #include <CSE/systems/layer.h>
+#include <CSE/systems/scene.h>
 
 namespace CSE
 {
@@ -30,6 +31,9 @@ namespace CSE
 		// TODO: DANGER! one layer can be attached to two different windows. Need smart pointers.
 		bool AttachLayer(Window* window, Ref<Layer> layer);
 		bool DetachLayer(Window* window, Ref<Layer> layer);
+		
+		// multiple windows functionality
+		inline WindowStack& GetWindows() { return m_WindowStack; }
 		
 		// only one application allowed to run at a time
 		inline static Application* Get() { return m_ApplicationInstance; }

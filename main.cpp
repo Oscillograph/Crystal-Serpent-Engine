@@ -13,7 +13,7 @@ public:
 	bool OnEvent(SDL_Event* event)
 	{
 		// CSE_LOG("Layer ", GetName(), " stopped event: ", event->type);
-		return true;
+		return true; // "true" means that event doesn't move further 
 	}
 };
 
@@ -29,7 +29,7 @@ public:
 	bool OnEvent(SDL_Event* event)
 	{
 		// CSE_LOG("Layer ", GetName(), " stopped event: ", event->type);
-		return true;
+		return true; // "true" means that event doesn't move further
 	}
 };
 
@@ -42,11 +42,11 @@ public:
 		CSE::Ref<CSE::Layer> layer1(new Layer1());
 		CSE::Ref<CSE::Layer> layer2(new Layer2());
 		
-		m_WindowStack.Push(new CSE::Window({"CSE: Тест", 100, 100, 320, 240}));
+		GetWindows().Push(new CSE::Window({"CSE: Тест", 100, 100, 320, 240}));
 		// m_WindowStack.Push(new CSE::Window({"CSE: Второе окно", 400, 100, 320, 240}));
-		CSE_LOG("Total windows in App's WindowStack: ", m_WindowStack.GetContents().size());
+		CSE_LOG("Total windows in App's WindowStack: ", GetWindows().Size());
 		
-		for (CSE::Window* window : m_WindowStack)
+		for (CSE::Window* window : GetWindows())
 		{
 			AttachLayer(window, layer1);
 			CSE_LOG("Layer ", layer1.get()->GetName(), " attached to window #", window->GetNativeWindowID());
@@ -54,18 +54,11 @@ public:
 			CSE_LOG("Layer ", layer2.get()->GetName(), " attached to window #", window->GetNativeWindowID());
 		}
 		
-		// m_Window2 = new CSE::Window({"CSE: Второе окно", 400, 100, 320, 240});
-		// AttachLayer(m_Window2, layer1);
-		// AttachLayer(m_Window2, layer2);
 		LimitFPS(CSE_FPS60);
 	};
 	~App() 
 	{
-		// delete m_Window2;
 	};
-	
-private:
-	// CSE::Window* m_Window2;
 };
 
 CSE::Application* CSE::CreateApplication()

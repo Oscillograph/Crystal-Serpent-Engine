@@ -82,7 +82,6 @@ namespace CSE
 			{
 				if (event.type == SDL_QUIT)
 				{
-					CSE_CORE_LOG("event.type: ", event.type);
 					m_Running = false;
 					break;
 				}
