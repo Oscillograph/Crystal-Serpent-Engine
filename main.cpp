@@ -43,7 +43,7 @@ public:
 		CSE::Ref<CSE::Layer> layer2(new Layer2());
 		
 		m_WindowStack.Push(new CSE::Window({"CSE: Тест", 100, 100, 320, 240}));
-		m_WindowStack.Push(new CSE::Window({"CSE: Второе окно", 400, 100, 320, 240}));
+		// m_WindowStack.Push(new CSE::Window({"CSE: Второе окно", 400, 100, 320, 240}));
 		CSE_LOG("Total windows in App's WindowStack: ", m_WindowStack.GetContents().size());
 		
 		for (CSE::Window* window : m_WindowStack)

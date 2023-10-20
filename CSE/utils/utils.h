@@ -20,6 +20,16 @@ namespace CSE
 			
 			return charBuffer;
 		}
+		
+		namespace UUID {
+			static std::random_device g_RandomDevice;
+			static std::mt19937_64 g_RandomEngine(g_RandomDevice());
+			static std::uniform_int_distribution<uint64_t> g_UniformDistribution;
+			
+			static uint64_t Generate() {
+				return g_UniformDistribution(g_RandomEngine);
+			}
+		}
 	}
 }
 
