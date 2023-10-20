@@ -3,22 +3,18 @@
 namespace CSE
 {
 	Application* Application::m_ApplicationInstance = nullptr;
-	// extern Application* CreateApplication();
 	
 	Application::Application()
 	{
 		Init();
-		m_Window = new Window();
+		// m_WindowStack.Push(new Window());
 	}
 	
 	Application::Application(const WindowPrefs& prefs)
 	{
 		Init();
 		
-		m_Window = new Window(prefs);
-		
-		m_Events = nullptr;
-		// m_Events = Platform::GetEventListener();
+		// m_WindowStack.Push(new Window(prefs));
 		
 		// initialize randomizer
 		tm randomTime;
@@ -31,17 +27,7 @@ namespace CSE
 	
 	Application::~Application()
 	{
-		if (m_Window != nullptr)
-		{
-			delete m_Window;
-			m_Window = nullptr;
-		}
-		
-		if (m_Events != nullptr)
-		{
-			delete m_Events;
-			m_Events = nullptr;
-		}
+		// some internal pointers memory deallocating
 		CSE_CORE_LOG("Internal systems pointers deleted.");
 		
 		Platform::Shutdown();
@@ -72,10 +58,15 @@ namespace CSE
 	
 	int Application::Run()
 	{
-		Renderer::SetActiveRenderer(m_Window->GetRenderer());
-		Renderer::SetBackgroundColor({30, 50, 90, 255});
+		Texture* broscillograph = nullptr;
 		
-		Texture* broscillograph = new Texture("./CSE/assets/CSE_logo.png", Renderer::GetActiveRenderer());
+		for (Window* window : m_WindowStack)
+		{
+			Renderer::SetActiveRenderer(window->GetRenderer());
+			Renderer::SetBackgroundColor({30, 50, 90, 255});
+		}
+		
+		broscillograph = new Texture("./CSE/assets/CSE_logo.png", (m_WindowStack.GetContents())[0]->GetRenderer());
 		
 		CSE_CORE_LOG("Starting FPS timer.");
 		m_TimeLastFrame = 0;
@@ -89,12 +80,15 @@ namespace CSE
 			SDL_Event event;
 			while (SDL_PollEvent(&event))
 			{
-				if (event.type == SDL_QUIT){
+				if (event.type == SDL_QUIT)
+				{
+					CSE_CORE_LOG("event.type: ", event.type);
 					m_Running = false;
 					break;
 				}
 				
-				if (event.type == SDL_KEYUP){
+				if (event.type == SDL_KEYUP)
+				{
 					if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE)
 					{
 						m_Running = false;
@@ -102,23 +96,54 @@ namespace CSE
 					}
 				}
 				
-				if (event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
+				if (event.type == SDL_WINDOWEVENT)
 				{
-					int newWidth, newHeight;
-					SDL_GetWindowSize(m_Window->GetNativeWindow(), &newWidth, &newHeight);
-					m_Window->SetScale({
-						(float)newWidth / m_Window->GetPrefs().width,
-						(float)newHeight / m_Window->GetPrefs().height,
-						1.0f
-					});
+					for (Window* window : m_WindowStack)
+					{
+						if (event.window.event == SDL_WINDOWEVENT_CLOSE)
+						{
+							if (event.window.windowID == window->GetNativeWindowID())
+							{
+								m_WindowStack.Pop(window);
+								break;
+							}
+						}
+						
+						if (event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
+						{
+							int newWidth, newHeight;
+							SDL_GetWindowSize(window->GetNativeWindow(), &newWidth, &newHeight);
+							window->SetScale({
+								(float)newWidth / window->GetPrefs().width,
+								(float)newHeight / window->GetPrefs().height,
+								1.0f
+							});
+						}
+						
+						if (event.window.event == SDL_WINDOWEVENT_FOCUS_GAINED)
+						{
+							window->SetFocus(true);
+						}
+						
+						if (event.window.event == SDL_WINDOWEVENT_FOCUS_LOST)
+						{
+							window->SetFocus(false);
+						}
+					}
 				}
 				
-				for (Ref<Layer> layer : m_Window->GetLayers())
+				for (Window* window : m_WindowStack)
 				{
-					if (layer->IsEnabled())
+					if (window->IsFocused())
 					{
-						if (layer->OnEvent(&event))
-							break;
+						for (Ref<Layer> layer : window->GetLayers())
+						{
+							if (layer->IsEnabled())
+							{
+								if (layer->OnEvent(&event))
+									break;
+							}
+						}
 					}
 				}
 			}
@@ -149,29 +174,35 @@ namespace CSE
 					}
 				}
 				
-				m_Window->ShowFPSInTitle(fpsCount);
-				
-				Renderer::ClearScreen();
-				
-				SDL_FRect stretchBro = {
-					0, 
-					0, 
-					m_Window->GetPrefs().width, 
-					m_Window->GetPrefs().height
-				};
-				
-				SDL_Rect srcRect = {0, 0, 80, 30};
-				
-				Renderer::DrawTexture(
-					broscillograph->GetTexture(), 
-					&stretchBro, 
-					NULL, 
-					m_Window->GetScale().x, 
-					m_Window->GetScale().y
-				);
-				
-				Renderer::Update();
-				
+				for (Window* window : m_WindowStack)
+				{
+					window->ShowFPSInTitle(fpsCount);
+					
+					if (window->GetRenderer() != Renderer::GetActiveRenderer())
+					{
+						Renderer::SetActiveRenderer(window->GetRenderer());
+					}
+					Renderer::ClearScreen();
+					
+					SDL_FRect stretchBro = {
+						0, 
+						0, 
+						window->GetPrefs().width, 
+						window->GetPrefs().height
+					};
+					
+					SDL_Rect srcRect = {0, 0, 80, 30};
+					
+					Renderer::DrawTexture(
+						broscillograph->GetTexture(), 
+						&stretchBro, 
+						NULL, 
+						window->GetScale().x, 
+						window->GetScale().y
+						);
+					
+					Renderer::Update();
+				}
 				m_TimeLastFrame = m_TimeThisFrame;
 			}
 			
@@ -179,11 +210,18 @@ namespace CSE
 			// 10. File I/O system
 			// 11. Log system
 			// 12. FPS Count
+			
+			if (m_WindowStack.GetContents().size() == 0)
+				m_Running = false;
 		}
 		CSE_CORE_LOG("Exit from App main loop.");
 		
-		delete broscillograph; 
-		broscillograph = nullptr;
+		if (broscillograph != nullptr)
+		{
+			delete broscillograph; 
+			broscillograph = nullptr;
+		}
+		// CSE_CORE_LOG("Texture deleted.");
 		
 		return 0;
 	}

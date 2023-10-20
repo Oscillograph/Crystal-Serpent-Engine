@@ -72,18 +72,18 @@ namespace CSE
 		
 		/*
 		int index = SDL_GetNumRenderDrivers();
+		SDL_RendererInfo* info;
 		CSE_CORE_LOG("Total video drivers availiable: ", index);
 		for (int i = 0; i < index; i++)
 		{
-			SDL_RendererInfo* info;
-			if (SDL_GetRenderDriverInfo(i, info) >= 0)
+			if (SDL_GetRenderDriverInfo(i, info) > 0)
 			{
 				CSE_CORE_LOG("Render driver info: #", i);
 				CSE_CORE_LOG("Name: ", info->name);
 				CSE_CORE_LOG(" ");
 			}
-		}
-		*/
+		}*/
+		
 		
 		return 0;
 	}

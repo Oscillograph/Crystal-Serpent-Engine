@@ -48,7 +48,7 @@ namespace CSE
 	}
 	
 	bool Layer::OnAttach(){
-		CSE_CORE_LOG("Layer ", m_Name, " attached.");
+		// CSE_CORE_LOG("Layer ", m_Name, " attached.");
 		return true;
 	}
 	
@@ -66,7 +66,7 @@ namespace CSE
 	}
 	
 	bool Layer::OnDetach(){
-		CSE_CORE_LOG("Layer ", m_Name, " detached.");
+		// CSE_CORE_LOG("Layer ", m_Name, " detached.");
 		return true;
 	}
 	

@@ -41,11 +41,7 @@ namespace CSE
 		
 	protected:
 		bool m_Running = true;
-		
-		// assume now we have only one window, but remember: that's not the limit!
-		Window* m_Window = nullptr;
-		
-		SDL_Event* m_Events = nullptr; // TODO: separate and wrap into a custom Event class
+		WindowStack m_WindowStack;
 		
 	protected:
 		static Application* m_ApplicationInstance;

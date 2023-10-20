@@ -60,20 +60,23 @@ namespace CSE
 			SDL_FreeSurface(m_WindowSurface);
 			m_WindowSurface = nullptr;
 		}
-		CSE_CORE_LOG("Window", m_Prefs.title, " surface memory freed.");
+		CSE_CORE_LOG("Window \"", m_Prefs.title, "\" surface memory freed.");
 		
 		// destroy renderer and the window
 		if (m_Renderer != nullptr){
+			// CSE_CORE_LOG("Window", m_Prefs.title, " renderer is to be destroyed.");
 			SDL_DestroyRenderer(m_Renderer);
 			m_Renderer = nullptr;
+		} else {
+			// CSE_CORE_LOG("Window", m_Prefs.title, " renderer is null somehow.");
 		}
-		CSE_CORE_LOG("Window", m_Prefs.title, " renderer destroyed.");
+		CSE_CORE_LOG("Window \"", m_Prefs.title, "\" renderer destroyed.");
 		
 		if (m_NativeWindow != nullptr){
 			SDL_DestroyWindow(m_NativeWindow);
 			m_NativeWindow = nullptr;
 		}
-		CSE_CORE_LOG("Window", m_Prefs.title, " destroyed.");
+		CSE_CORE_LOG("Window \"", m_Prefs.title, "\" destroyed.");
 	}
 	
 	void Window::SetTitle(const std::string& title)
@@ -109,5 +112,35 @@ namespace CSE
 	bool Window::DetachLayer(Ref<Layer> layer)
 	{
 		return m_LayerStack.Detach(layer);
+	}
+	
+	//
+	// ================= WindowStack =================
+	WindowStack::WindowStack()
+	{
+	}
+	
+	WindowStack::~WindowStack()
+	{
+	}
+	
+	void WindowStack::Push(Window* window)
+	{
+		m_Windows.emplace(m_Windows.begin() + m_WindowInsertIndex, window);
+		m_WindowInsertIndex++;
+	}
+	
+	void WindowStack::Pop(Window* window)
+	{
+		auto it = std::find(m_Windows.begin(), m_Windows.end(), window);
+		if (it != m_Windows.end())
+		{
+			m_Windows.erase(it);
+			if (window != nullptr)
+			{
+				delete window;
+			}
+			m_WindowInsertIndex--;
+		}
 	}
 }

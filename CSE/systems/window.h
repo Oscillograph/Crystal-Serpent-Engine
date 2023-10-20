@@ -65,6 +65,9 @@ namespace CSE
 		bool AttachLayer(Ref<Layer> layer);
 		bool DetachLayer(Ref<Layer> layer);
 	
+		bool IsFocused() { return m_Focused; }
+		void SetFocus(bool focus) { m_Focused = focus; }
+		
 	private:
 		WindowPrefs m_Prefs;
 		WindowScale m_Scale;
@@ -76,6 +79,27 @@ namespace CSE
 		SDL_Surface* m_WindowSurface = nullptr; // the window surface
 		
 		LayerStack m_LayerStack;
+		
+		bool m_Focused = false;
+	};
+	
+	class WindowStack
+	{
+	public:
+		WindowStack();
+		~WindowStack();
+		
+		void Push(Window* window);
+		void Pop(Window* window);
+		
+		inline const std::vector<Window*>& GetContents() const { return m_Windows; }
+		
+		std::vector<Window*>::iterator begin() { return m_Windows.begin(); }
+		std::vector<Window*>::iterator end()   { return m_Windows.end();   }
+		
+	protected:
+		std::vector<Window*> m_Windows;
+		uint32_t m_WindowInsertIndex = 0;
 	};
 }
 

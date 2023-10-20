@@ -12,7 +12,7 @@ public:
 	
 	bool OnEvent(SDL_Event* event)
 	{
-		CSE_LOG("Layer ", GetName(), " stopped event: ", event->type);
+		// CSE_LOG("Layer ", GetName(), " stopped event: ", event->type);
 		return true;
 	}
 };
@@ -28,7 +28,7 @@ public:
 	
 	bool OnEvent(SDL_Event* event)
 	{
-		CSE_LOG("Layer ", GetName(), " stopped event: ", event->type);
+		// CSE_LOG("Layer ", GetName(), " stopped event: ", event->type);
 		return true;
 	}
 };
@@ -41,8 +41,18 @@ public:
 	{
 		CSE::Ref<CSE::Layer> layer1(new Layer1());
 		CSE::Ref<CSE::Layer> layer2(new Layer2());
-		AttachLayer(m_Window, layer1);
-		AttachLayer(m_Window, layer2);
+		
+		m_WindowStack.Push(new CSE::Window({"CSE: Тест", 100, 100, 320, 240}));
+		m_WindowStack.Push(new CSE::Window({"CSE: Второе окно", 400, 100, 320, 240}));
+		CSE_LOG("Total windows in App's WindowStack: ", m_WindowStack.GetContents().size());
+		
+		for (CSE::Window* window : m_WindowStack)
+		{
+			AttachLayer(window, layer1);
+			CSE_LOG("Layer ", layer1.get()->GetName(), " attached to window #", window->GetNativeWindowID());
+			AttachLayer(window, layer2);
+			CSE_LOG("Layer ", layer2.get()->GetName(), " attached to window #", window->GetNativeWindowID());
+		}
 		
 		// m_Window2 = new CSE::Window({"CSE: Второе окно", 400, 100, 320, 240});
 		// AttachLayer(m_Window2, layer1);
