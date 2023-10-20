@@ -240,6 +240,7 @@ int main (int argv, char** argc)
 	app->Run();
 	delete app;
 	CSE_LOG("App destroyed.");
+	CSE_CORE_LOG("Engine offline.");
 	
 	return 0;
 }
