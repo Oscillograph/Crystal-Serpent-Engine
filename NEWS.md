@@ -2,7 +2,10 @@
 Changelog:
 + Moved LayerStack to the Window class so that each window can have its own pack of layers;
 + Changed Layer pointers to shared pointers across application, window and layer files;
-+ Support for multiple windows; 
++ Support for multiple windows;
++ Added Scenes abstraction;
++ Added Entities;
++ Added Components;
 
 ## 0.2.2 ##
 Changelog:

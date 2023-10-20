@@ -2,6 +2,13 @@
 # CRYSTAL SERPENT ENGINE #
 Crystal Serpent Engine is aimed to be a game engine based on SDL.
 
+## Features ##
++ Multiple windows support
++ 2D graphics SDL-based renderer
++ Architecture (Engine core and utils -> Application -> Window -> Layer -> Scene -> ECS)
++ Command line logger with colors
+
+## Usage ##
 The engine is designed to be used through a header file. The common way to use it looks like this:
 1. Include "./cse.h"
 2. Set up layers:
@@ -24,7 +31,12 @@ public:
 	App(const CSE::WindowPrefs& prefs)
 		: CSE::Application(prefs) 
 	{
-		AttachLayer(new Layer1());
+		// Create a window
+		m_WindowStack.Push(new CSE::Window({"CSE: Тест", 100, 100, 320, 240}));
+		
+		// Attach a layer to the window
+		AttachLayer(m_WindowStack.GetContents()[0], new Layer1());
+		
 		LimitFPS(CSE_FPS60);
 	};
 	~App() {};
