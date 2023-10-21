@@ -39,6 +39,7 @@ public:
 	App(const CSE::WindowPrefs& prefs)
 	: CSE::Application(prefs) 
 	{
+		CSE_LOG("App constructor");
 		CSE::Ref<CSE::Layer> layer1(new Layer1());
 		CSE::Ref<CSE::Layer> layer2(new Layer2());
 		

@@ -67,8 +67,8 @@ namespace CSE
 		}
 		CSE_CORE_LOG("SDL_mixer online.");
 		
-		m_EventListener = new SDL_Event;
-		CSE_CORE_LOG("SDL events listener online.");
+		// m_EventListener = new SDL_Event;
+		// CSE_CORE_LOG("SDL events listener online.");
 		
 		/*
 		int index = SDL_GetNumRenderDrivers();
@@ -131,5 +131,7 @@ namespace CSE
 		CSE_CORE_LOG("SDL_image offline.");
 		SDL_Quit();
 		CSE_CORE_LOG("SDL offline.");
+		
+		return 0;
 	}
 }

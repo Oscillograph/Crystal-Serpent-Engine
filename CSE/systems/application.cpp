@@ -47,7 +47,7 @@ namespace CSE
 	int Application::Init()
 	{
 		CSE_CORE_ASSERT((m_ApplicationInstance == nullptr), "This application already exists!");
-		Platform::InitDefault();
+		return Platform::InitDefault();
 	}
 	
 	void Application::LimitFPS(float fps)
