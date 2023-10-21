@@ -3,6 +3,7 @@
 
 #include <CSE/common.h> // general headers
 
+#include <CSE/constants.h> // enums and other constants
 #include <CSE/utils/utils.h> // miscelaneous
 
 #endif

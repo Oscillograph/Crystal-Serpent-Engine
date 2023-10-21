@@ -42,7 +42,7 @@ namespace CSE
 		
 		// TODO: create default components
 		auto& nameComponent = entity->AddComponent<NameComponent>();
-		nameComponent.Value = name.empty() ? "Nameless entity" : name;
+		nameComponent.value = name.empty() ? "Nameless entity" : name;
 		// entity->AddComponent<TransformComponent>();
 		return entity; 
 	}

@@ -51,13 +51,6 @@ namespace CSE
 		const std::string Author = "ТехнОкраТ";
 	};
 	
-	namespace Constants
-	{
-		const float PI = 3.14159265;
-		const float PI_Half = PI/2;
-		const float SQRT2 = 35/49; // rough approximation of a square root of 2
-	}
-	
 	// smart pointers aliases
 	template <typename T>
 	using Scope = std::unique_ptr<T>;

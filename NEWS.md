@@ -3,9 +3,9 @@ Changelog:
 + Moved LayerStack to the Window class so that each window can have its own pack of layers;
 + Changed Layer pointers to shared pointers across application, window and layer files;
 + Support for multiple windows;
-+ Added Scenes abstraction;
-+ Added Entities;
-+ Added Components;
++ Added Scenes abstraction which works with Entities, Components and entities registry by EnTT library;
++ Added header constants.h to CSE folder to hoard all enums and predefined variables;
++ Expanded Components with code from SDLCSE v0.1.1-2 to support sprites, animations and controls;
 
 ## 0.2.2 ##
 Changelog:

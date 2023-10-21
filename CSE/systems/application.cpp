@@ -73,11 +73,11 @@ namespace CSE
 		m_TimeThisFrame = 0;
 		
 		CSE_CORE_LOG("Entering the main loop.");
+		SDL_Event event; // for events
 		while (m_Running){
 			// 0. Start collecting debug information
 			// 1. Input management system
 			// 2. Events system
-			SDL_Event event;
 			while (SDL_PollEvent(&event))
 			{
 				if (event.type == SDL_QUIT)
