@@ -121,15 +121,16 @@ namespace CSE
 			loop = false;
 		}
 		
-		AnimationFrames(SDL_Point beginPoint, SDL_Point endPoint, int w, int h, float fps, bool loopIt)
+		AnimationFrames(SDL_Point beginPoint, SDL_Point endPoint, int frameWidth, int frameHeight, float fps, bool loopIt)
 		{
 			begin = beginPoint;
 			end = endPoint;
-			width = w;
-			height = h;
-			framesTotal = (int)round(std::abs((endPoint.x - beginPoint.x) / w));
+			width = frameWidth;
+			height = frameHeight;
+			framesTotal = (int)round(std::abs((endPoint.x - beginPoint.x) / frameWidth));
 			
-			if (framesTotal == 0){
+			if (framesTotal == 0)
+			{
 				framesTotal = 1;
 			}
 			framesPerSecond = fps;
@@ -157,7 +158,8 @@ namespace CSE
 			timeBefore = SDL_GetTicks64();
 			framesTotal = 0;
 			
-			for (int i = EntityStates::BEGIN+1; i < EntityStates::TOTAL; i++){
+			for (int i = EntityStates::BEGIN+1; i < EntityStates::TOTAL; i++)
+			{
 				frames[i] = NULL;
 			}
 		}
@@ -214,7 +216,8 @@ namespace CSE
 		
 		void Change(int state, AnimationFrames* animFrames)
 		{
-			if (frames[state] != NULL){
+			if (frames[state] != NULL)
+			{
 				delete frames[state];
 			}
 			Add(state, animFrames);

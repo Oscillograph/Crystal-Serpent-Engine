@@ -16,12 +16,18 @@ namespace CSE
 	public:
 		static int InitDefault();
 		static int Init(uint32_t platformFlags, uint32_t rendererFlags, uint32_t winFlags, uint32_t imgFlags);
-		static SDL_Renderer* InitRenderer(SDL_Window* window);
+		static int Shutdown();
+		
+		// Windowing
 		static SDL_Window* CreateWindow(const char* title, int x, int y, int width, int height, uint32_t winFlags);
-		static SDL_Surface* GetWindowSurface(SDL_Window* window);
+		
+		// Events
 		// inline static SDL_Event* GetEventListener() { return m_EventListener; }
 		inline static SDL_Event* GetEventListener() { return new SDL_Event; }
-		static int Shutdown();
+		
+		// Renderer
+		static SDL_Renderer* InitRenderer(SDL_Window* window);
+		static SDL_Surface* GetWindowSurface(SDL_Window* window);
 		
 	private:
 		static uint32_t m_PlatformFlags;

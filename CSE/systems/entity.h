@@ -27,25 +27,29 @@ namespace CSE
 		inline Scene* GetScene(){ return m_Scene; };
 		
 		template <typename T, typename... Args>
-		T& AddComponent(Args&&... args){
+		T& AddComponent(Args&&... args)
+		{
 			CSE_CORE_ASSERT(!HasComponent<T>(), "Entity # already has the component.");
 			return m_Scene->GetRegistry().emplace<T>(this->m_EntityID, std::forward<Args>(args)...);
 		}
 		
 		template <typename T>
-		T& GetComponent(){
+		T& GetComponent()
+		{
 			// BSE_ASSERT(HasComponent<T>(), "Entity doesn't have the component.");
 			return m_Scene->GetRegistry().get<T>(this->m_EntityID);
 		}
 		
 		template <typename T>
-		bool HasComponent(){
+		bool HasComponent()
+		{
 			return m_Scene->GetRegistry().all_of<T>(this->m_EntityID);
 		}
 		
 		template <typename T>
-		void RemoveComponent(){
-			// BSE_ASSERT(HasComponent<T>(), "Entity doesn't have the component.");
+		void RemoveComponent()
+		{
+			CSE_CORE_ASSERT(HasComponent<T>(), "Entity doesn't have the component.");
 			return m_Scene->GetRegistry().erase<T>(this->m_EntityID);
 		}
 		

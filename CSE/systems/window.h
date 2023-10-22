@@ -81,6 +81,8 @@ namespace CSE
 		LayerStack m_LayerStack;
 		
 		bool m_Focused = false;
+		
+		char m_NewTitle[512];
 	};
 	
 	class WindowStack

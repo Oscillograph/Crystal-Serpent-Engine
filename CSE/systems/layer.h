@@ -6,6 +6,8 @@
 
 namespace CSE
 {
+	class Window; // forward declaration so that a layer can store which window it belongs to.
+	
 	// Every window is associated with its own layers stack.
 	// Every layer represents an abstraction capable of receiving and processing events.
 	// Layers are organized so they can pass events down the stack.
@@ -30,14 +32,19 @@ namespace CSE
 		virtual void End();
 		
 		// maintenance
+		inline std::string GetName() { return m_Name; }
+		
 		inline bool IsEnabled() { return m_Enabled; }
 		inline void Enable() { m_Enabled = true; }
 		inline void Disable() { m_Enabled = false; }
-		inline std::string GetName() { return m_Name; }
+		
+		inline void SetWindow(Window* window) { m_Window = window; }
+		inline Window* GetWindow() { return m_Window; }
 		
 	protected:
 		std::string m_Name;
 		bool m_Enabled;
+		Window* m_Window;
 	};
 	
 	class LayerStack

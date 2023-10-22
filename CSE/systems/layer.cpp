@@ -44,7 +44,7 @@ namespace CSE
 	}
 	
 	Layer::~Layer(){
-		
+		m_Window = nullptr;
 	}
 	
 	bool Layer::OnAttach(){

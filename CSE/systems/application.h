@@ -12,6 +12,9 @@
 #include <CSE/systems/layer.h>
 #include <CSE/systems/scene.h>
 
+#include <CSE/systems/entity.h>
+#include <CSE/systems/components.h>
+
 namespace CSE
 {
 	// Main CSE application which can have windows

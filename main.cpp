@@ -8,13 +8,39 @@ public:
 	: CSE::Layer("Game")
 	{};
 	
-	~Layer1() {};
+	~Layer1() 
+	{
+		if (scene != nullptr)
+			delete scene;
+		scene = nullptr;
+		if (sprite != nullptr)
+			delete sprite;
+		sprite = nullptr;
+		if (ball != nullptr)
+			delete ball;
+		ball = nullptr;
+	};
+	
+	bool OnAttach()
+	{
+		scene = new CSE::Scene();
+		scene->OnLoaded(this);
+		sprite = new CSE::Texture("./App/Sprites.png", GetWindow()->GetRenderer());
+		ball = scene->CreateEntity("Ball");
+		ball->AddComponent<CSE::AnimationComponent>();
+		
+		return true;
+	}
 	
 	bool OnEvent(SDL_Event* event)
 	{
 		// CSE_LOG("Layer ", GetName(), " stopped event: ", event->type);
 		return true; // "true" means that event doesn't move further 
 	}
+	
+	CSE::Scene* scene = nullptr;
+	CSE::Texture* sprite = nullptr;
+	CSE::Entity* ball = nullptr;
 };
 
 class Layer2 : public CSE::Layer

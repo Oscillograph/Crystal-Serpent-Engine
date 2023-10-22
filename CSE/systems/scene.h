@@ -10,7 +10,8 @@ namespace CSE
 	class Layer;
 	class Entity;
 	
-	// Scene is meant to be loaded onto a layer
+	// Scene is meant to be loaded onto a layer.
+	// Only one scene per layer!
 	class Scene {
 	public:
 		Scene();

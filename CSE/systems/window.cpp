@@ -98,9 +98,8 @@ namespace CSE
 		// newTitle << GetBaseTitle() << " - FPS: " << fpsCount;
 		// SetTitle(newTitle.str());
 		
-		char newTitle[512];
-		sprintf(newTitle, "%s - FPS: %d", m_Prefs.title.c_str(), fpsCount);
-		std::string fpsString(newTitle);
+		sprintf(m_NewTitle, "%s - FPS: %d", m_Prefs.title.c_str(), fpsCount);
+		std::string fpsString(m_NewTitle);
 		SetTitle(fpsString);
 	}
 	

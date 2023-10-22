@@ -36,11 +36,13 @@ namespace CSE
 	
 	bool Application::AttachLayer(Window* window, Ref<Layer> layer)
 	{
+		layer->SetWindow(window);
 		return window->AttachLayer(layer);
 	}
 	
 	bool Application::DetachLayer(Window* window, Ref<Layer> layer)
 	{
+		layer->SetWindow(nullptr);
 		return window->DetachLayer(layer);
 	}
 	
@@ -67,6 +69,13 @@ namespace CSE
 		}
 		
 		broscillograph = new Texture("./CSE/assets/CSE_logo.png", (m_WindowStack.GetContents())[0]->GetRenderer());
+		SDL_FRect stretchBro = {
+			0,
+			0,
+			0,
+			0
+		};
+		SDL_Rect srcRect = {0, 0, 80, 30};
 		
 		CSE_CORE_LOG("Starting FPS timer.");
 		m_TimeLastFrame = 0;
@@ -183,15 +192,9 @@ namespace CSE
 					}
 					Renderer::ClearScreen();
 					
-					SDL_FRect stretchBro = {
-						0, 
-						0, 
-						window->GetPrefs().width, 
-						window->GetPrefs().height
-					};
-					
-					SDL_Rect srcRect = {0, 0, 80, 30};
-					
+					stretchBro.w = window->GetPrefs().width;
+					stretchBro.h = window->GetPrefs().height;
+
 					Renderer::DrawTexture(
 						broscillograph->GetTexture(), 
 						&stretchBro, 
