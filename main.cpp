@@ -24,12 +24,19 @@ public:
 	bool OnAttach()
 	{
 		scene = new CSE::Scene();
-		scene->OnLoaded(this);
+		LoadScene(scene);
 		sprite = new CSE::Texture("./App/Sprites.png", GetWindow()->GetRenderer());
 		ball = scene->CreateEntity("Ball");
-		ball->AddComponent<CSE::AnimationComponent>();
+		CSE::SpriteComponent& sprite = ball->AddComponent<CSE::SpriteComponent>(sprite);
+		CSE::AnimationComponent& animation = ball->AddComponent<CSE::AnimationComponent>();
+		animation.
 		
 		return true;
+	}
+	
+	bool OnDetach()
+	{
+		UnloadScene(scene);
 	}
 	
 	bool OnEvent(SDL_Event* event)

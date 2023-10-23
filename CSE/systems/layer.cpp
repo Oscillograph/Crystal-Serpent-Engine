@@ -65,6 +65,22 @@ namespace CSE
 		return true;
 	}
 	
+	bool LoadScene(Scene* scene)
+	{
+		m_Scene = scene;
+		m_Scene->SetLayer(this);
+		m_Scene->OnLoaded();
+		return true;
+	}
+	
+	bool UnloadScene(Scene* scene)
+	{
+		scene->SetLayer(nullptr);
+		m_Scene = nullptr;
+		scene->OnUnloaded();
+		return true;
+	}
+	
 	bool Layer::OnDetach(){
 		// CSE_CORE_LOG("Layer ", m_Name, " detached.");
 		return true;

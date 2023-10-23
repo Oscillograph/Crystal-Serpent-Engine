@@ -3,6 +3,7 @@
 
 #include <CSE/core.h>
 #include <CSE/systems/platform.h>
+#include <CSE/systems/scene.h>
 
 namespace CSE
 {
@@ -24,6 +25,8 @@ namespace CSE
 		virtual bool OnDisplay();
 		virtual bool OnEvent(SDL_Event* event); // TODO: My own events wrapper around SDL_Event so that I can store events and decide when to pass them further 
 		virtual bool OnUpdate(float time);
+		virtual bool LoadScene(Scene* scene);
+		virtual bool UnloadScene(Scene* scene);
 		virtual bool OnDetach();
 		
 		// graphic user interface API
@@ -44,7 +47,8 @@ namespace CSE
 	protected:
 		std::string m_Name;
 		bool m_Enabled;
-		Window* m_Window;
+		Window* m_Window = nullptr;
+		Scene* m_Scene = nullptr;
 	};
 	
 	class LayerStack

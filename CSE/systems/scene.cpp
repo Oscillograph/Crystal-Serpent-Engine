@@ -15,13 +15,10 @@ namespace CSE
 	
 	void Scene::OnLoaded(Layer* layer)
 	{
-		m_Layer = layer;
 	}
 	
 	void Scene::OnUnloaded(Layer* layer)
 	{
-		if (m_Layer != nullptr)
-			m_Layer = nullptr;
 	}
 	
 	void Scene::Update(float sceneTime)

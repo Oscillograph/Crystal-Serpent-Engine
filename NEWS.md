@@ -6,6 +6,7 @@ Changelog:
 + Added Scenes abstraction which works with Entities, Components and entities registry by EnTT library;
 + Added header constants.h to CSE folder to hoard all enums and predefined variables;
 + Expanded Components with code from SDLCSE v0.1.1-2 to support sprites, animations and controls;
++ Added Scene load/unload mechanic;
 
 ## 0.2.2 ##
 Changelog:

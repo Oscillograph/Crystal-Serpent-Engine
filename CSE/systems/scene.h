@@ -17,8 +17,11 @@ namespace CSE
 		Scene();
 		virtual ~Scene();
 		
-		virtual void OnLoaded(Layer* layer);
-		virtual void OnUnloaded(Layer* layer);
+		virtual void OnLoaded();
+		virtual void OnUnloaded();
+		
+		inline void SetLayer(Layer* layer) { m_Layer = layer; }
+		inline Layer* GetLayer() { return m_Layer; }
 		
 		// Picks every entity it has and updates their components depending on the system involved.
 		virtual void Update(float sceneTime);
