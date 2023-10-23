@@ -101,8 +101,8 @@ namespace CSE
 				
 				place = 
 				{
-					position.NormalizedToWindow(m_Layer->GetWindow()).x, 
-					position.NormalizedToWindow(m_Layer->GetWindow()).y,
+					position.NormalizedToWindow(m_Layer->GetWindow()).x - frame.w/2, 
+					position.NormalizedToWindow(m_Layer->GetWindow()).y - frame.h/2,
 					frame.w, 
 					frame.h
 				};
@@ -119,10 +119,14 @@ namespace CSE
 				
 				place = 
 				{
-					position.NormalizedToWindow(m_Layer->GetWindow()).x, 
-					position.NormalizedToWindow(m_Layer->GetWindow()).y, 
-					spriteComponent.texture->GetWidth(), 
-					spriteComponent.texture->GetHeight()
+					// position.NormalizedToWindow(m_Layer->GetWindow()).x - spriteComponent.texture->GetWidth()/2,
+					0, 
+					// position.NormalizedToWindow(m_Layer->GetWindow()).y - spriteComponent.texture->GetHeight()/2,
+					0,
+					// spriteComponent.texture->GetWidth(),
+					m_Layer->GetWindow()->GetPrefs().width,
+					// spriteComponent.texture->GetHeight()
+					m_Layer->GetWindow()->GetPrefs().height
 				};
 			}
 

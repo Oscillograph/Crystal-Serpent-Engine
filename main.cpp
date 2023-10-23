@@ -10,6 +10,16 @@ public:
 	
 	~Layer1() 
 	{
+		if (sceneLogo != nullptr)
+			delete sceneLogo;
+		sceneLogo = nullptr;
+		if (spriteLogo != nullptr)
+			delete spriteLogo;
+		spriteLogo = nullptr;
+		if (logo != nullptr)
+			delete logo;
+		logo = nullptr;
+		
 		if (scene != nullptr)
 			delete scene;
 		scene = nullptr;
@@ -23,9 +33,15 @@ public:
 	
 	bool OnAttach()
 	{
+		sceneLogo = new CSE::Scene();
+		logo = sceneLogo->CreateEntity("CSE Logotype");
+		logo->AddComponent<CSE::PositionComponent>(0.5f, 0.5f);
+		spriteLogo = new CSE::Texture("./CSE/assets/CSE_logo.png", GetWindow()->GetRenderer());
+		logo->AddComponent<CSE::SpriteComponent>(spriteLogo);
+		LoadScene(sceneLogo);
+		CSE_LOG("SceneLogo has been created and loaded.");
+
 		scene = new CSE::Scene();
-		LoadScene(scene);
-		
 		// a ball entity on the screen
 		ball = scene->CreateEntity("Ball");
 		CSE::PositionComponent& position = ball->AddComponent<CSE::PositionComponent>(0.5f, 0.5f);
@@ -35,25 +51,26 @@ public:
 		CSE::AnimationComponent& animationComponent = ball->AddComponent<CSE::AnimationComponent>();
 		animationComponent.Add(
 			CSE::EntityStates::IDLE, 
-			// new CSE::AnimationFrames( {80, 0}, {99, 29}, 20, 20, 4.0f, true)
-			new CSE::AnimationFrames( {0, 0}, {79, 19}, 20, 20, 4.0f, true)
+			new CSE::AnimationFrames( {80, 0}, {159, 29}, 20, 29, 4.0f, true)
+			// new CSE::AnimationFrames( {0, 0}, {79, 19}, 20, 20, 4.0f, true)
 			);
 		animationComponent.Set(CSE::EntityStates::IDLE);
 		animationComponent.Start();
-		
+		// LoadScene(scene);
+
 		return true;
 	}
 	
 	bool OnDisplay()
 	{
-		scene->Update(CSE::Platform::GetTimeMs());
+		m_Scene->Update(CSE::Platform::GetTimeMs());
 		
 		return true;
 	}
 	
 	bool OnDetach()
 	{
-		UnloadScene(scene);
+		UnloadScene(m_Scene);
 		
 		return true;
 	}
@@ -61,8 +78,30 @@ public:
 	bool OnEvent(SDL_Event* event)
 	{
 		// CSE_LOG("Layer ", GetName(), " stopped event: ", event->type);
+		if (event->type == SDL_KEYDOWN)
+		{
+			if (event->key.keysym.scancode == SDL_SCANCODE_SPACE)
+			{
+				if ((m_Scene == sceneLogo) && (sceneLogo != nullptr))
+				{
+					UnloadScene(sceneLogo);
+					LoadScene(scene);
+				} else {
+					if ((m_Scene == scene) && (scene != nullptr))
+					{
+						UnloadScene(scene);
+						LoadScene(sceneLogo);
+					}
+				}
+			}
+		}
+		
 		return true; // "true" means that event doesn't move further 
 	}
+	
+	CSE::Scene* sceneLogo = nullptr;
+	CSE::Texture* spriteLogo = nullptr;
+	CSE::Entity* logo = nullptr;
 	
 	CSE::Scene* scene = nullptr;
 	CSE::Texture* sprite = nullptr;
@@ -95,7 +134,7 @@ public:
 		CSE::Ref<CSE::Layer> layer1(new Layer1());
 		CSE::Ref<CSE::Layer> layer2(new Layer2());
 		
-		GetWindows().Push(new CSE::Window({"CSE: Тест", 100, 100, 320, 240}));
+		GetWindows().Push(new CSE::Window(prefs));
 		// m_WindowStack.Push(new CSE::Window({"CSE: Второе окно", 400, 100, 320, 240}));
 		CSE_LOG("Total windows in App's WindowStack: ", GetWindows().Size());
 		
@@ -117,4 +156,5 @@ public:
 CSE::Application* CSE::CreateApplication()
 {
 	return new App({"CSE: Тест", 100, 100, 320, 240});
+	// return new App();
 }

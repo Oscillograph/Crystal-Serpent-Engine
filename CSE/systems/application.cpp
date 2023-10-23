@@ -184,7 +184,7 @@ namespace CSE
 				
 				for (Window* window : m_WindowStack)
 				{
-					window->ShowFPSInTitle(fpsCount);
+					// window->ShowFPSInTitle(fpsCount);
 					
 					if (window->GetRenderer() != Renderer::GetActiveRenderer())
 					{
@@ -197,7 +197,10 @@ namespace CSE
 					{
 						if (layer->IsEnabled())
 						{
-							layer->OnDisplay();
+							if (layer->HasScene())
+							{
+								layer->OnDisplay();
+							}
 						}
 					}
 					
