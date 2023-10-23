@@ -3,6 +3,8 @@
 
 #include <CSE/core.h>
 
+#include <CSE/systems/platform.h>
+
 #include <CSE/vendor/entt/entt.hpp>
 
 namespace CSE
@@ -24,7 +26,9 @@ namespace CSE
 		inline Layer* GetLayer() { return m_Layer; }
 		
 		// Picks every entity it has and updates their components depending on the system involved.
-		virtual void Update(float sceneTime);
+		virtual void Update(TimeType sceneTime);
+		void Animate(TimeType sceneTime); // updates AnimationComponent
+		void Draw(); // draw anything with SpriteComponent
 		
 		Entity* CreateEntity(const std::string& name = "");
 		Entity* CreateEntityWithUUID(const std::string& name = "", uint64_t uuid = 0);

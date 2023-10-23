@@ -8,6 +8,7 @@ Changelog:
 + Expanded Components with code from SDLCSE v0.1.1-2 to support sprites, animations and controls;
 + Added Scene load/unload mechanic;
 + Added layers display mechanism (and tested with AnimationComponent);
++ Scenes Update routine automates work with animations and draw calls.
 
 ## 0.2.2 ##
 Changelog:

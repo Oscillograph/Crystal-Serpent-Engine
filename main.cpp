@@ -28,7 +28,9 @@ public:
 		
 		// a ball entity on the screen
 		ball = scene->CreateEntity("Ball");
-		sprite = new CSE::Texture("./App/Sprites.png", GetWindow()->GetRenderer());
+		CSE::PositionComponent& position = ball->AddComponent<CSE::PositionComponent>(0.5f, 0.5f);
+		
+		sprite = new CSE::Texture("./App/Sprites.png", GetWindow()->GetRenderer(), {0, 0, 0});
 		CSE::SpriteComponent& spriteComponent = ball->AddComponent<CSE::SpriteComponent>(sprite);
 		CSE::AnimationComponent& animationComponent = ball->AddComponent<CSE::AnimationComponent>();
 		animationComponent.Add(
@@ -44,45 +46,7 @@ public:
 	
 	bool OnDisplay()
 	{
-		CSE::AnimationComponent& animationComponent = ball->GetComponent<CSE::AnimationComponent>();
-		auto* frameset = animationComponent.frames[animationComponent.currentAnimation];
-		
-		if (!animationComponent.paused)
-		{
-			uint64_t timeTemp = CSE::Platform::GetTimeMs();
-			if ((timeTemp - animationComponent.timeBefore) >= frameset->timeBetweenFrames)
-			{
-				animationComponent.timeBefore = timeTemp;
-				animationComponent.currentFrame++;
-				if (animationComponent.currentFrame == animationComponent.framesTotal){
-					if (frameset->loop)
-					{
-						animationComponent.currentFrame = 0;
-					} else {
-						animationComponent.currentFrame--;
-						animationComponent.paused = true;
-					}
-				}
-			}
-		}
-		
-		SDL_Rect frame = 
-		{
-			frameset->begin.x + (frameset->width * animationComponent.currentFrame),
-			frameset->begin.y,
-			std::abs(frameset->width),
-			std::abs(frameset->height)
-		};
-		
-		SDL_FRect place = {50, 50, frame.w, frame.h};
-		
-		CSE::Renderer::DrawTexture(
-			sprite->GetTexture(),
-			&place,
-			&frame,
-			m_Window->GetScale().x,
-			m_Window->GetScale().y
-			);
+		scene->Update(CSE::Platform::GetTimeMs());
 		
 		return true;
 	}

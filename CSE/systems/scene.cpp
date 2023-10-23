@@ -2,6 +2,10 @@
 #include <CSE/systems/entity.h>
 #include <CSE/systems/components.h>
 
+#include <CSE/systems/renderer.h>
+#include <CSE/systems/window.h>
+#include <CSE/systems/layer.h>
+
 namespace CSE
 {
 	Scene::Scene()
@@ -21,9 +25,15 @@ namespace CSE
 	{
 	}
 	
-	void Scene::Update(float sceneTime)
+	void Scene::Update(TimeType sceneTime)
 	{
 		// TODO: Scene Update mechanism
+		Animate(sceneTime);
+		// CSE_CORE_LOG("Animations updated");
+		Draw();
+		// CSE_CORE_LOG("Draws updated");
+		// CSE_CORE_LOG("Scene in ", this->m_Layer->GetName(), " has ", m_Registry.size(), " entities.");
+		
 		/*
 		m_Registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc){
 			if (!nsc.Instance){
@@ -34,6 +44,96 @@ namespace CSE
 			nsc.Instance->OnUpdate(sceneTime);
 		});
 		*/
+	}
+	
+	void Scene::Animate(TimeType sceneTime)
+	{
+		m_Registry.view<AnimationComponent>().each([=](auto entity, auto& animationComponent){
+			auto* frameset = animationComponent.frames[animationComponent.currentAnimation];
+			
+			if (!animationComponent.paused)
+			{
+				uint64_t timeTemp = sceneTime;
+				if ((timeTemp - animationComponent.timeBefore) >= frameset->timeBetweenFrames)
+				{
+					animationComponent.timeBefore = timeTemp;
+					animationComponent.currentFrame++;
+					if (animationComponent.currentFrame == animationComponent.framesTotal){
+						if (frameset->loop)
+						{
+							animationComponent.currentFrame = 0;
+						} else {
+							animationComponent.currentFrame--;
+							animationComponent.paused = true;
+						}
+					}
+				}
+			}
+		});
+	}
+	
+	void Scene::Draw()
+	{
+		for (auto entity : m_Registry.view<SpriteComponent>())
+		{
+			Entity e = Entity(entity, this);
+			PositionComponent& position = e.GetComponent<PositionComponent>();
+			SpriteComponent& spriteComponent = e.GetComponent<SpriteComponent>();
+			
+			SDL_FRect place; // where to draw
+			SDL_Rect frame; // what to draw from a spritesheet
+			
+			place = {50, 50, 79, 29};
+			frame = {0, 0, 79, 29};
+			
+			if (e.HasComponent<AnimationComponent>())
+			{
+				AnimationComponent& animationComponent = e.GetComponent<AnimationComponent>();
+				AnimationFrames* frameset = animationComponent.frames[animationComponent.currentAnimation];
+				
+				frame = 
+				{
+					frameset->begin.x + (frameset->width * animationComponent.currentFrame),
+					frameset->begin.y,
+					std::abs(frameset->width),
+					std::abs(frameset->height)
+				};
+				
+				place = 
+				{
+					position.NormalizedToWindow(m_Layer->GetWindow()).x, 
+					position.NormalizedToWindow(m_Layer->GetWindow()).y,
+					frame.w, 
+					frame.h
+				};
+				
+				// CSE_CORE_LOG("Place: { ", place.x, ", ", place.y, ", ", place.w, ", ", place.h, " }");
+			} else {
+				frame = 
+				{
+					0, 
+					0, 
+					spriteComponent.texture->GetWidth(), 
+					spriteComponent.texture->GetHeight() 
+				};
+				
+				place = 
+				{
+					position.NormalizedToWindow(m_Layer->GetWindow()).x, 
+					position.NormalizedToWindow(m_Layer->GetWindow()).y, 
+					spriteComponent.texture->GetWidth(), 
+					spriteComponent.texture->GetHeight()
+				};
+			}
+
+			CSE::Renderer::DrawTexture(
+				spriteComponent.texture->GetTexture(),
+				&place,
+				&frame,
+				m_Layer->GetWindow()->GetScale().x,
+				m_Layer->GetWindow()->GetScale().y
+				);
+		}
 	}
 	
 	Entity* Scene::CreateEntity(const std::string& name)

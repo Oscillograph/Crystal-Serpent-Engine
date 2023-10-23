@@ -10,6 +10,8 @@
 
 namespace CSE
 {
+	typedef uint64_t TimeType;
+	
 	// SDL_Renderer* Renderer::Create(int rendererFlags){}
 	class Platform
 	{
