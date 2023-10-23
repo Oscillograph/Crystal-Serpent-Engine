@@ -7,6 +7,7 @@ Changelog:
 + Added header constants.h to CSE folder to hoard all enums and predefined variables;
 + Expanded Components with code from SDLCSE v0.1.1-2 to support sprites, animations and controls;
 + Added Scene load/unload mechanic;
++ Added layers display mechanism (and tested with AnimationComponent);
 
 ## 0.2.2 ##
 Changelog:
