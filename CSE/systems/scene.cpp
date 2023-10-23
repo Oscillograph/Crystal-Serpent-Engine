@@ -13,11 +13,11 @@ namespace CSE
 		m_Layer = nullptr;
 	}
 	
-	void Scene::OnLoaded(Layer* layer)
+	void Scene::OnLoaded()
 	{
 	}
 	
-	void Scene::OnUnloaded(Layer* layer)
+	void Scene::OnUnloaded()
 	{
 	}
 	

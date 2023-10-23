@@ -29,7 +29,7 @@ public:
 		ball = scene->CreateEntity("Ball");
 		CSE::SpriteComponent& sprite = ball->AddComponent<CSE::SpriteComponent>(sprite);
 		CSE::AnimationComponent& animation = ball->AddComponent<CSE::AnimationComponent>();
-		animation.
+		// animation.
 		
 		return true;
 	}
@@ -37,6 +37,8 @@ public:
 	bool OnDetach()
 	{
 		UnloadScene(scene);
+		
+		return true;
 	}
 	
 	bool OnEvent(SDL_Event* event)

@@ -65,7 +65,7 @@ namespace CSE
 		return true;
 	}
 	
-	bool LoadScene(Scene* scene)
+	bool Layer::LoadScene(Scene* scene)
 	{
 		m_Scene = scene;
 		m_Scene->SetLayer(this);
@@ -73,7 +73,7 @@ namespace CSE
 		return true;
 	}
 	
-	bool UnloadScene(Scene* scene)
+	bool Layer::UnloadScene(Scene* scene)
 	{
 		scene->SetLayer(nullptr);
 		m_Scene = nullptr;
