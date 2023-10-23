@@ -146,7 +146,7 @@ namespace CSE
 		std::map<int, AnimationFrames*> frames; // [ANIM_CODE] = {};
 		int currentAnimation;
 		int currentFrame;
-		int timeBefore; // last time this component was checked
+		uint64_t timeBefore; // last time this component was checked
 		int framesTotal;
 		bool paused;
 		
@@ -155,12 +155,12 @@ namespace CSE
 			paused = true;
 			currentAnimation = EntityStates::IDLE;
 			currentFrame = 0;
-			timeBefore = SDL_GetTicks64();
+			timeBefore = Platform::GetTimeMs();
 			framesTotal = 0;
 			
 			for (int i = EntityStates::BEGIN+1; i < EntityStates::TOTAL; i++)
 			{
-				frames[i] = NULL;
+				frames[i] = nullptr;
 			}
 		}
 		
@@ -174,6 +174,17 @@ namespace CSE
 			timeBefore = SDL_GetTicks64();
 			framesTotal = 0;
 		};
+		~AnimationComponent()
+		{
+			for (int i = EntityStates::BEGIN+1; i < EntityStates::TOTAL; i++)
+			{
+				if (frames[i] != nullptr)
+				{
+					delete frames[i];
+					frames[i] = nullptr;
+				}
+			}
+		}
 		
 		void Add(int state, AnimationFrames* animFrames)
 		{

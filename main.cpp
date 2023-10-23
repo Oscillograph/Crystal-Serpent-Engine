@@ -25,11 +25,64 @@ public:
 	{
 		scene = new CSE::Scene();
 		LoadScene(scene);
-		sprite = new CSE::Texture("./App/Sprites.png", GetWindow()->GetRenderer());
+		
+		// a ball entity on the screen
 		ball = scene->CreateEntity("Ball");
-		CSE::SpriteComponent& sprite = ball->AddComponent<CSE::SpriteComponent>(sprite);
-		CSE::AnimationComponent& animation = ball->AddComponent<CSE::AnimationComponent>();
-		// animation.
+		sprite = new CSE::Texture("./App/Sprites.png", GetWindow()->GetRenderer());
+		CSE::SpriteComponent& spriteComponent = ball->AddComponent<CSE::SpriteComponent>(sprite);
+		CSE::AnimationComponent& animationComponent = ball->AddComponent<CSE::AnimationComponent>();
+		animationComponent.Add(
+			CSE::EntityStates::IDLE, 
+			// new CSE::AnimationFrames( {80, 0}, {99, 29}, 20, 20, 4.0f, true)
+			new CSE::AnimationFrames( {0, 0}, {79, 19}, 20, 20, 4.0f, true)
+			);
+		animationComponent.Set(CSE::EntityStates::IDLE);
+		animationComponent.Start();
+		
+		return true;
+	}
+	
+	bool OnDisplay()
+	{
+		CSE::AnimationComponent& animationComponent = ball->GetComponent<CSE::AnimationComponent>();
+		auto* frameset = animationComponent.frames[animationComponent.currentAnimation];
+		
+		if (!animationComponent.paused)
+		{
+			uint64_t timeTemp = CSE::Platform::GetTimeMs();
+			if ((timeTemp - animationComponent.timeBefore) >= frameset->timeBetweenFrames)
+			{
+				animationComponent.timeBefore = timeTemp;
+				animationComponent.currentFrame++;
+				if (animationComponent.currentFrame == animationComponent.framesTotal){
+					if (frameset->loop)
+					{
+						animationComponent.currentFrame = 0;
+					} else {
+						animationComponent.currentFrame--;
+						animationComponent.paused = true;
+					}
+				}
+			}
+		}
+		
+		SDL_Rect frame = 
+		{
+			frameset->begin.x + (frameset->width * animationComponent.currentFrame),
+			frameset->begin.y,
+			std::abs(frameset->width),
+			std::abs(frameset->height)
+		};
+		
+		SDL_FRect place = {50, 50, frame.w, frame.h};
+		
+		CSE::Renderer::DrawTexture(
+			sprite->GetTexture(),
+			&place,
+			&frame,
+			m_Window->GetScale().x,
+			m_Window->GetScale().y
+			);
 		
 		return true;
 	}

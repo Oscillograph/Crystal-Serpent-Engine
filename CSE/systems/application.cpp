@@ -192,6 +192,16 @@ namespace CSE
 					}
 					Renderer::ClearScreen();
 					
+					// display every layer
+					for (Ref<Layer> layer : window->GetLayers())
+					{
+						if (layer->IsEnabled())
+						{
+							layer->OnDisplay();
+						}
+					}
+					
+					/*
 					stretchBro.w = window->GetPrefs().width;
 					stretchBro.h = window->GetPrefs().height;
 
@@ -202,6 +212,7 @@ namespace CSE
 						window->GetScale().x, 
 						window->GetScale().y
 						);
+					*/
 					
 					Renderer::Update();
 				}

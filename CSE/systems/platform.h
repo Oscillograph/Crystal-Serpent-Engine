@@ -29,6 +29,9 @@ namespace CSE
 		static SDL_Renderer* InitRenderer(SDL_Window* window);
 		static SDL_Surface* GetWindowSurface(SDL_Window* window);
 		
+		// Utils
+		inline static uint64_t GetTimeMs() { return SDL_GetTicks64(); }
+		
 	private:
 		static uint32_t m_PlatformFlags;
 		static uint32_t m_RendererFlags;
