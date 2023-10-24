@@ -46,6 +46,13 @@ public:
 		ball = scene->CreateEntity("Ball");
 		CSE::PositionComponent& position = ball->AddComponent<CSE::PositionComponent>(0.5f, 0.5f);
 		
+		std::unordered_map<int, SDL_Keycode> ballKBControls = {
+			{CSE::Commands::KBCommand_Left, SDLK_LEFT}, 
+			{CSE::Commands::KBCommand_Right, SDLK_RIGHT}
+		};
+		
+		CSE::KeyBoardComponent& keyboard = ball->AddComponent<CSE::KeyBoardComponent>(ballKBControls);
+		
 		sprite = new CSE::Texture("./App/Sprites.png", GetWindow()->GetRenderer(), {0, 0, 0});
 		CSE::SpriteComponent& spriteComponent = ball->AddComponent<CSE::SpriteComponent>(sprite);
 		CSE::AnimationComponent& animationComponent = ball->AddComponent<CSE::AnimationComponent>();
@@ -80,7 +87,7 @@ public:
 		// CSE_LOG("Layer ", GetName(), " stopped event: ", event->type);
 		if (event->type == SDL_KEYDOWN)
 		{
-			if (event->key.keysym.scancode == SDL_SCANCODE_SPACE)
+			if (event->key.keysym.sym == SDLK_SPACE)
 			{
 				if ((m_Scene == sceneLogo) && (sceneLogo != nullptr))
 				{
@@ -93,6 +100,15 @@ public:
 						LoadScene(sceneLogo);
 					}
 				}
+			}
+			
+			if (ball->GetComponent<CSE::KeyBoardComponent>().controls[CSE::Commands::KBCommand_Left] == event->key.keysym.sym)
+			{
+				ball->GetComponent<CSE::PositionComponent>().x -= 0.05f;
+			}
+			if (ball->GetComponent<CSE::KeyBoardComponent>().controls[CSE::Commands::KBCommand_Right] == event->key.keysym.sym)
+			{
+				ball->GetComponent<CSE::PositionComponent>().x += 0.05f;
 			}
 		}
 		

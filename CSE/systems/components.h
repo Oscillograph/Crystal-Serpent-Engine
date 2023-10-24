@@ -5,6 +5,8 @@
 #include <CSE/systems/platform.h>
 #include <CSE/systems/renderer/texture.h>
 
+#include <initializer_list>
+
 namespace CSE
 {
 	class Window;
@@ -51,7 +53,8 @@ namespace CSE
 	
 	struct KeyBoardComponent {
 		// int stands for command from enum
-		std::unordered_map<int, SDL_Keycode> controls;
+		using ControlsMap = std::unordered_map<int, SDL_Keycode>;
+		ControlsMap controls;
 		
 		KeyBoardComponent();
 		KeyBoardComponent(const KeyBoardComponent&) = default;

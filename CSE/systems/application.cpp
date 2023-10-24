@@ -69,12 +69,7 @@ namespace CSE
 		}
 		
 		broscillograph = new Texture("./CSE/assets/CSE_logo.png", (m_WindowStack.GetContents())[0]->GetRenderer());
-		SDL_FRect stretchBro = {
-			0,
-			0,
-			0,
-			0
-		};
+		SDL_FRect stretchBro = {0, 0, 0, 0};
 		SDL_Rect srcRect = {0, 0, 80, 30};
 		
 		CSE_CORE_LOG("Starting FPS timer.");
