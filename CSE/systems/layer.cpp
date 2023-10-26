@@ -43,25 +43,32 @@ namespace CSE
 		m_Enabled = true;
 	}
 	
-	Layer::~Layer(){
+	Layer::~Layer()
+	{
 		m_Window = nullptr;
 	}
 	
-	bool Layer::OnAttach(){
+	bool Layer::OnAttach()
+	{
 		// CSE_CORE_LOG("Layer ", m_Name, " attached.");
 		return true;
 	}
 	
-	bool Layer::OnDisplay(){
+	bool Layer::OnDisplay()
+	{
+		m_Scene->UpdateGraphics(CSE::Platform::GetTimeMs());
+		
 		return true;
 	}
 	
-	bool Layer::OnEvent(SDL_Event* event){
+	bool Layer::OnEvent(SDL_Event* event)
+	{
 		CSE_CORE_LOG("Layer ", m_Name, " event: ", event->type);
 		return false;
 	}
 	
-	bool Layer::OnUpdate(TimeType time){
+	bool Layer::OnUpdate(TimeType time)
+	{
 		if (m_Scene != nullptr)
 		{
 			m_Scene->OnUpdate(time);
@@ -85,21 +92,23 @@ namespace CSE
 		return true;
 	}
 	
-	bool Layer::OnDetach(){
+	bool Layer::OnDetach()
+	{
 		// CSE_CORE_LOG("Layer ", m_Name, " detached.");
+		UnloadScene(m_Scene);
 		return true;
 	}
 	
-	void Layer::Begin(){
-		
+	void Layer::Begin()
+	{
 	}
 	
-	void Layer::OnGuiRender(float time){
-		
+	void Layer::OnGuiRender(float time)
+	{
 	}
 	
-	void Layer::End(){
-		
+	void Layer::End()
+	{
 	}
 }
 

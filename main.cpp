@@ -1,50 +1,59 @@
 #include "./cse.h"
 
-// Layers of the main (default) window, which is created with the application start.
-class Layer1 : public CSE::Layer
+// Scenes
+class SceneLogo : public CSE::Scene
 {
 public:
-	Layer1()
-	: CSE::Layer("Game")
-	{};
-	
-	~Layer1() 
+	SceneLogo()
+		: CSE::Scene()
 	{
-		if (sceneLogo != nullptr)
-			delete sceneLogo;
-		sceneLogo = nullptr;
-		if (spriteLogo != nullptr)
-			delete spriteLogo;
-		spriteLogo = nullptr;
+	};
+	
+	~SceneLogo()
+	{
+		if (sprite != nullptr)
+			delete sprite;
+		sprite = nullptr;
 		if (logo != nullptr)
 			delete logo;
 		logo = nullptr;
-		
-		if (scene != nullptr)
-			delete scene;
-		scene = nullptr;
+	}
+	
+	void Init(SDL_Renderer* r)
+	{
+		logo = CreateEntity("CSE Logotype");
+		logo->AddComponent<CSE::PositionComponent>(0.5f, 0.5f);
+		sprite = new CSE::Texture("./CSE/assets/CSE_logo.png", r);
+		logo->AddComponent<CSE::SpriteComponent>(sprite);
+	}
+	
+private:
+	CSE::Texture* sprite = nullptr;
+	CSE::Entity* logo = nullptr;
+};
+
+class SceneGame : public CSE::Scene
+{
+public:
+	SceneGame()
+		: CSE::Scene()
+	{
+	};
+	
+	~SceneGame()
+	{
 		if (sprite != nullptr)
 			delete sprite;
 		sprite = nullptr;
 		if (ball != nullptr)
 			delete ball;
 		ball = nullptr;
-	};
+	}
 	
-	bool OnAttach()
+	void Init(SDL_Renderer* r)
 	{
-		sceneLogo = new CSE::Scene();
-		logo = sceneLogo->CreateEntity("CSE Logotype");
-		logo->AddComponent<CSE::PositionComponent>(0.5f, 0.5f);
-		spriteLogo = new CSE::Texture("./CSE/assets/CSE_logo.png", GetWindow()->GetRenderer());
-		logo->AddComponent<CSE::SpriteComponent>(spriteLogo);
-		LoadScene(sceneLogo);
-		CSE_LOG("Scene \"sceneLogo\" has been created and loaded.");
-
-		scene = new CSE::Scene();
-		CSE_LOG("Scene \"scene\" has been created and loaded.");
 		// a ball entity on the screen
-		ball = scene->CreateEntity("Ball");
+		ball = CreateEntity("Ball");
 		CSE::PositionComponent& position = ball->AddComponent<CSE::PositionComponent>(0.5f, 0.5f);
 		
 		std::unordered_map<int, SDL_Keycode> ballKBControls = {
@@ -54,34 +63,27 @@ public:
 		
 		CSE::KeyBoardComponent& keyboard = ball->AddComponent<CSE::KeyBoardComponent>(ballKBControls);
 		
-		sprite = new CSE::Texture("./App/Sprites.png", GetWindow()->GetRenderer(), {0, 0, 0});
+		sprite = new CSE::Texture("./App/Sprites.png", r, {0, 0, 0});
 		CSE::SpriteComponent& spriteComponent = ball->AddComponent<CSE::SpriteComponent>(sprite);
 		CSE::AnimationComponent& animationComponent = ball->AddComponent<CSE::AnimationComponent>();
 		animationComponent.Add(
 			CSE::EntityStates::IDLE, 
 			new CSE::AnimationFrames( {80, 0}, {99, 29}, 20, 29, 4.0f, true)
-			// new CSE::AnimationFrames( {0, 0}, {79, 19}, 20, 20, 4.0f, true)
 			);
 		animationComponent.Add(
 			CSE::EntityStates::WALK1, 
 			new CSE::AnimationFrames( {80, 0}, {159, 29}, 20, 29, 8.0f, true)
-			// new CSE::AnimationFrames( {0, 0}, {79, 19}, 20, 20, 4.0f, true)
 			);
 		animationComponent.Add(
 			CSE::EntityStates::WALK2, 
 			new CSE::AnimationFrames( {260, 0}, {200, 29}, -20, 29, 8.0f, true)
-			// new CSE::AnimationFrames( {0, 0}, {79, 19}, 20, 20, 4.0f, true)
 			);
 		animationComponent.Set(CSE::EntityStates::IDLE);
 		animationComponent.Start();
-		// LoadScene(scene);
-
-		return true;
 	}
 	
-	bool OnDisplay()
+	void OnUpdate(CSE::TimeType timeFrame)
 	{
-		// TODO: Create a scene and move this to OnUpdate(TimeType sceneTime) method
 		if ((CSE::Input::IsButtonPressed(ball->GetComponent<CSE::KeyBoardComponent>().controls[CSE::Commands::KBCommand_Left]))
 			|| (CSE::Input::IsButtonPressed(ball->GetComponent<CSE::KeyBoardComponent>().controls[CSE::Commands::KBCommand_Right])))
 		{
@@ -110,17 +112,43 @@ public:
 				ball->GetComponent<CSE::AnimationComponent>().Start();
 			}
 		}
-		
-		// Update contents
-		m_Scene->UpdateGraphics(CSE::Platform::GetTimeMs());
-		
-		return true;
 	}
 	
-	bool OnDetach()
+private:
+	CSE::Texture* sprite = nullptr;
+	CSE::Entity* ball = nullptr;
+};
+
+// Layers of the main (default) window, which is created with the application start.
+class Layer1 : public CSE::Layer
+{
+public:
+	Layer1()
+	: CSE::Layer("Game")
+	{};
+	
+	~Layer1() 
 	{
-		UnloadScene(m_Scene);
-		
+		if (sceneLogo != nullptr)
+			delete sceneLogo;
+		sceneLogo = nullptr;
+		if (scene != nullptr)
+			delete scene;
+		scene = nullptr;
+	};
+	
+	bool OnAttach()
+	{
+		// TODO: Automated Scene collection to make loading/unloading routine easier 
+		sceneLogo = new SceneLogo();
+		sceneLogo->Init(GetWindow()->GetRenderer());
+		LoadScene(sceneLogo);
+		CSE_LOG("Scene \"sceneLogo\" has been created and loaded.");
+
+		scene = new SceneGame();
+		scene->Init(GetWindow()->GetRenderer());
+		CSE_LOG("Scene \"scene\" has been created and loaded.");
+
 		return true;
 	}
 	
@@ -153,12 +181,7 @@ public:
 	}
 	
 	CSE::Scene* sceneLogo = nullptr;
-	CSE::Texture* spriteLogo = nullptr;
-	CSE::Entity* logo = nullptr;
-	
 	CSE::Scene* scene = nullptr;
-	CSE::Texture* sprite = nullptr;
-	CSE::Entity* ball = nullptr;
 };
 
 class Layer2 : public CSE::Layer

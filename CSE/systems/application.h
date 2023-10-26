@@ -49,6 +49,7 @@ namespace CSE
 		
 	protected:
 		bool m_Running = true;
+		bool m_TaskToDo = false;
 		WindowStack m_WindowStack;
 		
 	protected:

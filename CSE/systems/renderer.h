@@ -9,6 +9,11 @@
 
 namespace CSE
 {
+	// TODO: Draw graphic primitives
+	// TODO: Draw text messages using raster fonts
+	// TODO: Draw text messages using TTF (ex.: FreeType)
+	// TODO: Optimization of draw calls using batch rendering
+	
 	class Renderer
 	{
 	public:

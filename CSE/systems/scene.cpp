@@ -17,6 +17,10 @@ namespace CSE
 		m_Layer = nullptr;
 	}
 	
+	void Scene::Init(SDL_Renderer* r)
+	{
+	}
+	
 	void Scene::OnLoaded()
 	{
 	}

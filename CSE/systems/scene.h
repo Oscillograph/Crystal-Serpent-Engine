@@ -12,6 +12,12 @@ namespace CSE
 	class Layer;
 	class Entity;
 	
+	// TODO: Scene serialization mechanism
+	// TODO: Scene reset mechanism
+	// TODO: Scene store/load/unload content mechanism
+	// TODO: Canban board to implement communication between scenes from different layers
+	// TODO: Special kind of scenes for UI or HUD
+	
 	// Scene is meant to be loaded onto a layer.
 	// Only one scene per layer!
 	class Scene {
@@ -19,6 +25,7 @@ namespace CSE
 		Scene();
 		virtual ~Scene();
 		
+		virtual void Init(SDL_Renderer* r); // should be called after constructor
 		virtual void OnLoaded();
 		virtual void OnUnloaded();
 		virtual void OnUpdate(TimeType sceneTime); // before the update happens
