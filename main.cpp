@@ -47,8 +47,8 @@ public:
 		CSE::PositionComponent& position = ball->AddComponent<CSE::PositionComponent>(0.5f, 0.5f);
 		
 		std::unordered_map<int, SDL_Keycode> ballKBControls = {
-			{CSE::Commands::KBCommand_Left, SDLK_LEFT}, 
-			{CSE::Commands::KBCommand_Right, SDLK_RIGHT}
+			{CSE::Commands::KBCommand_Left, CSE::ScanCode::Left}, 
+			{CSE::Commands::KBCommand_Right, CSE::ScanCode::Right}
 		};
 		
 		CSE::KeyBoardComponent& keyboard = ball->AddComponent<CSE::KeyBoardComponent>(ballKBControls);
@@ -102,11 +102,11 @@ public:
 				}
 			}
 			
-			if (ball->GetComponent<CSE::KeyBoardComponent>().controls[CSE::Commands::KBCommand_Left] == event->key.keysym.sym)
+			if (CSE::Input::IsButtonPressed(ball->GetComponent<CSE::KeyBoardComponent>().controls[CSE::Commands::KBCommand_Left]))
 			{
 				ball->GetComponent<CSE::PositionComponent>().x -= 0.05f;
 			}
-			if (ball->GetComponent<CSE::KeyBoardComponent>().controls[CSE::Commands::KBCommand_Right] == event->key.keysym.sym)
+			if (CSE::Input::IsButtonPressed(ball->GetComponent<CSE::KeyBoardComponent>().controls[CSE::Commands::KBCommand_Right]))
 			{
 				ball->GetComponent<CSE::PositionComponent>().x += 0.05f;
 			}

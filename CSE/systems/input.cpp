@@ -2,7 +2,7 @@
 
 namespace CSE
 {
-	bool IsButtonPressed(int scancode)
+	bool Input::IsButtonPressed(int scancode)
 	{
 		const uint8_t* keyBoardState =  SDL_GetKeyboardState(nullptr);
 		if (keyBoardState[scancode])

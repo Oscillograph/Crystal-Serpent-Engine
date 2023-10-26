@@ -58,7 +58,7 @@ namespace CSE
 		
 		KeyBoardComponent();
 		KeyBoardComponent(const KeyBoardComponent&) = default;
-		KeyBoardComponent(const std::unordered_map<int, SDL_Keycode>& kbControls);
+		KeyBoardComponent(const ControlsMap& kbControls);
 		
 		
 		void Set(int state, SDL_Keycode code);
