@@ -53,6 +53,8 @@ namespace CSE
 	
 	struct KeyBoardComponent {
 		// int stands for command from enum
+		// using funcVoid = std::function<void()>;
+		// using ControlsMap = std::unordered_map<int, SDL_Keycode, funcVoid>;
 		using ControlsMap = std::unordered_map<int, SDL_Keycode>;
 		ControlsMap controls;
 		
@@ -67,7 +69,10 @@ namespace CSE
 	
 	struct MouseComponent {
 		// int stands for command from enum
-		std::unordered_map<int, SDL_Keycode> controls;
+		// using funcVoid = std::function<void()>;
+		// using ControlsMap = std::unordered_map<int, SDL_Keycode, funcVoid>;
+		using ControlsMap = std::unordered_map<int, SDL_Keycode>;
+		ControlsMap controls;
 		
 		MouseComponent();
 		MouseComponent(const MouseComponent&) = default;
@@ -113,6 +118,7 @@ namespace CSE
 		
 		void Add(int state, AnimationFrames* animFrames);
 		void Set(int state);
+		inline int Get() { return currentAnimation; } 
 		void Stop();
 		void Start();
 		void Pause();

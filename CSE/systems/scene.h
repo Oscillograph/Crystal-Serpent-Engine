@@ -21,6 +21,7 @@ namespace CSE
 		
 		virtual void OnLoaded();
 		virtual void OnUnloaded();
+		virtual void OnUpdate(TimeType sceneTime); // before the update happens
 		
 		// TODO: scene start/stop/pause/resume
 		virtual void Start(); // run the scene
@@ -35,7 +36,8 @@ namespace CSE
 		inline Layer* GetLayer() { return m_Layer; }
 		
 		// Picks every entity it has and updates their components depending on the system involved.
-		virtual void Update(TimeType sceneTime);
+		virtual void UpdateGraphics(TimeType sceneTime);
+		// void Input();
 		void Animate(TimeType sceneTime); // updates AnimationComponent
 		void Draw(); // draw anything with SpriteComponent
 		

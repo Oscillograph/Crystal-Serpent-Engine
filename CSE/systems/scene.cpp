@@ -25,6 +25,10 @@ namespace CSE
 	{
 	}
 	
+	void Scene::OnUpdate(TimeType sceneTime)
+	{
+	}
+	
 	void Scene::Start()
 	{
 	}
@@ -41,7 +45,7 @@ namespace CSE
 	{
 	}
 	
-	void Scene::Update(TimeType sceneTime)
+	void Scene::UpdateGraphics(TimeType sceneTime)
 	{
 		// TODO: Scene Update mechanism
 		Animate(sceneTime);

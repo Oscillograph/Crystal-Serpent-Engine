@@ -24,7 +24,7 @@ namespace CSE
 		virtual bool OnAttach();
 		virtual bool OnDisplay();
 		virtual bool OnEvent(SDL_Event* event); // TODO: My own events wrapper around SDL_Event so that I can store events and decide when to pass them further 
-		virtual bool OnUpdate(float time);
+		virtual bool OnUpdate(TimeType time);
 		virtual bool LoadScene(Scene* scene);
 		virtual bool UnloadScene(Scene* scene);
 		virtual bool OnDetach();

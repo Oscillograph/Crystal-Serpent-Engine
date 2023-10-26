@@ -61,7 +61,11 @@ namespace CSE
 		return false;
 	}
 	
-	bool Layer::OnUpdate(float time){
+	bool Layer::OnUpdate(TimeType time){
+		if (m_Scene != nullptr)
+		{
+			m_Scene->OnUpdate(time);
+		}
 		return true;
 	}
 	

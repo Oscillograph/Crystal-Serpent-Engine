@@ -39,9 +39,10 @@ public:
 		spriteLogo = new CSE::Texture("./CSE/assets/CSE_logo.png", GetWindow()->GetRenderer());
 		logo->AddComponent<CSE::SpriteComponent>(spriteLogo);
 		LoadScene(sceneLogo);
-		CSE_LOG("SceneLogo has been created and loaded.");
+		CSE_LOG("Scene \"sceneLogo\" has been created and loaded.");
 
 		scene = new CSE::Scene();
+		CSE_LOG("Scene \"scene\" has been created and loaded.");
 		// a ball entity on the screen
 		ball = scene->CreateEntity("Ball");
 		CSE::PositionComponent& position = ball->AddComponent<CSE::PositionComponent>(0.5f, 0.5f);
@@ -58,7 +59,17 @@ public:
 		CSE::AnimationComponent& animationComponent = ball->AddComponent<CSE::AnimationComponent>();
 		animationComponent.Add(
 			CSE::EntityStates::IDLE, 
-			new CSE::AnimationFrames( {80, 0}, {159, 29}, 20, 29, 4.0f, true)
+			new CSE::AnimationFrames( {80, 0}, {99, 29}, 20, 29, 4.0f, true)
+			// new CSE::AnimationFrames( {0, 0}, {79, 19}, 20, 20, 4.0f, true)
+			);
+		animationComponent.Add(
+			CSE::EntityStates::WALK1, 
+			new CSE::AnimationFrames( {80, 0}, {159, 29}, 20, 29, 8.0f, true)
+			// new CSE::AnimationFrames( {0, 0}, {79, 19}, 20, 20, 4.0f, true)
+			);
+		animationComponent.Add(
+			CSE::EntityStates::WALK2, 
+			new CSE::AnimationFrames( {260, 0}, {200, 29}, -20, 29, 8.0f, true)
 			// new CSE::AnimationFrames( {0, 0}, {79, 19}, 20, 20, 4.0f, true)
 			);
 		animationComponent.Set(CSE::EntityStates::IDLE);
@@ -70,7 +81,38 @@ public:
 	
 	bool OnDisplay()
 	{
-		m_Scene->Update(CSE::Platform::GetTimeMs());
+		// TODO: Create a scene and move this to OnUpdate(TimeType sceneTime) method
+		if ((CSE::Input::IsButtonPressed(ball->GetComponent<CSE::KeyBoardComponent>().controls[CSE::Commands::KBCommand_Left]))
+			|| (CSE::Input::IsButtonPressed(ball->GetComponent<CSE::KeyBoardComponent>().controls[CSE::Commands::KBCommand_Right])))
+		{
+			if (CSE::Input::IsButtonPressed(ball->GetComponent<CSE::KeyBoardComponent>().controls[CSE::Commands::KBCommand_Left]))
+			{
+				if (ball->GetComponent<CSE::AnimationComponent>().Get() != CSE::EntityStates::WALK2)
+				{
+					ball->GetComponent<CSE::AnimationComponent>().Set(CSE::EntityStates::WALK2);
+					ball->GetComponent<CSE::AnimationComponent>().Start();
+				}
+				ball->GetComponent<CSE::PositionComponent>().x -= 0.002f;
+			}
+			if (CSE::Input::IsButtonPressed(ball->GetComponent<CSE::KeyBoardComponent>().controls[CSE::Commands::KBCommand_Right]))
+			{
+				if (ball->GetComponent<CSE::AnimationComponent>().Get() != CSE::EntityStates::WALK1)
+				{
+					ball->GetComponent<CSE::AnimationComponent>().Set(CSE::EntityStates::WALK1);
+					ball->GetComponent<CSE::AnimationComponent>().Start();
+				}
+				ball->GetComponent<CSE::PositionComponent>().x += 0.002f;
+			}
+		} else {
+			if (ball->GetComponent<CSE::AnimationComponent>().Get() != CSE::EntityStates::IDLE)
+			{
+				ball->GetComponent<CSE::AnimationComponent>().Set(CSE::EntityStates::IDLE);
+				ball->GetComponent<CSE::AnimationComponent>().Start();
+			}
+		}
+		
+		// Update contents
+		m_Scene->UpdateGraphics(CSE::Platform::GetTimeMs());
 		
 		return true;
 	}
@@ -92,23 +134,18 @@ public:
 				if ((m_Scene == sceneLogo) && (sceneLogo != nullptr))
 				{
 					UnloadScene(sceneLogo);
+					CSE_LOG("Scene \"sceneLogo\" has been unloaded");
 					LoadScene(scene);
+					CSE_LOG("Scene \"scene\" has been loaded");
 				} else {
 					if ((m_Scene == scene) && (scene != nullptr))
 					{
 						UnloadScene(scene);
+						CSE_LOG("Scene \"scene\" has been unloaded");
 						LoadScene(sceneLogo);
+						CSE_LOG("Scene \"sceneLogo\" has been loaded");
 					}
 				}
-			}
-			
-			if (CSE::Input::IsButtonPressed(ball->GetComponent<CSE::KeyBoardComponent>().controls[CSE::Commands::KBCommand_Left]))
-			{
-				ball->GetComponent<CSE::PositionComponent>().x -= 0.05f;
-			}
-			if (CSE::Input::IsButtonPressed(ball->GetComponent<CSE::KeyBoardComponent>().controls[CSE::Commands::KBCommand_Right]))
-			{
-				ball->GetComponent<CSE::PositionComponent>().x += 0.05f;
 			}
 		}
 		

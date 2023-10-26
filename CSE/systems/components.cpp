@@ -167,7 +167,7 @@ namespace CSE
 		}
 	}
 	
-	KeyBoardComponent::KeyBoardComponent(const std::unordered_map<int, SDL_Keycode>& kbControls)
+	KeyBoardComponent::KeyBoardComponent(const ControlsMap& kbControls)
 		: controls(kbControls) 
 	{
 	};
@@ -191,7 +191,7 @@ namespace CSE
 		}
 	}
 	
-	MouseComponent::MouseComponent(const std::unordered_map<int, SDL_Keycode>& mControls)
+	MouseComponent::MouseComponent(const ControlsMap& mControls)
 		: controls(mControls) 
 	{
 	};

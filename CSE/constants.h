@@ -30,8 +30,12 @@ namespace CSE
 			STAND2,
 			STAND3,
 			CROUCH,
-			WALK,
-			RUN,
+			WALK1, // one state/animation is simply not enough
+			WALK2,
+			WALK3,
+			RUN1, // one state/animation is simply not enough
+			RUN2,
+			RUN3,
 			JUMP, // first, they jump
 			FLY, // then, they fly
 			FALL, // finally, they fall to somewhere

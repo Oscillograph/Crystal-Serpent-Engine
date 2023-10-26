@@ -151,7 +151,7 @@ namespace CSE
 				}
 			}
 			
-			SDL_PumpEvents(); // update keyboard state array 
+			// SDL_PumpEvents(); // update keyboard state array 
 			
 			// 3. App Reaction system
 			// 4. Game Object Management System (GOMS)
