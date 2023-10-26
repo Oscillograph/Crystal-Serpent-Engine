@@ -25,6 +25,22 @@ namespace CSE
 	{
 	}
 	
+	void Scene::Start()
+	{
+	}
+	
+	void Scene::Stop()
+	{
+	}
+	
+	void Scene::Pause()
+	{
+	}
+	
+	void Scene::Resume()
+	{
+	}
+	
 	void Scene::Update(TimeType sceneTime)
 	{
 		// TODO: Scene Update mechanism

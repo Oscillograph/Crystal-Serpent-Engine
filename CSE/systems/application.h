@@ -7,6 +7,7 @@
 #include <CSE/systems/platform.h> // SDL
 #include <CSE/systems/window.h> // CSE interfaces are based on gui
 #include <CSE/systems/renderer.h> // graphics
+#include <CSE/systems/input.h> // keyboard and other manipulators input
 
 // architecture abstractions
 #include <CSE/systems/layer.h>

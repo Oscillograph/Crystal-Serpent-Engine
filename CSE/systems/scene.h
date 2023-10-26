@@ -22,6 +22,15 @@ namespace CSE
 		virtual void OnLoaded();
 		virtual void OnUnloaded();
 		
+		// TODO: scene start/stop/pause/resume
+		virtual void Start(); // run the scene
+		virtual void Stop(); // stop the scene
+		virtual void Pause(); // pause the scene (only if it is running)
+		virtual void Resume(); // unpause the scene (only if it is running)
+		
+		inline bool IsRunning() { return m_Running; }
+		inline bool IsPaused() { return m_Paused; }
+		
 		inline void SetLayer(Layer* layer) { m_Layer = layer; }
 		inline Layer* GetLayer() { return m_Layer; }
 		
@@ -37,9 +46,11 @@ namespace CSE
 		inline entt::registry& GetRegistry() { return m_Registry; };
 		inline bool HasEntity(uint32_t entityID) { return m_Registry.valid((entt::entity)entityID); };
 		
-	private:
+	protected:
 		Layer* m_Layer; // so that the scene knows where it is loaded
 		uint32_t m_SceneID;
+		bool m_Running = false;
+		bool m_Paused = false;
 		entt::registry m_Registry;
 	};
 }
