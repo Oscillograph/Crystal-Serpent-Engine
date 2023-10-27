@@ -178,6 +178,7 @@ namespace CSE
 				}
 				
 				// TODO: 6. Asset management system
+				// TODO: Inter-scene assets storage mechanism to allow moving things between windows
 				
 				if (m_TimeDelta >= m_TimeDeltaLimit)
 				{

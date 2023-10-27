@@ -25,7 +25,7 @@ namespace CSE
 		Scene();
 		virtual ~Scene();
 		
-		virtual void Init(SDL_Renderer* r); // should be called after constructor
+		virtual void Init(); // should be called after constructor
 		virtual void OnLoaded();
 		virtual void OnUnloaded();
 		virtual void OnUpdate(TimeType sceneTime); // before the update happens

@@ -5,6 +5,8 @@
 #include <CSE/systems/platform.h>
 #include <CSE/systems/renderer/texture.h>
 
+#include <CSE/systems/components/states.h>
+
 #include <initializer_list>
 
 namespace CSE
@@ -25,6 +27,7 @@ namespace CSE
 		// normalized coordinates corresponding to the scene world
 		float x = 0.0f;
 		float y = 0.0f;
+		int direction = 0; // user defined meaning
 		
 		PositionComponent() = default;
 		PositionComponent(const PositionComponent&) = default;
@@ -67,7 +70,8 @@ namespace CSE
 		SDL_Keycode Get(int state);
 	};
 	
-	struct MouseComponent {
+	struct MouseComponent 
+	{
 		// int stands for command from enum
 		// using funcVoid = std::function<void()>;
 		// using ControlsMap = std::unordered_map<int, SDL_Keycode, funcVoid>;
@@ -76,10 +80,28 @@ namespace CSE
 		
 		MouseComponent();
 		MouseComponent(const MouseComponent&) = default;
-		MouseComponent(const std::unordered_map<int, SDL_Keycode>& mControls);
+		MouseComponent(const ControlsMap& mControls);
 		
 		void Set(int state, SDL_Keycode code);
 		SDL_Keycode Get(int state);
+	};
+	
+	struct StateMachineComponent
+	{
+		bool isStanding = false;
+		bool isMoving = false;
+		bool isWalking = false;
+		bool isJumping = false;
+		bool isFlying = false;
+		bool isFalling = false;
+		bool isBumping = false;
+		bool isFighting = false;
+		bool isHitting = false;
+		bool isShooting = false;
+		bool isDying = false;
+		
+		StateMachineComponent();
+		StateMachineComponent(const StateMachineComponent&) = default;
 	};
 	
 	// ================== Animation ===================

@@ -19,12 +19,16 @@ public:
 		logo = nullptr;
 	}
 	
-	void Init(SDL_Renderer* r)
+	void Init()
 	{
-		logo = CreateEntity("CSE Logotype");
-		logo->AddComponent<CSE::PositionComponent>(0.5f, 0.5f);
-		sprite = new CSE::Texture("./CSE/assets/CSE_logo.png", r);
-		logo->AddComponent<CSE::SpriteComponent>(sprite);
+		// TODO: figure out how to de-initialize a scene for a proper scene unload mechanism
+		if (logo == nullptr)
+		{
+			logo = CreateEntity("CSE Logotype");
+			logo->AddComponent<CSE::PositionComponent>(0.5f, 0.5f);
+			sprite = new CSE::Texture("./CSE/assets/CSE_logo.png", GetLayer()->GetWindow()->GetRenderer());
+			logo->AddComponent<CSE::SpriteComponent>(sprite);
+		}
 	}
 	
 private:
@@ -50,66 +54,102 @@ public:
 		ball = nullptr;
 	}
 	
-	void Init(SDL_Renderer* r)
+	void Init()
 	{
-		// a ball entity on the screen
-		ball = CreateEntity("Ball");
-		CSE::PositionComponent& position = ball->AddComponent<CSE::PositionComponent>(0.5f, 0.5f);
-		
-		std::unordered_map<int, SDL_Keycode> ballKBControls = {
-			{CSE::Commands::KBCommand_Left, CSE::ScanCode::Left}, 
-			{CSE::Commands::KBCommand_Right, CSE::ScanCode::Right}
-		};
-		
-		CSE::KeyBoardComponent& keyboard = ball->AddComponent<CSE::KeyBoardComponent>(ballKBControls);
-		
-		sprite = new CSE::Texture("./App/Sprites.png", r, {0, 0, 0});
-		CSE::SpriteComponent& spriteComponent = ball->AddComponent<CSE::SpriteComponent>(sprite);
-		CSE::AnimationComponent& animationComponent = ball->AddComponent<CSE::AnimationComponent>();
-		animationComponent.Add(
-			CSE::EntityStates::IDLE, 
-			new CSE::AnimationFrames( {80, 0}, {99, 29}, 20, 29, 4.0f, true)
-			);
-		animationComponent.Add(
-			CSE::EntityStates::WALK1, 
-			new CSE::AnimationFrames( {80, 0}, {159, 29}, 20, 29, 8.0f, true)
-			);
-		animationComponent.Add(
-			CSE::EntityStates::WALK2, 
-			new CSE::AnimationFrames( {260, 0}, {200, 29}, -20, 29, 8.0f, true)
-			);
-		animationComponent.Set(CSE::EntityStates::IDLE);
-		animationComponent.Start();
+		if (ball == nullptr)
+		{
+			// a ball entity on the screen
+			ball = CreateEntity("Ball");
+			CSE::PositionComponent& position = ball->AddComponent<CSE::PositionComponent>(0.5f, 0.5f);
+			position.direction = 1; // 1 means right, -1 means left
+			CSE::StateMachineComponent& stateMachine = ball->AddComponent<CSE::StateMachineComponent>();
+			
+			std::unordered_map<int, SDL_Keycode> ballKBControls = {
+				{CSE::Commands::KBCommand_Left, CSE::ScanCode::Left}, 
+				{CSE::Commands::KBCommand_Right, CSE::ScanCode::Right}
+			};
+			
+			CSE::KeyBoardComponent& keyboard = ball->AddComponent<CSE::KeyBoardComponent>(ballKBControls);
+			
+			sprite = new CSE::Texture("./App/Sprites.png", GetLayer()->GetWindow()->GetRenderer(), {0, 0, 0});
+			CSE::SpriteComponent& spriteComponent = ball->AddComponent<CSE::SpriteComponent>(sprite);
+			CSE::AnimationComponent& animationComponent = ball->AddComponent<CSE::AnimationComponent>();
+			animationComponent.Add(
+				CSE::EntityStates::STAND1, 
+				new CSE::AnimationFrames( {80, 0}, {99, 29}, 20, 29, 4.0f, true)
+				);
+			animationComponent.Add(
+				CSE::EntityStates::STAND2, 
+				new CSE::AnimationFrames( {260, 0}, {279, 29}, 20, 29, 4.0f, true)
+				);
+			animationComponent.Add(
+				CSE::EntityStates::WALK1, 
+				new CSE::AnimationFrames( {80, 0}, {159, 29}, 20, 29, 20.0f, true)
+				);
+			animationComponent.Add(
+				CSE::EntityStates::WALK2, 
+				new CSE::AnimationFrames( {260, 0}, {200, 29}, -20, 29, 20.0f, true)
+				);
+			animationComponent.Set(CSE::EntityStates::STAND1);
+			animationComponent.Start();
+		}
 	}
 	
 	void OnUpdate(CSE::TimeType timeFrame)
 	{
-		if ((CSE::Input::IsButtonPressed(ball->GetComponent<CSE::KeyBoardComponent>().controls[CSE::Commands::KBCommand_Left]))
-			|| (CSE::Input::IsButtonPressed(ball->GetComponent<CSE::KeyBoardComponent>().controls[CSE::Commands::KBCommand_Right])))
+		auto& ballKeyBoard = ball->GetComponent<CSE::KeyBoardComponent>();
+		auto& ballAnimation = ball->GetComponent<CSE::AnimationComponent>();
+		auto& ballPosition = ball->GetComponent<CSE::PositionComponent>();
+		auto& ballState = ball->GetComponent<CSE::StateMachineComponent>();
+		
+		if ((CSE::Input::IsButtonPressed(ballKeyBoard.controls[CSE::Commands::KBCommand_Left])) ||
+			(CSE::Input::IsButtonPressed(ballKeyBoard.controls[CSE::Commands::KBCommand_Right])))
 		{
-			if (CSE::Input::IsButtonPressed(ball->GetComponent<CSE::KeyBoardComponent>().controls[CSE::Commands::KBCommand_Left]))
+			if (CSE::Input::IsButtonPressed(ballKeyBoard.controls[CSE::Commands::KBCommand_Left]))
 			{
-				if (ball->GetComponent<CSE::AnimationComponent>().Get() != CSE::EntityStates::WALK2)
+				// change substate
+				if (ballPosition.direction != -1)
 				{
-					ball->GetComponent<CSE::AnimationComponent>().Set(CSE::EntityStates::WALK2);
-					ball->GetComponent<CSE::AnimationComponent>().Start();
+					ballPosition.direction = -1;
+					ballAnimation.Set(CSE::EntityStates::WALK2);
 				}
-				ball->GetComponent<CSE::PositionComponent>().x -= 0.002f;
 			}
-			if (CSE::Input::IsButtonPressed(ball->GetComponent<CSE::KeyBoardComponent>().controls[CSE::Commands::KBCommand_Right]))
+			
+			if (CSE::Input::IsButtonPressed(ballKeyBoard.controls[CSE::Commands::KBCommand_Right]))
 			{
-				if (ball->GetComponent<CSE::AnimationComponent>().Get() != CSE::EntityStates::WALK1)
+				// change substate
+				if (ballPosition.direction != 1)
 				{
-					ball->GetComponent<CSE::AnimationComponent>().Set(CSE::EntityStates::WALK1);
-					ball->GetComponent<CSE::AnimationComponent>().Start();
+					ballPosition.direction = 1;
+					ballAnimation.Set(CSE::EntityStates::WALK1);
 				}
-				ball->GetComponent<CSE::PositionComponent>().x += 0.002f;
 			}
+
+			// change state
+			if (!ballState.isWalking)
+			{
+				// exit previous state
+				ballAnimation.Stop();
+				// initiate new state
+				ballState.isWalking = true;
+				ballAnimation.Set((ballPosition.direction == 1) ? CSE::EntityStates::WALK1 : CSE::EntityStates::WALK2);
+				// start new state
+				ballAnimation.Start();
+			}
+			
+			ballPosition.x += ballPosition.direction * 0.002f;
+			
 		} else {
-			if (ball->GetComponent<CSE::AnimationComponent>().Get() != CSE::EntityStates::IDLE)
+			// change state
+			if (ballState.isWalking)
 			{
-				ball->GetComponent<CSE::AnimationComponent>().Set(CSE::EntityStates::IDLE);
-				ball->GetComponent<CSE::AnimationComponent>().Start();
+				// exit previous state
+				ballAnimation.Stop();
+				// initiate new state
+				ballState.isWalking = false;
+				// start new state
+				ballAnimation.Set((ballPosition.direction == 1) ? CSE::EntityStates::STAND1 : CSE::EntityStates::STAND2);
+				ballAnimation.Start();
 			}
 		}
 	}
@@ -141,12 +181,10 @@ public:
 	{
 		// TODO: Automated Scene collection to make loading/unloading routine easier 
 		sceneLogo = new SceneLogo();
-		sceneLogo->Init(GetWindow()->GetRenderer());
 		LoadScene(sceneLogo);
 		CSE_LOG("Scene \"sceneLogo\" has been created and loaded.");
 
 		scene = new SceneGame();
-		scene->Init(GetWindow()->GetRenderer());
 		CSE_LOG("Scene \"scene\" has been created and loaded.");
 
 		return true;

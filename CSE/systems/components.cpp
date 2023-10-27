@@ -41,6 +41,11 @@ namespace CSE
 	{
 	};
 	
+	// State Machine Component
+	StateMachineComponent::StateMachineComponent()
+	{
+	}
+	
 	// Animation Component - Animation Frames
 	AnimationFrames::AnimationFrames()
 	{
@@ -117,6 +122,7 @@ namespace CSE
 	
 	void AnimationComponent::Set(int state)
 	{
+		CSE_CORE_ASSERT(frames[state] != nullptr, "Trying to set an animation that doesn't exist!");
 		currentAnimation = state;
 		framesTotal = frames[currentAnimation]->framesTotal;
 		currentFrame = 0;

@@ -11,6 +11,7 @@ namespace CSE
 	}
 	
 	// All possible entity states to check
+	// use in animations
 	namespace EntityStates
 	{
 		typedef enum {
@@ -20,26 +21,54 @@ namespace CSE
 			NONE, // this should be set  in stateStack component constructor
 			BIRTH,
 			IDLE,
-			ATTACK1, // one state/animation is simply not enough
+			
+			// one state/animation is simply not enough
+			ATTACK1, 
 			ATTACK2,
 			ATTACK3,
-			CAST1, // one state/animation is simply not enough
+			
+			// one state/animation is simply not enough
+			CAST1,
 			CAST2,
 			CAST3,
-			STAND1, // one state/animation is simply not enough
+			
+			// one state/animation is simply not enough
+			STAND1,
 			STAND2,
 			STAND3,
+			
 			CROUCH,
-			WALK1, // one state/animation is simply not enough
+			
+			// one state/animation is simply not enough
+			WALK1, 
 			WALK2,
 			WALK3,
-			RUN1, // one state/animation is simply not enough
+			
+			// one state/animation is simply not enough
+			RUN1,
 			RUN2,
 			RUN3,
-			JUMP, // first, they jump
-			FLY, // then, they fly
-			FALL, // finally, they fall to somewhere
-			HIT, // fallen/other state
+			
+			// one state/animation is simply not enough
+			JUMP1, // first, they jump
+			JUMP2, 
+			JUMP3,
+			
+			// one state/animation is simply not enough
+			FLY1, // then, they fly
+			FLY2,
+			FLY3,
+			
+			// one state/animation is simply not enough
+			FALL1, // finally, they fall to somewhere
+			FALL2,
+			FALL3,
+			
+			// one state/animation is simply not enough
+			HIT1, // fallen/other state
+			HIT2,
+			HIT3,
+			
 			DAMAGED,
 			STUNNED,
 			SLEEP,

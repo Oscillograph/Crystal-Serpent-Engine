@@ -80,6 +80,7 @@ namespace CSE
 	{
 		m_Scene = scene;
 		m_Scene->SetLayer(this);
+		m_Scene->Init();
 		m_Scene->OnLoaded();
 		return true;
 	}
