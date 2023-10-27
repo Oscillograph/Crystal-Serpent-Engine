@@ -90,6 +90,14 @@ public:
 				CSE::EntityStates::WALK2, 
 				new CSE::AnimationFrames( {260, 0}, {200, 29}, -20, 29, 20.0f, true)
 				);
+			animationComponent.Add(
+				CSE::EntityStates::JUMP1, 
+				new CSE::AnimationFrames( {160, 0}, {179, 29}, 20, 29, 20.0f, true)
+				);
+			animationComponent.Add(
+				CSE::EntityStates::JUMP2, 
+				new CSE::AnimationFrames( {180, 0}, {199, 29}, 20, 29, 20.0f, true)
+				);
 			animationComponent.Set(CSE::EntityStates::STAND1);
 			animationComponent.Start();
 		}
@@ -185,7 +193,7 @@ public:
 		CSE_LOG("Scene \"sceneLogo\" has been created and loaded.");
 
 		scene = new SceneGame();
-		CSE_LOG("Scene \"scene\" has been created and loaded.");
+		CSE_LOG("Scene \"scene\" has been created.");
 
 		return true;
 	}

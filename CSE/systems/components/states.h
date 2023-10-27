@@ -7,17 +7,18 @@ namespace CSE
 {
 	struct StateStruct // this is the data that defines a state
 	{
-		bool isStanding 	= false;
-		bool isMoving 		= false;
-		bool isWalking 		= false;
-		bool isJumping 		= false;
-		bool isFlying 		= false;
-		bool isFalling 		= false;
-		bool isBumping 		= false;
-		bool isFighting 	= false;
-		bool isHitting 		= false;
-		bool isShooting 	= false;
-		bool isDying 		= false;
+		//	 state					 // usual transitions
+		bool isStanding 	= false; // -> Walking, Jumping, Hitting
+		bool isMoving 		= false; // -> ???
+		bool isWalking 		= false; // -> Standing, Jumping, Hitting
+		bool isJumping 		= false; // -> Hitting, Flying, Falling
+		bool isFlying 		= false; // -> Hitting, Falling
+		bool isFalling 		= false; // -> Standing
+		bool isBumping 		= false; // -> ???
+		bool isFighting 	= false; // -> ???
+		bool isHitting 		= false; // -> Standing, Walking, Jumping
+		bool isShooting 	= false; // -> ???
+		bool isDying 		= false; // -> ???
 	};
 	
 	class State
