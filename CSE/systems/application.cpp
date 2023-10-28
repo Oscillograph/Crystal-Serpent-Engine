@@ -13,6 +13,7 @@ namespace CSE
 	Application::Application(const WindowPrefs& prefs)
 	{
 		Init();
+		LimitFPS(CSE_FPS60);
 		
 		// m_WindowStack.Push(new Window(prefs));
 		
@@ -199,7 +200,7 @@ namespace CSE
 					
 					for (Window* window : m_WindowStack)
 					{
-						// window->ShowFPSInTitle(fpsCount);
+						window->ShowFPSInTitle(fpsCount);
 						
 						if (window->GetRenderer() != Renderer::GetActiveRenderer())
 						{

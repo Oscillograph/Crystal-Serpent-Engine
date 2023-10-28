@@ -60,6 +60,7 @@ namespace CSE
 		uint64_t fpsCount;
 		float m_TimeDelta = 0;
 		float m_TimeDeltaLimit = 0.0f;
+		// float m_TimeDeltaLimit = CSE_FPS60;
 	};
 	
 	Application* CreateApplication();

@@ -172,6 +172,7 @@ public:
 			}
 			
 			// process states
+			// TODO: Implement physics: an update should take into consideration the app inner time
 			if (ballStateMachine.GetState()->data == CSE::EntityStates::WALK)
 			{
 				if (CSE::Input::IsButtonPressed(ballKeyBoard.controls[CSE::Commands::KBCommand_Up]))
@@ -301,7 +302,7 @@ public:
 			CSE_LOG("Layer ", layer2.get()->GetName(), " attached to window #", window->GetNativeWindowID());
 		}
 		
-		LimitFPS(CSE_FPS60);
+		// LimitFPS(CSE_FPS60);
 	};
 	~App() 
 	{
