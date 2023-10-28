@@ -65,10 +65,12 @@ Includes directories should contain:
 - SDL2
 - Crystal Serpent Engine
 
-A precompiled header can dramatically reduce compile time:
+A precompiled header can dramatically decrease compile time:
 Crystal Serpent Engine/CSE/common.h
 
 ## Tech Stack ##
 + **C++17** (almost everything)
-+ **SDL 2.28.4** (windowing, events listening, rendering, sounds)
++ **SDL2** (windowing, events listening, rendering, sounds)
 + **GLM** (math library)
++ **EnTT** (entities and components management in scenes)
++ **[Color Console](https://github.com/aafulei/color-console)** (Windows-only)

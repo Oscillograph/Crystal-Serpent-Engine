@@ -39,6 +39,7 @@ namespace CSE
 		// concept: block if not in the list
 		void AllowEntry(State* state);
 		void BlockEntry(State* state); // check in the list, remove if found
+		
 		void AllowExit(State* state);
 		void BlockExit(State* state); // check in the list, remove if found
 		
