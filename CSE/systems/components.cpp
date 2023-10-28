@@ -56,6 +56,10 @@ namespace CSE
 		}
 	}
 	
+	void StateMachineComponent::AddState(State* state)
+	{
+	}
+	
 	// Animation Component - Animation Frames
 	AnimationFrames::AnimationFrames()
 	{

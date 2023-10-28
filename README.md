@@ -70,7 +70,7 @@ Crystal Serpent Engine/CSE/common.h
 
 ## Tech Stack ##
 + **C++17** (almost everything)
-+ **SDL2** (windowing, events listening, rendering, sounds)
-+ **GLM** (math library)
-+ **EnTT** (entities and components management in scenes)
++ **[SDL2](https://github.com/libsdl-org/SDL)** (windowing, events listening, rendering, sounds)
++ **[GLM](https://github.com/g-truc/glm)** (math library)
++ **[EnTT](https://github.com/skypjack/entt)** (entities and components management in scenes)
 + **[Color Console](https://github.com/aafulei/color-console)** (Windows-only)

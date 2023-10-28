@@ -106,6 +106,8 @@ namespace CSE
 		StateMachineComponent();
 		StateMachineComponent(const StateMachineComponent&) = default;
 		~StateMachineComponent();
+		
+		void AddState(State* state);
 	};
 	
 	// ================== Animation ===================
