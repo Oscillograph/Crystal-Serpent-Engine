@@ -117,23 +117,17 @@ public:
 	
 	void OnUpdate(CSE::TimeType timeFrame)
 	{
-		// CSE_LOG("Scene OnUpdate start");
+		// THE BALL SECTION
 		CSE::KeyBoardComponent& ballKeyBoard = ball->GetComponent<CSE::KeyBoardComponent>();
-		// CSE_LOG("KB component accessed");
 		CSE::AnimationComponent& ballAnimation = ball->GetComponent<CSE::AnimationComponent>();
-		// CSE_LOG("Animation component accessed");
 		CSE::PositionComponent& ballPosition = ball->GetComponent<CSE::PositionComponent>();
-		// CSE_LOG("Position component accessed");
 		CSE::StateMachineComponent& ballStateMachine = ball->GetComponent<CSE::StateMachineComponent>();
-		// CSE_LOG("State Machine component accessed");
 		
-		// CSE_LOG("Input state check");
 		if ((CSE::Input::IsButtonPressed(ballKeyBoard.controls[CSE::Commands::KBCommand_Left]))
 			|| (CSE::Input::IsButtonPressed(ballKeyBoard.controls[CSE::Commands::KBCommand_Right]))
 			|| (CSE::Input::IsButtonPressed(ballKeyBoard.controls[CSE::Commands::KBCommand_Up]))
 			|| (CSE::Input::IsButtonPressed(ballKeyBoard.controls[CSE::Commands::KBCommand_Down])))
 		{
-			// CSE_LOG("Change state condition");
 			// change state
 			if (ballStateMachine.GetState()->data == CSE::EntityStates::STAND)
 			{
@@ -144,7 +138,6 @@ public:
 				ballAnimation.Start();
 			}
 			
-			// CSE_LOG("Change substate 1 condition");
 			// change substate
 			if (CSE::Input::IsButtonPressed(ballKeyBoard.controls[CSE::Commands::KBCommand_Left]))
 			{
@@ -162,7 +155,6 @@ public:
 				}
 			}
 			
-			// CSE_LOG("Change substate 2 condition");
 			// change substate
 			if (CSE::Input::IsButtonPressed(ballKeyBoard.controls[CSE::Commands::KBCommand_Right]))
 			{
@@ -179,7 +171,6 @@ public:
 				}
 			}
 			
-			// CSE_LOG("Process state condition");
 			// process states
 			if (ballStateMachine.GetState()->data == CSE::EntityStates::WALK)
 			{
@@ -201,6 +192,7 @@ public:
 				ballAnimation.Start();
 			}
 		}
+		// \ THE BALL SECTION
 	}
 	
 private:
