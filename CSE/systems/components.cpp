@@ -72,6 +72,18 @@ namespace CSE
 		return newState;
 	}
 	
+	bool StateMachineComponent::HasState(int state)
+	{
+		for (int i = 0; i < States.size(); i++)
+		{
+			if (States[i]->data == state)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	bool StateMachineComponent::SetState(int state)
 	{
 		// initial run
@@ -115,7 +127,7 @@ namespace CSE
 				}
 			}
 		}
-		return true; // if this is the same state, then it's an obvious success
+		return false; // if this is the same state, it's not a success
 	}
 	
 	State* StateMachineComponent::GetState()

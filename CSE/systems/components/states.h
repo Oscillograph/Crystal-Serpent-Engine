@@ -49,6 +49,34 @@ namespace CSE
 		bool IsAllowedExitTo(int state);
 		void BlockExitTo(int state); // check in the list, remove if found
 		
+		/*
+		// comparing states
+		bool operator==(State* other) 
+		{
+			return (this->data == other->data);
+		};
+		bool operator!=(State* other) 
+		{
+			return !(this == other);
+		};
+		bool operator==(int other) 
+		{
+			return (this->data == other);
+		};
+		bool operator!=(int other) 
+		{
+			return (this->data != other);
+		};
+		bool operator==(EntityStates::EntityState other) 
+		{
+			return (this->data == other);
+		};
+		bool operator!=(EntityStates::EntityState other) 
+		{
+			return (this->data != other);
+		};
+		*/
+		
 		// data
 		int data; // see EntityState
 		

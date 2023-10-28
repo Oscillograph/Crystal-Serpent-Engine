@@ -5,4 +5,7 @@
 
 #include <CSE/constants.h> // enums and other constants
 
+#include <CSE/utils/utils.h> // miscelaneous
+#include <CSE/utils/timer.h> // local timer for timed events
+
 #endif

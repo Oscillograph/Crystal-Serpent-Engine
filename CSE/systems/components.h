@@ -108,6 +108,7 @@ namespace CSE
 		~StateMachineComponent();
 		
 		State* AddState(int state);
+		bool HasState(int state);
 		bool SetState(int state); // true if success, false otherwise
 		State* GetState();
 		
