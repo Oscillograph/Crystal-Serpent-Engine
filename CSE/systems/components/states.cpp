@@ -6,13 +6,14 @@ namespace CSE
 	{
 	}
 	
-	State::State(EntityStates::EntityState value)
+	State::State(int value)
 	{
 		data = value;
 	}
 	
 	State::~State()
 	{
+		/*
 		for (int i = 0; i < m_AllowEntry.size(); i++)
 		{
 			m_AllowEntry[i] = nullptr;
@@ -22,6 +23,7 @@ namespace CSE
 		{
 			m_AllowExit[i] = nullptr;
 		}
+		*/
 	}
 	
 	// check whether we can enter the state
@@ -39,13 +41,13 @@ namespace CSE
 	}
 	
 	// concept: block if not in the list
-	void State::AllowEntry(State* state)
+	void State::AllowEntryFrom(int state)
 	{
 		CSE_CORE_ASSERT(!IsAllowedEntryFrom(state), "That state is already allowed to enter this one");
 		m_AllowEntry.push_back(state);
 	}
 	
-	bool State::IsAllowedEntryFrom(State* state)
+	bool State::IsAllowedEntryFrom(int state)
 	{
 		auto it = std::find(m_AllowEntry.begin(), m_AllowEntry.end(), state);
 		if (it != m_AllowEntry.end())
@@ -53,7 +55,7 @@ namespace CSE
 		return false;
 	}
 	
-	void State::BlockEntry(State* state) // check in the list, remove if found
+	void State::BlockEntryFrom(int state) // check in the list, remove if found
 	{
 		auto it = std::find(m_AllowEntry.begin(), m_AllowEntry.end(), state);
 		if (it != m_AllowEntry.end())
@@ -64,13 +66,13 @@ namespace CSE
 		}
 	}
 	
-	void State::AllowExit(State* state)
+	void State::AllowExitTo(int state)
 	{
 		CSE_CORE_ASSERT(!IsAllowedExitTo(state), "This state is already allowed to exit to that one");
 		m_AllowExit.push_back(state);
 	}
 	
-	bool State::IsAllowedExitTo(State* state)
+	bool State::IsAllowedExitTo(int state)
 	{
 		for (auto i : m_AllowExit)
 		{
@@ -80,7 +82,7 @@ namespace CSE
 		return false;
 	}
 	
-	void State::BlockExit(State* state) // check in the list, remove if found
+	void State::BlockExitTo(int state) // check in the list, remove if found
 	{
 		auto it = std::find(m_AllowExit.begin(), m_AllowExit.end(), state);
 		if (it != m_AllowExit.end())

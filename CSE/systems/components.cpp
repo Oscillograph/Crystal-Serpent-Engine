@@ -57,32 +57,65 @@ namespace CSE
 		m_CurrentState = nullptr;
 	}
 	
-	void StateMachineComponent::AddState(State* state)
+	State* StateMachineComponent::AddState(int state)
 	{
-		auto it = std::find(States.begin(), States.end(), state);
-		if (it != States.end())
+		for (int i = 0; i < States.size(); i++)
 		{
-			States.push_back(state);
-		} else {
-			CSE_CORE_LOG("Can't add the state: already exists");
+			if (States[i]->data == state)
+			{
+				CSE_CORE_LOG("Can't add the state: already exists");
+				return nullptr;
+			}
 		}
+		State* newState = new State(state);
+		States.push_back(newState);
+		return newState;
 	}
 	
-	void StateMachineComponent::SetState(State* state)
+	bool StateMachineComponent::SetState(int state)
 	{
-		if (m_CurrentState->IsAllowedExitTo(state))
+		// initial run
+		if (m_CurrentState == nullptr)
 		{
-			if (state->IsAllowedEntryFrom(m_CurrentState))
+			// look the state up
+			for (int i = 0; i < States.size(); i++)
 			{
-				m_CurrentState->OnExit();
-				m_CurrentState = state;
-				m_CurrentState->OnEnter();
-			} else {
-				CSE_CORE_LOG("The state cannot be entered from this one.");
+				if (States[i]->data == state)
+				{
+					m_CurrentState = States[i];
+					m_CurrentState->OnEnter();
+					return true; // state found and set
+				}
 			}
-		} else {
-			CSE_CORE_LOG("Exit to the scene is not allowed from this one");
+			return false; // state has not been found
 		}
+		
+		if (m_CurrentState->data != state)
+		{
+			for (int i = 0; i < States.size(); i++)
+			{
+				if (States[i]->data == state)
+				{
+					if (m_CurrentState->IsAllowedExitTo(state))
+					{
+						if (States[i]->IsAllowedEntryFrom(m_CurrentState->data))
+						{
+							m_CurrentState->OnExit();
+							m_CurrentState = States[i];
+							m_CurrentState->OnEnter();
+							return true; // conditions met, procedures ran
+						} else {
+							CSE_CORE_LOG("Enter from the state is not allowed to this one.");
+						}
+					} else {
+						CSE_CORE_LOG("Exit to the scene is not allowed from this one");
+					}
+					
+					return false; // conditions not met -> can't set the new state
+				}
+			}
+		}
+		return true; // if this is the same state, then it's an obvious success
 	}
 	
 	State* StateMachineComponent::GetState()

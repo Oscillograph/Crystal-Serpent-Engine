@@ -28,7 +28,7 @@ namespace CSE
 	{
 	public:
 		State();
-		State(EntityStates::EntityState value);
+		State(int value);
 		State(const State&) = default;
 		
 		~State();
@@ -41,20 +41,20 @@ namespace CSE
 		void OnExit();
 		
 		// concept: block if not in the list
-		void AllowEntry(State* state);
-		bool IsAllowedEntryFrom(State* state);
-		void BlockEntry(State* state); // check in the list, remove if found
+		void AllowEntryFrom(int state);
+		bool IsAllowedEntryFrom(int state);
+		void BlockEntryFrom(int state); // check in the list, remove if found
 		
-		void AllowExit(State* state);
-		bool IsAllowedExitTo(State* state);
-		void BlockExit(State* state); // check in the list, remove if found
+		void AllowExitTo(int state);
+		bool IsAllowedExitTo(int state);
+		void BlockExitTo(int state); // check in the list, remove if found
 		
 		// data
-		EntityStates::EntityState data; // see EntityState
+		int data; // see EntityState
 		
 	private:
-		std::vector<State*> m_AllowEntry;
-		std::vector<State*> m_AllowExit;
+		std::vector<int> m_AllowEntry;
+		std::vector<int> m_AllowExit;
 	};
 }
 

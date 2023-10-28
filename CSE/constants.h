@@ -23,16 +23,19 @@ namespace CSE
 			IDLE,
 			
 			// one state/animation is simply not enough
+			ATTACK,
 			ATTACK1, 
 			ATTACK2,
 			ATTACK3,
 			
 			// one state/animation is simply not enough
+			CAST,
 			CAST1,
 			CAST2,
 			CAST3,
 			
 			// one state/animation is simply not enough
+			STAND,
 			STAND1,
 			STAND2,
 			STAND3,
@@ -40,31 +43,37 @@ namespace CSE
 			CROUCH,
 			
 			// one state/animation is simply not enough
+			WALK,
 			WALK1, 
 			WALK2,
 			WALK3,
 			
 			// one state/animation is simply not enough
+			RUN,
 			RUN1,
 			RUN2,
 			RUN3,
 			
 			// one state/animation is simply not enough
+			JUMP,
 			JUMP1, // first, they jump
 			JUMP2, 
 			JUMP3,
 			
 			// one state/animation is simply not enough
+			FLY,
 			FLY1, // then, they fly
 			FLY2,
 			FLY3,
 			
 			// one state/animation is simply not enough
+			FALL,
 			FALL1, // finally, they fall to somewhere
 			FALL2,
 			FALL3,
 			
 			// one state/animation is simply not enough
+			HIT,
 			HIT1, // fallen/other state
 			HIT2,
 			HIT3,

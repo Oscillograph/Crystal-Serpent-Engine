@@ -107,8 +107,8 @@ namespace CSE
 		StateMachineComponent(const StateMachineComponent&) = default;
 		~StateMachineComponent();
 		
-		void AddState(State* state);
-		void SetState(State* state);
+		State* AddState(int state);
+		bool SetState(int state); // true if success, false otherwise
 		State* GetState();
 		
 	private:

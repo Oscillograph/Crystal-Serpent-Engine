@@ -53,21 +53,7 @@ namespace CSE
 	{
 		// TODO: Scene Update mechanism
 		Animate(sceneTime);
-		// CSE_CORE_LOG("Animations updated");
 		Draw();
-		// CSE_CORE_LOG("Draws updated");
-		// CSE_CORE_LOG("Scene in ", this->m_Layer->GetName(), " has ", m_Registry.size(), " entities.");
-		
-		/*
-		m_Registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc){
-			if (!nsc.Instance){
-				nsc.Instance = nsc.InstantiateScript();
-				nsc.Instance->m_Entity = new Entity(entity, this); // WHAT IS IT
-				nsc.Instance->OnCreate();
-			}
-			nsc.Instance->OnUpdate(sceneTime);
-		});
-		*/
 	}
 	
 	void Scene::Animate(TimeType sceneTime)

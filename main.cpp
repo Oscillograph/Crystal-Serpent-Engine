@@ -62,7 +62,17 @@ public:
 			ball = CreateEntity("Ball");
 			CSE::PositionComponent& position = ball->AddComponent<CSE::PositionComponent>(0.5f, 0.5f);
 			position.direction = 1; // 1 means right, -1 means left
+			
 			CSE::StateMachineComponent& stateMachine = ball->AddComponent<CSE::StateMachineComponent>();
+			CSE::State* ballWalkState = stateMachine.AddState(CSE::EntityStates::WALK);
+			CSE::State* ballStandState = stateMachine.AddState(CSE::EntityStates::STAND);
+
+			ballWalkState->AllowEntryFrom(ballStandState->data); 
+			ballWalkState->AllowExitTo(ballStandState->data);
+			
+			ballStandState->AllowEntryFrom(ballWalkState->data);
+			ballStandState->AllowExitTo(ballWalkState->data);
+			stateMachine.SetState(CSE::EntityStates::STAND);
 			
 			std::unordered_map<int, SDL_Keycode> ballKBControls = {
 				{CSE::Commands::KBCommand_Left, CSE::ScanCode::Left}, 
@@ -107,66 +117,86 @@ public:
 	
 	void OnUpdate(CSE::TimeType timeFrame)
 	{
-		auto& ballKeyBoard = ball->GetComponent<CSE::KeyBoardComponent>();
-		auto& ballAnimation = ball->GetComponent<CSE::AnimationComponent>();
-		auto& ballPosition = ball->GetComponent<CSE::PositionComponent>();
-		auto& ballState = ball->GetComponent<CSE::StateMachineComponent>();
+		// CSE_LOG("Scene OnUpdate start");
+		CSE::KeyBoardComponent& ballKeyBoard = ball->GetComponent<CSE::KeyBoardComponent>();
+		// CSE_LOG("KB component accessed");
+		CSE::AnimationComponent& ballAnimation = ball->GetComponent<CSE::AnimationComponent>();
+		// CSE_LOG("Animation component accessed");
+		CSE::PositionComponent& ballPosition = ball->GetComponent<CSE::PositionComponent>();
+		// CSE_LOG("Position component accessed");
+		CSE::StateMachineComponent& ballStateMachine = ball->GetComponent<CSE::StateMachineComponent>();
+		// CSE_LOG("State Machine component accessed");
 		
-		if ((CSE::Input::IsButtonPressed(ballKeyBoard.controls[CSE::Commands::KBCommand_Left])) ||
-			(CSE::Input::IsButtonPressed(ballKeyBoard.controls[CSE::Commands::KBCommand_Right])) ||
-			(CSE::Input::IsButtonPressed(ballKeyBoard.controls[CSE::Commands::KBCommand_Up])) ||
-			(CSE::Input::IsButtonPressed(ballKeyBoard.controls[CSE::Commands::KBCommand_Down])))
+		// CSE_LOG("Input state check");
+		if ((CSE::Input::IsButtonPressed(ballKeyBoard.controls[CSE::Commands::KBCommand_Left]))
+			|| (CSE::Input::IsButtonPressed(ballKeyBoard.controls[CSE::Commands::KBCommand_Right]))
+			|| (CSE::Input::IsButtonPressed(ballKeyBoard.controls[CSE::Commands::KBCommand_Up]))
+			|| (CSE::Input::IsButtonPressed(ballKeyBoard.controls[CSE::Commands::KBCommand_Down])))
 		{
+			// CSE_LOG("Change state condition");
+			// change state
+			if (ballStateMachine.GetState()->data == CSE::EntityStates::STAND)
+			{
+				ballStateMachine.SetState(CSE::EntityStates::WALK);
+				
+				// recover previous animation if a substate did not change
+				ballAnimation.Set((ballPosition.direction == 1) ? CSE::EntityStates::WALK1 : CSE::EntityStates::WALK2);
+				ballAnimation.Start();
+			}
+			
+			// CSE_LOG("Change substate 1 condition");
+			// change substate
 			if (CSE::Input::IsButtonPressed(ballKeyBoard.controls[CSE::Commands::KBCommand_Left]))
 			{
 				// change substate
 				if (ballPosition.direction != -1)
 				{
 					ballPosition.direction = -1;
-					ballAnimation.Set(CSE::EntityStates::WALK2);
 				}
-				ballPosition.x -= 0.002f;
+				
+				// set a proper animation
+				if (CSE::EntityStates::WALK2 != ballAnimation.Get())
+				{
+					ballAnimation.Set(CSE::EntityStates::WALK2);
+					ballAnimation.Start();
+				}
 			}
 			
+			// CSE_LOG("Change substate 2 condition");
+			// change substate
 			if (CSE::Input::IsButtonPressed(ballKeyBoard.controls[CSE::Commands::KBCommand_Right]))
 			{
-				// change substate
 				if (ballPosition.direction != 1)
 				{
 					ballPosition.direction = 1;
-					ballAnimation.Set(CSE::EntityStates::WALK1);
 				}
-				ballPosition.x += 0.002f;
+				
+				// set a proper animation
+				if (CSE::EntityStates::WALK1 != ballAnimation.Get())
+				{
+					ballAnimation.Set(CSE::EntityStates::WALK1);
+					ballAnimation.Start();
+				}
 			}
 			
-			if (CSE::Input::IsButtonPressed(ballKeyBoard.controls[CSE::Commands::KBCommand_Up]))
-				ballPosition.y -= 0.002f;
-			if (CSE::Input::IsButtonPressed(ballKeyBoard.controls[CSE::Commands::KBCommand_Down]))
-				ballPosition.y += 0.002f;
-
-			// change state
-			if (!ballState.isWalking)
+			// CSE_LOG("Process state condition");
+			// process states
+			if (ballStateMachine.GetState()->data == CSE::EntityStates::WALK)
 			{
-				// exit previous state
-				ballAnimation.Stop();
-				// initiate new state
-				ballState.isWalking = true;
-				ballAnimation.Set((ballPosition.direction == 1) ? CSE::EntityStates::WALK1 : CSE::EntityStates::WALK2);
-				// start new state
-				ballAnimation.Start();
+				if (CSE::Input::IsButtonPressed(ballKeyBoard.controls[CSE::Commands::KBCommand_Up]))
+					ballPosition.y -= 0.002f;
+				if (CSE::Input::IsButtonPressed(ballKeyBoard.controls[CSE::Commands::KBCommand_Down]))
+					ballPosition.y += 0.002f;
+				if (CSE::Input::IsButtonPressed(ballKeyBoard.controls[CSE::Commands::KBCommand_Left]))
+					ballPosition.x -= 0.002f;
+				if (CSE::Input::IsButtonPressed(ballKeyBoard.controls[CSE::Commands::KBCommand_Right]))
+					ballPosition.x += 0.002f;
 			}
-			
-			// ballPosition.x += ballPosition.direction * 0.002f;
-			
 		} else {
-			// change state
-			if (ballState.isWalking)
+			if (ballStateMachine.GetState()->data == CSE::EntityStates::WALK)
 			{
-				// exit previous state
-				ballAnimation.Stop();
-				// initiate new state
-				ballState.isWalking = false;
-				// start new state
+				ballStateMachine.SetState(CSE::EntityStates::STAND);
+				
 				ballAnimation.Set((ballPosition.direction == 1) ? CSE::EntityStates::STAND1 : CSE::EntityStates::STAND2);
 				ballAnimation.Start();
 			}
