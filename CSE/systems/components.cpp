@@ -46,6 +46,16 @@ namespace CSE
 	{
 	}
 	
+	StateMachineComponent::~StateMachineComponent()
+	{
+		for (int i = 0; i < States.size(); i++)
+		{
+			if (States[i] != nullptr)
+				delete States[i];
+			States[i] = nullptr;
+		}
+	}
+	
 	// Animation Component - Animation Frames
 	AnimationFrames::AnimationFrames()
 	{

@@ -100,8 +100,12 @@ namespace CSE
 		bool isShooting = false;
 		bool isDying = false;
 		
+		// every group of entities might share the same set of states  
+		std::vector<State*> States;
+		
 		StateMachineComponent();
 		StateMachineComponent(const StateMachineComponent&) = default;
+		~StateMachineComponent();
 	};
 	
 	// ================== Animation ===================

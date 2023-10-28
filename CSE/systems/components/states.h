@@ -5,6 +5,9 @@
 
 namespace CSE
 {
+	// TODO: Redesign it to be a bitmask defined by CSE/constants.h
+	// But remember: 64 bit (8 bytes per state) is the max, so 
+	// 				 we can afford only 64 different states to set per entity.
 	struct StateStruct // this is the data that defines a state
 	{
 		//	 state					 // usual transitions
@@ -25,6 +28,7 @@ namespace CSE
 	{
 	public:
 		State();
+		State(EntityStates::EntityState value);
 		State(const State&) = default;
 		
 		~State();
@@ -38,15 +42,19 @@ namespace CSE
 		
 		// concept: block if not in the list
 		void AllowEntry(State* state);
+		bool IsAllowedEntryFrom(State* state);
 		void BlockEntry(State* state); // check in the list, remove if found
 		
 		void AllowExit(State* state);
+		bool IsAllowedExitTo(State* state);
 		void BlockExit(State* state); // check in the list, remove if found
+		
+		// data
+		EntityStates::EntityState data; // see EntityState
 		
 	private:
 		std::vector<State*> m_AllowEntry;
 		std::vector<State*> m_AllowExit;
-		StateStruct m_StateData;
 	};
 }
 
