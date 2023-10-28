@@ -66,7 +66,9 @@ public:
 			
 			std::unordered_map<int, SDL_Keycode> ballKBControls = {
 				{CSE::Commands::KBCommand_Left, CSE::ScanCode::Left}, 
-				{CSE::Commands::KBCommand_Right, CSE::ScanCode::Right}
+				{CSE::Commands::KBCommand_Right, CSE::ScanCode::Right},
+				{CSE::Commands::KBCommand_Up, CSE::ScanCode::Up},
+				{CSE::Commands::KBCommand_Down, CSE::ScanCode::Down}
 			};
 			
 			CSE::KeyBoardComponent& keyboard = ball->AddComponent<CSE::KeyBoardComponent>(ballKBControls);
@@ -111,7 +113,9 @@ public:
 		auto& ballState = ball->GetComponent<CSE::StateMachineComponent>();
 		
 		if ((CSE::Input::IsButtonPressed(ballKeyBoard.controls[CSE::Commands::KBCommand_Left])) ||
-			(CSE::Input::IsButtonPressed(ballKeyBoard.controls[CSE::Commands::KBCommand_Right])))
+			(CSE::Input::IsButtonPressed(ballKeyBoard.controls[CSE::Commands::KBCommand_Right])) ||
+			(CSE::Input::IsButtonPressed(ballKeyBoard.controls[CSE::Commands::KBCommand_Up])) ||
+			(CSE::Input::IsButtonPressed(ballKeyBoard.controls[CSE::Commands::KBCommand_Down])))
 		{
 			if (CSE::Input::IsButtonPressed(ballKeyBoard.controls[CSE::Commands::KBCommand_Left]))
 			{
@@ -121,6 +125,7 @@ public:
 					ballPosition.direction = -1;
 					ballAnimation.Set(CSE::EntityStates::WALK2);
 				}
+				ballPosition.x -= 0.002f;
 			}
 			
 			if (CSE::Input::IsButtonPressed(ballKeyBoard.controls[CSE::Commands::KBCommand_Right]))
@@ -131,7 +136,13 @@ public:
 					ballPosition.direction = 1;
 					ballAnimation.Set(CSE::EntityStates::WALK1);
 				}
+				ballPosition.x += 0.002f;
 			}
+			
+			if (CSE::Input::IsButtonPressed(ballKeyBoard.controls[CSE::Commands::KBCommand_Up]))
+				ballPosition.y -= 0.002f;
+			if (CSE::Input::IsButtonPressed(ballKeyBoard.controls[CSE::Commands::KBCommand_Down]))
+				ballPosition.y += 0.002f;
 
 			// change state
 			if (!ballState.isWalking)
@@ -145,7 +156,7 @@ public:
 				ballAnimation.Start();
 			}
 			
-			ballPosition.x += ballPosition.direction * 0.002f;
+			// ballPosition.x += ballPosition.direction * 0.002f;
 			
 		} else {
 			// change state

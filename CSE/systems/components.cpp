@@ -54,10 +54,40 @@ namespace CSE
 				delete States[i];
 			States[i] = nullptr;
 		}
+		m_CurrentState = nullptr;
 	}
 	
 	void StateMachineComponent::AddState(State* state)
 	{
+		auto it = std::find(States.begin(), States.end(), state);
+		if (it != States.end())
+		{
+			States.push_back(state);
+		} else {
+			CSE_CORE_LOG("Can't add the state: already exists");
+		}
+	}
+	
+	void StateMachineComponent::SetState(State* state)
+	{
+		if (m_CurrentState->IsAllowedExitTo(state))
+		{
+			if (state->IsAllowedEntryFrom(m_CurrentState))
+			{
+				m_CurrentState->OnExit();
+				m_CurrentState = state;
+				m_CurrentState->OnEnter();
+			} else {
+				CSE_CORE_LOG("The state cannot be entered from this one.");
+			}
+		} else {
+			CSE_CORE_LOG("Exit to the scene is not allowed from this one");
+		}
+	}
+	
+	State* StateMachineComponent::GetState()
+	{
+		return m_CurrentState;
 	}
 	
 	// Animation Component - Animation Frames

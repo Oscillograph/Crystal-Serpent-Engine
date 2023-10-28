@@ -108,6 +108,11 @@ namespace CSE
 		~StateMachineComponent();
 		
 		void AddState(State* state);
+		void SetState(State* state);
+		State* GetState();
+		
+	private:
+		State* m_CurrentState = nullptr;
 	};
 	
 	// ================== Animation ===================
