@@ -91,7 +91,7 @@ namespace CSE
 		}
 		
 		// tiling texture across the place rectangle
-		if ((tilingFactor.x != 1.0f) && (tilingFactor.y != 1.0f))
+		if ((tilingFactor.x != 1.0f) || (tilingFactor.y != 1.0f))
 		{
 			// if the region is the whole window, we need that window to get the correct *place
 			int windowWidth;
@@ -138,7 +138,7 @@ namespace CSE
 						tileHeight = (*source).h;
 					}
 					
-					*newPlace = { x * source->w * scaleX * tilingFactor.x, y * source->h * scaleY * tilingFactor.x, tileWidth * scaleX * tilingFactor.x, tileHeight * scaleY * tilingFactor.y };
+					*newPlace = { x * source->w * scaleX * tilingFactor.x, y * source->h * scaleY * tilingFactor.y, tileWidth * scaleX * tilingFactor.x, tileHeight * scaleY * tilingFactor.y };
 					*newSource = { source->x, source->y, tileWidth, tileHeight };
 					
 					SDL_RenderCopy(GetActiveRenderer(), texture, newSource, newPlace);
