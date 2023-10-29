@@ -1,6 +1,7 @@
 #include <CSE/systems/scene.h>
 #include <CSE/systems/entity.h>
 #include <CSE/systems/components.h>
+#include <CSE/systems/physics.h>
 
 #include <CSE/systems/renderer.h>
 #include <CSE/systems/window.h>

@@ -300,6 +300,25 @@ namespace CSE
 	{
 		return controls[state];
 	}
+	
+	// Physics Component - HitBox
+	PhysicsHitBox::PhysicsHitBox()
+	{
+	}
+	
+	PhysicsHitBox::~PhysicsHitBox()
+	{
+		parent = nullptr;
+	}
+	
+	// Physics Component - HitBox
+	PhysicsComponent::PhysicsComponent()
+	{
+	}
+	
+	PhysicsComponent::~PhysicsComponent()
+	{
+	}
 }
 
 

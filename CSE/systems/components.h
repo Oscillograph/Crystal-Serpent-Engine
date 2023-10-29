@@ -152,9 +152,33 @@ namespace CSE
 	// ================================================
 	
 	// ==================  Physics  ===================
+	namespace PhysicsDefines
+	{
+		typedef enum
+		{
+			Dynamic, // interaction with different bodies
+			Static, // doesn't react to other bodies, but other bodies react on this one
+			Astral, // reacts to other bodies, but other bodies don't react to this one
+			Banned // no interaction possible
+		} BodyType;
+		
+		typedef enum
+		{
+			Rectangle,
+			Circle
+		} HitBoxType;
+	}
+	
 	struct PhysicsHitBox
 	{
-		std::vector<PhysicsHitBox> hitBoxes; // it's a tree
+		// it's a tree
+		std::vector<PhysicsHitBox> children;
+		PhysicsHitBox* parent = nullptr;
+		
+		// characteristics
+		int hitBoxType = PhysicsDefines::HitBoxType::Rectangle;
+		std::vector<SDL_Point> points; // meters
+		float radius = 0.0f; // meters, only used in Circle HitBoxes
 		
 		PhysicsHitBox();
 		PhysicsHitBox(const PhysicsHitBox&) = default;
@@ -164,6 +188,15 @@ namespace CSE
 	struct PhysicsComponent
 	{
 		std::vector<PhysicsHitBox> hitBoxes;
+		
+		int bodyType = PhysicsDefines::BodyType::Dynamic;
+		
+		// translational movement
+		glm::vec2 velocity = glm::vec2(0.0f); // m/s
+		glm::vec2 acceleration = glm::vec2(0.0f); // m/s^2
+		
+		// characteristics
+		float mass = 0.0f; // kg
 		
 		PhysicsComponent();
 		PhysicsComponent(const PhysicsComponent&) = default;
