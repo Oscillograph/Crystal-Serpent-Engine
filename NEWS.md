@@ -11,6 +11,7 @@ Changelog:
 + Scenes Update routine automates work with animations and draw calls;
 + Custom Input class and keycode/scancode predefines support;
 + Made sure that inverted animations supported;
++ Renderer supports tiling;
 
 ## 0.2.2 ##
 Changelog:
