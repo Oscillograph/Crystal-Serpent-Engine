@@ -89,18 +89,6 @@ namespace CSE
 	
 	struct StateMachineComponent
 	{
-		bool isStanding = false;
-		bool isMoving = false;
-		bool isWalking = false;
-		bool isJumping = false;
-		bool isFlying = false;
-		bool isFalling = false;
-		bool isBumping = false;
-		bool isFighting = false;
-		bool isHitting = false;
-		bool isShooting = false;
-		bool isDying = false;
-		
 		// every group of entities might share the same set of states  
 		std::vector<State*> States;
 		
@@ -160,6 +148,26 @@ namespace CSE
 		void Unpause();
 		void Reset();
 		void Change(int state, AnimationFrames* animFrames);
+	};
+	// ================================================
+	
+	// ==================  Physics  ===================
+	struct PhysicsHitBox
+	{
+		std::vector<PhysicsHitBox> hitBoxes; // it's a tree
+		
+		PhysicsHitBox();
+		PhysicsHitBox(const PhysicsHitBox&) = default;
+		~PhysicsHitBox();
+	};
+	
+	struct PhysicsComponent
+	{
+		std::vector<PhysicsHitBox> hitBoxes;
+		
+		PhysicsComponent();
+		PhysicsComponent(const PhysicsComponent&) = default;
+		~PhysicsComponent();
 	};
 	// ================================================
 }
