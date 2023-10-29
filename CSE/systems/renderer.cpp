@@ -1,4 +1,5 @@
 #include <CSE/systems/renderer.h>
+#include <CSE/systems/application.h>
 
 namespace CSE
 {
@@ -11,12 +12,12 @@ namespace CSE
 	
 	void Renderer::SetBackgroundColor(const glm::u8vec4& color)
 	{
-		SDL_SetRenderDrawColor(m_Renderer, color.x, color.y, color.z, color.w);
+		SDL_SetRenderDrawColor(GetActiveRenderer(), color.x, color.y, color.z, color.w);
 	}
 	
 	void Renderer::ClearScreen()
 	{
-		SDL_RenderClear(m_Renderer);
+		SDL_RenderClear(GetActiveRenderer());
 	}
 	
 	uint32_t Renderer::GetPixel(SDL_Surface *surface, int x, int y)
@@ -58,42 +59,104 @@ namespace CSE
 		}
 	}
 	
-	void Renderer::DrawTexture(SDL_Texture* texture, SDL_FRect* stretchRect, SDL_Rect* srcRect, float scaleX, float scaleY)
+	void Renderer::DrawTexture(SDL_Texture* texture, SDL_FRect* destRect, SDL_Rect* srcRect, float scaleX, float scaleY)
 	{
-		SDL_Rect place = 
-		{ 
-			(int)round(stretchRect->x * scaleX),
-			(int)round(stretchRect->y * scaleY),
-			(int)round(stretchRect->w * scaleX),
-			(int)round(stretchRect->h * scaleY)
-		};
+		GeneralDrawTexture(texture, destRect, srcRect, scaleX, scaleY, false, glm::vec4(1.0f));
+	}
+	
+	void Renderer::DrawTiledTexture(SDL_Texture* texture, SDL_FRect* destRect, SDL_Rect* srcRect, float scaleX, float scaleY, bool tiling)
+	{
+		GeneralDrawTexture(texture, destRect, srcRect, scaleX, scaleY, tiling, glm::vec4(1.0f));
+	}
+	
+	void Renderer::GeneralDrawTexture(SDL_Texture* texture, SDL_FRect* destRect, SDL_Rect* srcRect, float scaleX, float scaleY, bool tiling, const glm::vec4& tintColor)
+	{
+		SDL_Rect* place = new SDL_Rect;
+		SDL_Rect* source = new SDL_Rect;
 		
-		SDL_Rect source;
-		
+		// correct the source rectangle
 		if (srcRect != NULL)
 		{
-			source = 
-			{ 
-				srcRect->x,
-				srcRect->y,
-				srcRect->w,
-				srcRect->h
-			};
+			*source = { srcRect->x, srcRect->y, srcRect->w, srcRect->h };
 		} else {
-			source = 
-			{
-				(int)round(stretchRect->x),
-				(int)round(stretchRect->y),
-				(int)round(stretchRect->w),
-				(int)round(stretchRect->h)
-			};
+			source = NULL;
 		}
 		
-		SDL_RenderCopy(m_Renderer, texture, &source, &place);
+		// correct the destination rectangle
+		if (destRect != NULL)
+		{
+			*place = { (int)round(destRect->x * scaleX), (int)round(destRect->y * scaleY), (int)round(destRect->w * scaleX), (int)round(destRect->h * scaleY) };
+		} else {
+			place = NULL;
+		}
+		
+		// tiling texture across the place rectangle
+		if (tiling)
+		{
+			// if the region is the whole window, we need that window to get the correct *place
+			int windowWidth;
+			int windowHeight;
+			// TODO: find out why Application::Get()->GetWindows() is not allowed to be accessed from here
+			SDL_GetWindowSize(SDL_RenderGetWindow(GetActiveRenderer()), &windowWidth, &windowHeight);
+			
+			// correct the destination rectangle
+			*place = { 0, 0, windowWidth, windowHeight };
+			
+			// now, get subPlaces and RenderCopy there
+			int xNum = (*place).w / ((*source).w * scaleX);
+			int xMod = (*place).w / scaleX - xNum * (*source).w; // get the non-scaled remainder in X coordinate
+			if (xMod > 0)
+				xNum++;
+			
+			int yNum = (*place).h / ((*source).h * scaleY);
+			int yMod = (*place).h / scaleY - yNum * (*source).h; // get the non-scaled remainder in Y coordinate
+			if (yMod > 0)
+				yNum++;
+			
+			SDL_Rect* newPlace = new SDL_Rect;
+			SDL_Rect* newSource = new SDL_Rect;
+			*newSource = *source;
+			
+			int tileWidth = 0;
+			int tileHeight = 0;
+			
+			for (int x = 0; x < xNum; x++)
+			{
+				if ((x == (xNum - 1)) && (xMod > 0))
+				{
+					tileWidth = xMod;
+				} else {
+					tileWidth = (*source).w;
+				}
+				
+				for (int y = 0; y < yNum; y++)
+				{
+					if ((y == (yNum - 1)) && (yMod > 0))
+					{
+						tileHeight = yMod;
+					} else {
+						tileHeight = (*source).h;
+					}
+					
+					*newPlace = { x * source->w * scaleX, y * source->h * scaleY, tileWidth * scaleX, tileHeight * scaleY };
+					*newSource = { source->x, source->y, tileWidth, tileHeight };
+					
+					SDL_RenderCopy(GetActiveRenderer(), texture, newSource, newPlace);
+				}
+			}
+			
+			delete newPlace;
+			delete newSource;
+		} else {
+			SDL_RenderCopy(GetActiveRenderer(), texture, source, place);
+		}
+		
+		delete place;
+		delete source;
 	}
 	
 	void Renderer::Update()
 	{
-		SDL_RenderPresent(m_Renderer);
+		SDL_RenderPresent(GetActiveRenderer());
 	}
 }

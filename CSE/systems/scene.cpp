@@ -140,12 +140,13 @@ namespace CSE
 				};
 			}
 
-			CSE::Renderer::DrawTexture(
+			CSE::Renderer::DrawTiledTexture(
 				spriteComponent.texture->GetTexture(),
 				&place,
 				&frame,
 				m_Layer->GetWindow()->GetScale().x,
-				m_Layer->GetWindow()->GetScale().y
+				m_Layer->GetWindow()->GetScale().y,
+				spriteComponent.tiling
 				);
 		}
 	}

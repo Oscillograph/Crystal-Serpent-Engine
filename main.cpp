@@ -27,7 +27,8 @@ public:
 			logo = CreateEntity("CSE Logotype");
 			logo->AddComponent<CSE::PositionComponent>(0.5f, 0.5f);
 			sprite = new CSE::Texture("./CSE/assets/CSE_logo.png", GetLayer()->GetWindow()->GetRenderer());
-			logo->AddComponent<CSE::SpriteComponent>(sprite);
+			CSE::SpriteComponent& spriteComponent = logo->AddComponent<CSE::SpriteComponent>(sprite);
+			spriteComponent.tiling = true;
 		}
 	}
 	

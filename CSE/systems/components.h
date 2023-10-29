@@ -48,6 +48,7 @@ namespace CSE
 	struct SpriteComponent
 	{
 		Texture* texture = nullptr;
+		bool tiling = false;
 		
 		SpriteComponent() = default;
 		SpriteComponent(const SpriteComponent&) = default;
