@@ -28,7 +28,7 @@ public:
 			logo->AddComponent<CSE::PositionComponent>(0.5f, 0.5f);
 			sprite = new CSE::Texture("./CSE/assets/CSE_logo.png", GetLayer()->GetWindow()->GetRenderer());
 			CSE::SpriteComponent& spriteComponent = logo->AddComponent<CSE::SpriteComponent>(sprite);
-			spriteComponent.tilingFactor = {1.0f, 1.0f};
+			// spriteComponent.tilingFactor = {0.0f, 0.0f};
 		}
 	}
 	
@@ -304,6 +304,7 @@ public:
 		}
 		
 		// LimitFPS(CSE_FPS60);
+		// LimitFPS(CSE_FPSNOLIMIT);
 	};
 	~App() 
 	{

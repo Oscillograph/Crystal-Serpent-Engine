@@ -29,7 +29,7 @@ namespace CSE
 		static uint32_t GetPixel(SDL_Surface *surface, int x, int y);
 		static void DrawTexture(SDL_Texture* texture, SDL_FRect* destRect, SDL_Rect* srcRect, float scaleX, float scaleY);
 		static void DrawTiledTexture(SDL_Texture* texture, SDL_FRect* destRect, SDL_Rect* srcRect, float scaleX, float scaleY, const glm::vec2& tilingFactor);
-		static void GeneralDrawTexture(SDL_Texture* texture, SDL_FRect* destRect, SDL_Rect* srcRect, float scaleX, float scaleY, const glm::vec2& tilingFactor, const glm::vec4& tintColor);
+		static void GeneralDrawTexture(SDL_Texture* texture, SDL_FRect* destRect, SDL_Rect* srcRect, float scaleX, float scaleY, glm::vec2 tilingFactor, const glm::vec4& tintColor);
 		
 		// mid-level methods (advanced renderer commands)
 		static void Update();

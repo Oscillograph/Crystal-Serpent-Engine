@@ -48,7 +48,7 @@ namespace CSE
 	struct SpriteComponent
 	{
 		Texture* texture = nullptr;
-		glm::vec2 tilingFactor = {1.0f, 1.0f};
+		glm::vec2 tilingFactor = {0.0f, 0.0f};
 		
 		SpriteComponent() = default;
 		SpriteComponent(const SpriteComponent&) = default;

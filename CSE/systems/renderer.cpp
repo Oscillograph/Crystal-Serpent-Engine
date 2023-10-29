@@ -69,7 +69,7 @@ namespace CSE
 		GeneralDrawTexture(texture, destRect, srcRect, scaleX, scaleY, tilingFactor, glm::vec4(1.0f));
 	}
 	
-	void Renderer::GeneralDrawTexture(SDL_Texture* texture, SDL_FRect* destRect, SDL_Rect* srcRect, float scaleX, float scaleY, const glm::vec2& tilingFactor, const glm::vec4& tintColor)
+	void Renderer::GeneralDrawTexture(SDL_Texture* texture, SDL_FRect* destRect, SDL_Rect* srcRect, float scaleX, float scaleY, glm::vec2 tilingFactor, const glm::vec4& tintColor)
 	{
 		SDL_Rect* place = new SDL_Rect;
 		SDL_Rect* source = new SDL_Rect;
@@ -91,8 +91,14 @@ namespace CSE
 		}
 		
 		// tiling texture across the place rectangle
-		if ((tilingFactor.x != 1.0f) || (tilingFactor.y != 1.0f))
+		if ((tilingFactor.x != 0.0f) || (tilingFactor.y != 0.0f))
 		{
+			// prevent division by zero
+			if (tilingFactor.x == 0.0f)
+				tilingFactor.x = 0.01f;
+			if (tilingFactor.y == 0.0f)
+				tilingFactor.y = 0.01f;
+			
 			// if the region is the whole window, we need that window to get the correct *place
 			int windowWidth;
 			int windowHeight;
