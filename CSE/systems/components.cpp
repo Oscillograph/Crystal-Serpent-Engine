@@ -37,7 +37,7 @@ namespace CSE
 	
 	// Sprite Component
 	SpriteComponent::SpriteComponent(Texture* value)
-		: texture(value) 
+		: texture(value), tilingFactor(glm::vec2(1.0f))
 	{
 	};
 	

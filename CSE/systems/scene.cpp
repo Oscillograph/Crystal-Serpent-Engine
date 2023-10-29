@@ -146,7 +146,7 @@ namespace CSE
 				&frame,
 				m_Layer->GetWindow()->GetScale().x,
 				m_Layer->GetWindow()->GetScale().y,
-				spriteComponent.tiling
+				spriteComponent.tilingFactor
 				);
 		}
 	}

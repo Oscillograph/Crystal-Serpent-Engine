@@ -61,15 +61,15 @@ namespace CSE
 	
 	void Renderer::DrawTexture(SDL_Texture* texture, SDL_FRect* destRect, SDL_Rect* srcRect, float scaleX, float scaleY)
 	{
-		GeneralDrawTexture(texture, destRect, srcRect, scaleX, scaleY, false, glm::vec4(1.0f));
+		GeneralDrawTexture(texture, destRect, srcRect, scaleX, scaleY, glm::vec2(1.0f), glm::vec4(1.0f));
 	}
 	
-	void Renderer::DrawTiledTexture(SDL_Texture* texture, SDL_FRect* destRect, SDL_Rect* srcRect, float scaleX, float scaleY, bool tiling)
+	void Renderer::DrawTiledTexture(SDL_Texture* texture, SDL_FRect* destRect, SDL_Rect* srcRect, float scaleX, float scaleY, const glm::vec2& tilingFactor)
 	{
-		GeneralDrawTexture(texture, destRect, srcRect, scaleX, scaleY, tiling, glm::vec4(1.0f));
+		GeneralDrawTexture(texture, destRect, srcRect, scaleX, scaleY, tilingFactor, glm::vec4(1.0f));
 	}
 	
-	void Renderer::GeneralDrawTexture(SDL_Texture* texture, SDL_FRect* destRect, SDL_Rect* srcRect, float scaleX, float scaleY, bool tiling, const glm::vec4& tintColor)
+	void Renderer::GeneralDrawTexture(SDL_Texture* texture, SDL_FRect* destRect, SDL_Rect* srcRect, float scaleX, float scaleY, const glm::vec2& tilingFactor, const glm::vec4& tintColor)
 	{
 		SDL_Rect* place = new SDL_Rect;
 		SDL_Rect* source = new SDL_Rect;
@@ -91,7 +91,7 @@ namespace CSE
 		}
 		
 		// tiling texture across the place rectangle
-		if (tiling)
+		if ((tilingFactor.x != 1.0f) && (tilingFactor.y != 1.0f))
 		{
 			// if the region is the whole window, we need that window to get the correct *place
 			int windowWidth;
@@ -103,13 +103,13 @@ namespace CSE
 			*place = { 0, 0, windowWidth, windowHeight };
 			
 			// now, get subPlaces and RenderCopy there
-			int xNum = (*place).w / ((*source).w * scaleX);
-			int xMod = (*place).w / scaleX - xNum * (*source).w; // get the non-scaled remainder in X coordinate
+			int xNum = (int)round((*place).w / ((*source).w * scaleX * tilingFactor.x));
+			int xMod = (int)round((*place).w / scaleX - xNum * (*source).w); // get the non-scaled remainder in X coordinate
 			if (xMod > 0)
 				xNum++;
 			
-			int yNum = (*place).h / ((*source).h * scaleY);
-			int yMod = (*place).h / scaleY - yNum * (*source).h; // get the non-scaled remainder in Y coordinate
+			int yNum = (int)round((*place).h / ((*source).h * scaleY * tilingFactor.y));
+			int yMod = (int)round((*place).h / scaleY - yNum * (*source).h); // get the non-scaled remainder in Y coordinate
 			if (yMod > 0)
 				yNum++;
 			
@@ -138,7 +138,7 @@ namespace CSE
 						tileHeight = (*source).h;
 					}
 					
-					*newPlace = { x * source->w * scaleX, y * source->h * scaleY, tileWidth * scaleX, tileHeight * scaleY };
+					*newPlace = { x * source->w * scaleX * tilingFactor.x, y * source->h * scaleY * tilingFactor.x, tileWidth * scaleX * tilingFactor.x, tileHeight * scaleY * tilingFactor.y };
 					*newSource = { source->x, source->y, tileWidth, tileHeight };
 					
 					SDL_RenderCopy(GetActiveRenderer(), texture, newSource, newPlace);
