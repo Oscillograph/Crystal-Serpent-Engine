@@ -53,6 +53,9 @@ public:
 		if (ball != nullptr)
 			delete ball;
 		ball = nullptr;
+		if (floor != nullptr)
+			delete floor;
+		floor = nullptr;
 	}
 	
 	void Init()
@@ -113,6 +116,33 @@ public:
 				);
 			animationComponent.Set(CSE::EntityStates::STAND1);
 			animationComponent.Start();
+		}
+		
+		if (floor == nullptr)
+		{
+			// a ball entity on the screen
+			floor = CreateEntity("Floor");
+			CSE::PositionComponent& position = floor->AddComponent<CSE::PositionComponent>(0.1f, 0.9f);
+			CSE::TransformComponent& transform = floor->AddComponent<CSE::TransformComponent>();
+			transform.size = {1.0f, 0.05f};
+			
+			CSE::StateMachineComponent& stateMachine = floor->AddComponent<CSE::StateMachineComponent>();
+			stateMachine.AddState(CSE::EntityStates::STAND);
+			stateMachine.SetState(CSE::EntityStates::STAND);
+			
+			CSE::SpriteComponent& spriteComponent = floor->AddComponent<CSE::SpriteComponent>(sprite);
+			spriteComponent.tilingFactor = {1.0f, 1.0f};
+			
+			CSE::AnimationComponent& animationComponent = floor->AddComponent<CSE::AnimationComponent>();
+			animationComponent.Add(
+				CSE::EntityStates::STAND1, 
+				new CSE::AnimationFrames( {72, 26}, {76, 29}, 5, 4, 4.0f, true)
+				);
+			animationComponent.Set(CSE::EntityStates::STAND1);
+			animationComponent.Start();
+			
+			CSE::PhysicsComponent& physicsComponent = floor->AddComponent<CSE::PhysicsComponent>();
+			physicsComponent.bodyType = CSE::PhysicsDefines::BodyType::Static;
 		}
 	}
 	
@@ -184,6 +214,7 @@ public:
 					ballPosition.x -= 0.002f;
 				if (CSE::Input::IsButtonPressed(ballKeyBoard.controls[CSE::Commands::KBCommand_Right]))
 					ballPosition.x += 0.002f;
+				CSE_LOG("Ball coordinates: (", ballPosition.x, "; ", ballPosition.y, ")");
 			}
 		} else {
 			if (ballStateMachine.GetState()->data == CSE::EntityStates::WALK)
@@ -200,6 +231,7 @@ public:
 private:
 	CSE::Texture* sprite = nullptr;
 	CSE::Entity* ball = nullptr;
+	CSE::Entity* floor = nullptr;
 };
 
 // Layers of the main (default) window, which is created with the application start.

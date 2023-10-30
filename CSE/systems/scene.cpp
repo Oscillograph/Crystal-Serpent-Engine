@@ -94,9 +94,6 @@ namespace CSE
 			SDL_FRect place; // where to draw
 			SDL_Rect frame; // what to draw from a spritesheet
 			
-			place = {50, 50, 79, 29};
-			frame = {0, 0, 79, 29};
-			
 			if (e.HasComponent<AnimationComponent>())
 			{
 				AnimationComponent& animationComponent = e.GetComponent<AnimationComponent>();
@@ -117,8 +114,6 @@ namespace CSE
 					frame.w, 
 					frame.h
 				};
-				
-				// CSE_CORE_LOG("Place: { ", place.x, ", ", place.y, ", ", place.w, ", ", place.h, " }");
 			} else {
 				frame = 
 				{
@@ -130,13 +125,9 @@ namespace CSE
 				
 				place = 
 				{
-					// position.NormalizedToWindow(m_Layer->GetWindow()).x - spriteComponent.texture->GetWidth()/2,
 					0, 
-					// position.NormalizedToWindow(m_Layer->GetWindow()).y - spriteComponent.texture->GetHeight()/2,
 					0,
-					// spriteComponent.texture->GetWidth(),
 					m_Layer->GetWindow()->GetPrefs().width,
-					// spriteComponent.texture->GetHeight()
 					m_Layer->GetWindow()->GetPrefs().height
 				};
 			}

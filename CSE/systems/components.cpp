@@ -35,6 +35,18 @@ namespace CSE
 		return newXY;
 	}
 	
+	// Transform Component
+	glm::vec2 TransformComponent::NormalizedToWindow(Window* window)
+	{
+		glm::vec2 newSize = 
+		{
+			window->GetPrefs().width * size.x,
+			window->GetPrefs().height * size.y,
+		};
+		
+		return newSize;
+	}
+	
 	// Sprite Component
 	SpriteComponent::SpriteComponent(Texture* value)
 		: texture(value), tilingFactor(glm::vec2(0.0f))

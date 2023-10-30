@@ -36,6 +36,17 @@ namespace CSE
 		SDL_FPoint NormalizedToWindow(Window* window);
 	};
 	
+	struct TransformComponent
+	{
+		glm::vec2 size = {1.0f, 1.0f}; // meters
+		float rotation = 0.0f; // counter-clockwise, radians
+		
+		TransformComponent() = default;
+		TransformComponent(const TransformComponent&) = default;
+		
+		glm::vec2 NormalizedToWindow(Window* window);
+	};
+	
 	struct UUIDComponent 
 	{
 		uint64_t value = 0;
@@ -190,6 +201,10 @@ namespace CSE
 		std::vector<PhysicsHitBox> hitBoxes;
 		
 		int bodyType = PhysicsDefines::BodyType::Dynamic;
+		
+		// time management
+		int timeInitial = 0; // in milliseconds - should be updated with SDL_GetTicks64()
+		float time; // in seconds - should be initiated with timeInitial / 1000.0f and updated with (SDL_GetTicks64() - timeInitial) / 1000.0f
 		
 		// translational movement
 		glm::vec2 velocity = glm::vec2(0.0f); // m/s
