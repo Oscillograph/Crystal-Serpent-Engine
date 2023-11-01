@@ -66,7 +66,8 @@ namespace CSE
 		for (Window* window : m_WindowStack)
 		{
 			Renderer::SetActiveRenderer(window->GetRenderer());
-			Renderer::SetBackgroundColor({30, 50, 90, 255});
+			// Renderer::SetBackgroundColor({30, 50, 90, 255});
+			Renderer::SetBackgroundColor({60, 30, 50, 255});
 		}
 		
 		broscillograph = new Texture("./CSE/assets/CSE_logo.png", (m_WindowStack.GetContents())[0]->GetRenderer());

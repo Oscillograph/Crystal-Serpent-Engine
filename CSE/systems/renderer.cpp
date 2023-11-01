@@ -87,7 +87,14 @@ namespace CSE
 		{
 			*place = { (int)round(destRect->x * scaleX), (int)round(destRect->y * scaleY), (int)round(destRect->w * scaleX), (int)round(destRect->h * scaleY) };
 		} else {
-			place = NULL;
+			// if the region is the whole window, we need that window to get the correct *place
+			int windowWidth;
+			int windowHeight;
+			// TODO: find out why Application::Get()->GetWindows() is not allowed to be accessed from here
+			SDL_GetWindowSize(SDL_RenderGetWindow(GetActiveRenderer()), &windowWidth, &windowHeight);
+			
+			*place = { 0, 0, windowWidth, windowHeight };
+			// not making it NULL is important for the next step - tiling
 		}
 		
 		// tiling texture across the place rectangle
@@ -99,23 +106,14 @@ namespace CSE
 			if (tilingFactor.y == 0.0f)
 				tilingFactor.y = 0.01f;
 			
-			// if the region is the whole window, we need that window to get the correct *place
-			int windowWidth;
-			int windowHeight;
-			// TODO: find out why Application::Get()->GetWindows() is not allowed to be accessed from here
-			SDL_GetWindowSize(SDL_RenderGetWindow(GetActiveRenderer()), &windowWidth, &windowHeight);
-			
-			// correct the destination rectangle
-			// *place = { 0, 0, windowWidth, windowHeight };
-			
 			// now, get subPlaces and RenderCopy there
-			int xNum = (int)round((*place).w / ((*source).w * scaleX * tilingFactor.x));
-			int xMod = (int)round((*place).w / scaleX - xNum * (*source).w); // get the non-scaled remainder in X coordinate
+			int xNum = (int)round((*place).w / ((*source).w * scaleX * tilingFactor.x)); // how many whole tiles there are?
+			int xMod = (int)round((xNum + 1) * (*source).w - (*place).w / scaleX); // how big is the partial tile left?
 			if (xMod > 0)
 				xNum++;
 			
-			int yNum = (int)round((*place).h / ((*source).h * scaleY * tilingFactor.y));
-			int yMod = (int)round((*place).h / scaleY - yNum * (*source).h); // get the non-scaled remainder in Y coordinate
+			int yNum = (int)round((*place).h / ((*source).h * scaleY * tilingFactor.y)); // how many whole tiles there are?
+			int yMod = (int)round((yNum + 1) * (*source).h - (*place).h / scaleY); // how big is the partial tile left?
 			if (yMod > 0)
 				yNum++;
 			
@@ -144,10 +142,28 @@ namespace CSE
 						tileHeight = (*source).h;
 					}
 					
-					*newPlace = { x * source->w * scaleX * tilingFactor.x, y * source->h * scaleY * tilingFactor.y, tileWidth * scaleX * tilingFactor.x, tileHeight * scaleY * tilingFactor.y };
-					*newSource = { source->x, source->y, tileWidth, tileHeight };
+					*newPlace = 
+					{
+						(*place).x + x * (*source).w * scaleX * tilingFactor.x, 
+						(*place).y + y * (*source).h * scaleY * tilingFactor.y, 
+						tileWidth * scaleX * tilingFactor.x, 
+						tileHeight * scaleY * tilingFactor.y 
+					};
 					
-					SDL_RenderCopy(GetActiveRenderer(), texture, newSource, newPlace);
+					*newSource = 
+					{ 
+						(*source).x, 
+						(*source).y, 
+						tileWidth, 
+						tileHeight 
+					};
+					
+					SDL_RenderCopy(
+						GetActiveRenderer(), 
+						texture, 
+						newSource, 
+						newPlace
+						);
 				}
 			}
 			

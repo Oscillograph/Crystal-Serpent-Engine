@@ -70,7 +70,7 @@ public:
 			position.direction = 1; // 1 means right, -1 means left
 			
 			CSE::TransformComponent& transform = ball->AddComponent<CSE::TransformComponent>();
-			transform.size = {0.2f, 0.3f};
+			transform.size = {0.1f, 0.15f};
 			
 			CSE::StateMachineComponent& stateMachine = ball->AddComponent<CSE::StateMachineComponent>();
 			CSE::State* ballWalkState = stateMachine.AddState(CSE::EntityStates::WALK);
@@ -127,16 +127,16 @@ public:
 		{
 			// a ball entity on the screen
 			floor = CreateEntity("Floor");
-			CSE::PositionComponent& position = floor->AddComponent<CSE::PositionComponent>(0.1f, 0.9f);
+			CSE::PositionComponent& position = floor->AddComponent<CSE::PositionComponent>(0.5f, 0.9f);
 			CSE::TransformComponent& transform = floor->AddComponent<CSE::TransformComponent>();
-			transform.size = {0.5f, 0.05f};
+			transform.size = {0.001f, 0.5f};
 			
 			CSE::StateMachineComponent& stateMachine = floor->AddComponent<CSE::StateMachineComponent>();
 			stateMachine.AddState(CSE::EntityStates::STAND);
 			stateMachine.SetState(CSE::EntityStates::STAND);
 			
 			CSE::SpriteComponent& spriteComponent = floor->AddComponent<CSE::SpriteComponent>(sprite);
-			spriteComponent.tilingFactor = {5.0f, 5.0f};
+			spriteComponent.tilingFactor = {2.0f, 2.0f};
 			
 			CSE::AnimationComponent& animationComponent = floor->AddComponent<CSE::AnimationComponent>();
 			animationComponent.Add(
