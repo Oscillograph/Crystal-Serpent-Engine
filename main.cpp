@@ -26,6 +26,8 @@ public:
 		{
 			logo = CreateEntity("CSE Logotype");
 			logo->AddComponent<CSE::PositionComponent>(0.5f, 0.5f);
+			CSE::TransformComponent& transform = logo->AddComponent<CSE::TransformComponent>();
+			transform.size = {1.0f, 1.0f};
 			sprite = new CSE::Texture("./CSE/assets/CSE_logo.png", GetLayer()->GetWindow()->GetRenderer());
 			CSE::SpriteComponent& spriteComponent = logo->AddComponent<CSE::SpriteComponent>(sprite);
 			// spriteComponent.tilingFactor = {0.0f, 0.0f};
@@ -66,6 +68,9 @@ public:
 			ball = CreateEntity("Ball");
 			CSE::PositionComponent& position = ball->AddComponent<CSE::PositionComponent>(0.5f, 0.5f);
 			position.direction = 1; // 1 means right, -1 means left
+			
+			CSE::TransformComponent& transform = ball->AddComponent<CSE::TransformComponent>();
+			transform.size = {0.2f, 0.3f};
 			
 			CSE::StateMachineComponent& stateMachine = ball->AddComponent<CSE::StateMachineComponent>();
 			CSE::State* ballWalkState = stateMachine.AddState(CSE::EntityStates::WALK);
@@ -124,14 +129,14 @@ public:
 			floor = CreateEntity("Floor");
 			CSE::PositionComponent& position = floor->AddComponent<CSE::PositionComponent>(0.1f, 0.9f);
 			CSE::TransformComponent& transform = floor->AddComponent<CSE::TransformComponent>();
-			transform.size = {1.0f, 0.05f};
+			transform.size = {0.5f, 0.05f};
 			
 			CSE::StateMachineComponent& stateMachine = floor->AddComponent<CSE::StateMachineComponent>();
 			stateMachine.AddState(CSE::EntityStates::STAND);
 			stateMachine.SetState(CSE::EntityStates::STAND);
 			
 			CSE::SpriteComponent& spriteComponent = floor->AddComponent<CSE::SpriteComponent>(sprite);
-			spriteComponent.tilingFactor = {1.0f, 1.0f};
+			spriteComponent.tilingFactor = {5.0f, 5.0f};
 			
 			CSE::AnimationComponent& animationComponent = floor->AddComponent<CSE::AnimationComponent>();
 			animationComponent.Add(

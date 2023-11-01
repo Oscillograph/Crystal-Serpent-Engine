@@ -5,12 +5,17 @@
 
 namespace CSE
 {
+	class Scene;
+	class Entity;
+	
 	class PhysicsProcessor
 	{
 	public:
-		static void CollisionSelection();
-		static void CollisionDetection();
-		static void CollisionReaction();
+		static void CollisionSelection(Entity* A, Entity* B);
+		static void CollisionDetection(Entity* A, Entity* B);
+		static void CollisionReaction(Entity* A, Entity* B);
+		
+		static void GeneralRoutine(Scene* scene);
 		
 	private:
 	};

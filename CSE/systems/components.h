@@ -60,6 +60,8 @@ namespace CSE
 	{
 		Texture* texture = nullptr;
 		glm::vec2 tilingFactor = {0.0f, 0.0f};
+		glm::vec2 size = {1.0f, 1.0f}; // meters
+		float rotation = 0.0f; // counter-clockwise, radians
 		
 		SpriteComponent() = default;
 		SpriteComponent(const SpriteComponent&) = default;

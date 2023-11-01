@@ -38,6 +38,7 @@ namespace CSE
 		inline std::string GetName() { return m_Name; }
 		
 		inline bool HasScene() { return (m_Scene != nullptr); }
+		inline Scene* GetScene() { return m_Scene; }
 		inline bool IsEnabled() { return m_Enabled; }
 		inline void Enable() { m_Enabled = true; }
 		inline void Disable() { m_Enabled = false; }

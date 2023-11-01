@@ -106,7 +106,7 @@ namespace CSE
 			SDL_GetWindowSize(SDL_RenderGetWindow(GetActiveRenderer()), &windowWidth, &windowHeight);
 			
 			// correct the destination rectangle
-			*place = { 0, 0, windowWidth, windowHeight };
+			// *place = { 0, 0, windowWidth, windowHeight };
 			
 			// now, get subPlaces and RenderCopy there
 			int xNum = (int)round((*place).w / ((*source).w * scaleX * tilingFactor.x));

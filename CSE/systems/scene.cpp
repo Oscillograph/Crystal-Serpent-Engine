@@ -89,10 +89,17 @@ namespace CSE
 		{
 			Entity e = Entity(entity, this);
 			PositionComponent& position = e.GetComponent<PositionComponent>();
+			TransformComponent& transform = e.GetComponent<TransformComponent>();
 			SpriteComponent& spriteComponent = e.GetComponent<SpriteComponent>();
 			
 			SDL_FRect place; // where to draw
 			SDL_Rect frame; // what to draw from a spritesheet
+			
+			glm::vec2 windowSize = 
+			{ 
+				m_Layer->GetWindow()->GetPrefs().width, 
+				m_Layer->GetWindow()->GetPrefs().height 
+			};
 			
 			if (e.HasComponent<AnimationComponent>())
 			{
@@ -106,14 +113,6 @@ namespace CSE
 					std::abs(frameset->width),
 					std::abs(frameset->height)
 				};
-				
-				place = 
-				{
-					position.NormalizedToWindow(m_Layer->GetWindow()).x - frame.w/2, 
-					position.NormalizedToWindow(m_Layer->GetWindow()).y - frame.h/2,
-					frame.w, 
-					frame.h
-				};
 			} else {
 				frame = 
 				{
@@ -122,15 +121,15 @@ namespace CSE
 					spriteComponent.texture->GetWidth(), 
 					spriteComponent.texture->GetHeight() 
 				};
-				
-				place = 
-				{
-					0, 
-					0,
-					m_Layer->GetWindow()->GetPrefs().width,
-					m_Layer->GetWindow()->GetPrefs().height
-				};
 			}
+			
+			place = 
+			{
+				windowSize.x * (position.x - transform.size.x/2), 
+				windowSize.y * (position.y - transform.size.y/2),
+				windowSize.x * transform.size.x,
+				windowSize.y * transform.size.y,
+			};
 
 			CSE::Renderer::DrawTiledTexture(
 				spriteComponent.texture->GetTexture(),
