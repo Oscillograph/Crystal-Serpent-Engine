@@ -193,14 +193,14 @@ public:
 			floor = CreateEntity("Floor");
 			CSE::PositionComponent& position = floor->AddComponent<CSE::PositionComponent>(0.5f, 0.9f);
 			CSE::TransformComponent& transform = floor->AddComponent<CSE::TransformComponent>();
-			transform.size = {0.001f, 0.5f};
+			transform.size = {0.05f, 0.5f};
 			
 			CSE::StateMachineComponent& stateMachine = floor->AddComponent<CSE::StateMachineComponent>();
 			stateMachine.AddState(CSE::EntityStates::STAND);
 			stateMachine.SetState(CSE::EntityStates::STAND);
 			
 			CSE::SpriteComponent& spriteComponent = floor->AddComponent<CSE::SpriteComponent>(sprite);
-			spriteComponent.tilingFactor = {2.0f, 2.0f};
+			spriteComponent.tilingFactor = {0.0f, 2.0f};
 			
 			CSE::AnimationComponent& animationComponent = floor->AddComponent<CSE::AnimationComponent>();
 			animationComponent.Add(

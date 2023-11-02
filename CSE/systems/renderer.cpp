@@ -100,22 +100,33 @@ namespace CSE
 		// tiling texture across the place rectangle
 		if ((tilingFactor.x != 0.0f) || (tilingFactor.y != 0.0f))
 		{
-			// prevent division by zero
-			if (tilingFactor.x == 0.0f)
-				tilingFactor.x = 0.01f;
-			if (tilingFactor.y == 0.0f)
-				tilingFactor.y = 0.01f;
-			
 			// now, get subPlaces and RenderCopy there
-			int xNum = (int)round((*place).w / ((*source).w * scaleX * tilingFactor.x)); // how many whole tiles there are?
-			int xMod = (int)round((xNum + 1) * (*source).w - (*place).w / scaleX); // how big is the partial tile left?
-			if (xMod > 0)
-				xNum++;
+			int xNum, yNum; // how many whole tiles there are?
+			int xMod, yMod; // how big is the partial tile left?
 			
-			int yNum = (int)round((*place).h / ((*source).h * scaleY * tilingFactor.y)); // how many whole tiles there are?
-			int yMod = (int)round((yNum + 1) * (*source).h - (*place).h / scaleY); // how big is the partial tile left?
-			if (yMod > 0)
-				yNum++;
+			if (tilingFactor.x > 0.0f)
+			{
+				xNum = (int)round((*place).w / ((*source).w * scaleX * tilingFactor.x)); 
+				xMod = (int)round((xNum + 1) * (*source).w - (*place).w / scaleX); 
+				if (xMod > 0)
+					xNum++;
+			} else { // not only prevent division by zero, but also allow no-tiling at all
+				xNum = 1;
+				xMod = 0;
+				tilingFactor.x = 1.0f; // prevent multiplying by zero
+			}
+			
+			if (tilingFactor.y > 0.0f)
+			{
+				yNum = (int)round((*place).h / ((*source).h * scaleY * tilingFactor.y)); // how many whole tiles there are?
+				yMod = (int)round((yNum + 1) * (*source).h - (*place).h / scaleY); // how big is the partial tile left?
+				if (yMod > 0)
+					yNum++;
+			} else { // not only prevent division by zero, but also allow no-tiling at all
+				yNum = 1;
+				yMod = 0;
+				tilingFactor.y = 1.0f; // prevent multiplying by zero
+			}
 			
 			SDL_Rect* newPlace = new SDL_Rect;
 			SDL_Rect* newSource = new SDL_Rect;
