@@ -7,6 +7,8 @@
 // bricks of the renderer system
 #include <CSE/systems/renderer/texture.h>
 
+// TODO: Consider developing Render class into a per-scene object instead of a static global
+
 namespace CSE
 {
 	// TODO: Draw graphic primitives

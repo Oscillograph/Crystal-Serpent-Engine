@@ -97,6 +97,7 @@ namespace CSE
 			// not making it NULL is important for the next step - tiling
 		}
 		
+		// TODO: Adjust tiling to pixel size
 		// tiling texture across the place rectangle
 		if ((tilingFactor.x != 0.0f) || (tilingFactor.y != 0.0f))
 		{
