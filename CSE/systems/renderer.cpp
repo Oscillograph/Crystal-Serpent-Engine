@@ -74,20 +74,22 @@ namespace CSE
 		}
 	}
 	
-	void Renderer::DrawTexture(SDL_Texture* texture, SDL_FRect* destRect, SDL_Rect* srcRect, float scaleX, float scaleY)
+	void Renderer::DrawTexture(SDL_Texture* texture, SDL_FRect* destRect, SDL_Rect* srcRect)
 	{
-		GeneralDrawTexture(texture, destRect, srcRect, scaleX, scaleY, glm::vec2(1.0f), glm::vec4(1.0f));
+		GeneralDrawTexture(texture, destRect, srcRect, glm::vec2(1.0f), glm::vec4(1.0f));
 	}
 	
-	void Renderer::DrawTiledTexture(SDL_Texture* texture, SDL_FRect* destRect, SDL_Rect* srcRect, float scaleX, float scaleY, const glm::vec2& tilingFactor)
+	void Renderer::DrawTiledTexture(SDL_Texture* texture, SDL_FRect* destRect, SDL_Rect* srcRect, const glm::vec2& tilingFactor)
 	{
-		GeneralDrawTexture(texture, destRect, srcRect, scaleX, scaleY, tilingFactor, glm::vec4(1.0f));
+		GeneralDrawTexture(texture, destRect, srcRect, tilingFactor, glm::vec4(1.0f));
 	}
 	
-	void Renderer::GeneralDrawTexture(SDL_Texture* texture, SDL_FRect* destRect, SDL_Rect* srcRect, float scaleX, float scaleY, glm::vec2 tilingFactor, const glm::vec4& tintColor)
+	void Renderer::GeneralDrawTexture(SDL_Texture* texture, SDL_FRect* destRect, SDL_Rect* srcRect, glm::vec2 tilingFactor, const glm::vec4& tintColor)
 	{
 		SDL_Rect* place = new SDL_Rect;
 		SDL_Rect* source = new SDL_Rect;
+		float scaleX = m_Scene->GetLayer()->GetWindow()->GetScale().x;
+		float scaleY = m_Scene->GetLayer()->GetWindow()->GetScale().y;
 		
 		// correct the source rectangle
 		if (srcRect != NULL)
@@ -100,62 +102,77 @@ namespace CSE
 		// correct the destination rectangle
 		if (destRect != NULL)
 		{
-			*place = { (int)round(destRect->x * scaleX), (int)round(destRect->y * scaleY), (int)round(destRect->w * scaleX), (int)round(destRect->h * scaleY) };
+			*place = 
+			{ 
+				(int)floorf(destRect->x * scaleX), 
+				(int)floorf(destRect->y * scaleY), 
+				(int)floorf(destRect->w * scaleX), 
+				(int)floorf(destRect->h * scaleY) 
+			};
 		} else {
-			// if the region is the whole window, we need that window to get the correct *place
+			// not making it NULL is important for the next step - tiling
 			int windowWidth;
 			int windowHeight;
 			// TODO: find out why Application::Get()->GetWindows() is not allowed to be accessed from here
-			SDL_GetWindowSize(SDL_RenderGetWindow(GetActiveRenderer()), &windowWidth, &windowHeight);
+			SDL_GetWindowSize(m_Scene->GetLayer()->GetWindow()->GetNativeWindow(), &windowWidth, &windowHeight);
 			
-			*place = { 0, 0, windowWidth, windowHeight };
-			// not making it NULL is important for the next step - tiling
+			*place = 
+			{ 
+				0, 
+				0, 
+				windowWidth, 
+				windowHeight 
+			};
 		}
 		
-		// TODO: Adjust tiling to pixel size
 		// tiling texture across the place rectangle
+		// TODO: Adjust tiling to pixel size
 		if ((tilingFactor.x != 0.0f) || (tilingFactor.y != 0.0f))
 		{
 			// now, get subPlaces and RenderCopy there
 			int xNum, yNum; // how many whole tiles there are?
 			int xMod, yMod; // how big is the partial tile left?
+			int tileWidth = (*source).w;
+			int tileHeight = (*source).h;
 			
+			// CSE_CORE_LOG("Region width: ", (*destRect).w, "; height: ", (*destRect).h);
+			// CSE_CORE_LOG("Tile width: ", tileWidth, "; height: ", tileHeight);
+			// CSE_CORE_LOG("Tiling factor: (", tilingFactor.x, "; ", tilingFactor.y, ")");
 			if (tilingFactor.x > 0.0f)
 			{
-				xNum = (int)round((*place).w / ((*source).w * scaleX * tilingFactor.x)); 
-				xMod = (int)round((xNum + 1) * (*source).w - (*place).w / scaleX); 
+				xNum = (int)floorf((*destRect).w / (floor)(tileWidth * tilingFactor.x)); 
+				xMod = (int)floorf((*destRect).w - (xNum * tileWidth * tilingFactor.x));
 				if (xMod > 0)
 					xNum++;
+				// CSE_CORE_LOG("xNum: ", xNum, "; xMod: ", xMod, "");
 			} else { // not only prevent division by zero, but also allow no-tiling at all
 				xNum = 1;
 				xMod = 0;
-				tilingFactor.x = (*place).w / scaleX; // prevent multiplying by zero
+				tilingFactor.x = (*destRect).w / tileWidth; // prevent multiplying by zero
 			}
 			
 			if (tilingFactor.y > 0.0f)
 			{
-				yNum = (int)round((*place).h / ((*source).h * scaleY * tilingFactor.y)); // how many whole tiles there are?
-				yMod = (int)round((yNum + 1) * (*source).h - (*place).h / scaleY); // how big is the partial tile left?
+				yNum = (int)floorf((*destRect).h / (floor)(tileHeight * tilingFactor.y)); // how many whole tiles there are?
+				yMod = (int)floorf((*destRect).h - (yNum * tileHeight * tilingFactor.y)); // how big is the partial tile left?
 				if (yMod > 0)
 					yNum++;
+				// CSE_CORE_LOG("yNum: ", yNum, "; yMod: ", yMod, "");
 			} else { // not only prevent division by zero, but also allow no-tiling at all
 				yNum = 1;
 				yMod = 0;
-				tilingFactor.y = (*place).h / scaleY; // prevent multiplying by zero
+				tilingFactor.y = (*destRect).h / tileHeight; // prevent multiplying by zero
 			}
 			
 			SDL_Rect* newPlace = new SDL_Rect;
 			SDL_Rect* newSource = new SDL_Rect;
 			*newSource = *source;
 			
-			int tileWidth = 0;
-			int tileHeight = 0;
-			
 			for (int x = 0; x < xNum; x++)
 			{
 				if ((x == (xNum - 1)) && (xMod > 0))
 				{
-					tileWidth = xMod;
+					tileWidth = xMod / tilingFactor.x;
 				} else {
 					tileWidth = (*source).w;
 				}
@@ -164,18 +181,21 @@ namespace CSE
 				{
 					if ((y == (yNum - 1)) && (yMod > 0))
 					{
-						tileHeight = yMod;
+						tileHeight = yMod / tilingFactor.y;
 					} else {
 						tileHeight = (*source).h;
 					}
 					
+					// CSE_LOG("scaleX: ", scaleX, "; scaleY: ", scaleY);
 					*newPlace = 
 					{
-						(*place).x + x * (*source).w * scaleX * tilingFactor.x, 
-						(*place).y + y * (*source).h * scaleY * tilingFactor.y, 
-						tileWidth * scaleX * tilingFactor.x, 
-						tileHeight * scaleY * tilingFactor.y 
+						(int)floorf(scaleX * ((*destRect).x + x * (*source).w * tilingFactor.x)), 
+						(int)floorf(scaleY * ((*destRect).y + y * (*source).h * tilingFactor.y)), 
+						(int)floorf(scaleX * tileWidth * tilingFactor.x), 
+						(int)floorf(scaleY * tileHeight * tilingFactor.y) 
 					};
+					// CSE_LOG("Tile width: ", tileWidth, "; height: ", tileHeight);
+					// CSE_LOG("New place (SDL_Rect): (", (*newPlace).x, "; ", (*newPlace).y, "; ", (*newPlace).w, "; ", (*newPlace).h, ")");
 					
 					*newSource = 
 					{ 
@@ -211,13 +231,13 @@ namespace CSE
 		
 		SDL_Rect rect = 
 		{
-			(int)round(scaleX * (center.x - size.x/2)), 
-			(int)round(scaleY * (center.y - size.y/2)), 
-			(int)round(scaleX * size.x), 
-			(int)round(scaleY * size.y)
+			(int)roundf(scaleX * (center.x - size.x/2)), 
+			(int)roundf(scaleY * (center.y - size.y/2)), 
+			(int)roundf(scaleX * size.x), 
+			(int)roundf(scaleY * size.y)
 		};
 		
-		SDL_SetRenderDrawColor(GetActiveRenderer(), 255, 255, 255, 255);
+		SDL_SetRenderDrawColor(GetActiveRenderer(), 128, 255, 255, 255);
 		SDL_RenderDrawRect(GetActiveRenderer(), &rect);
 		SetBackgroundColor(m_BackgroundColor);
 	}

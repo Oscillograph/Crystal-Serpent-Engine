@@ -55,6 +55,9 @@ public:
 		if (spriteBG != nullptr)
 			delete spriteBG;
 		spriteBG = nullptr;
+		if (spriteSDL != nullptr)
+			delete spriteSDL;
+		spriteSDL = nullptr;
 		if (player1 != nullptr)
 			delete player1;
 		player1 = nullptr;
@@ -67,6 +70,9 @@ public:
 		if (background != nullptr)
 			delete background;
 		background = nullptr;
+		if (backgroundSDL != nullptr)
+			delete backgroundSDL;
+		backgroundSDL = nullptr;
 	}
 	
 	void Init()
@@ -76,10 +82,21 @@ public:
 			background = CreateEntity("Background");
 			background->AddComponent<CSE::PositionComponent>(0.25f, 0.25f);
 			CSE::TransformComponent& transform = background->AddComponent<CSE::TransformComponent>();
-			transform.size = {0.25f, 0.25f};
+			transform.size = {0.5f, 0.5f};
 			spriteBG = new CSE::Texture("./CSE/assets/CSE_logo.png", GetLayer()->GetWindow()->GetRenderer(), {0, 0, 0});
 			CSE::SpriteComponent& spriteComponent = background->AddComponent<CSE::SpriteComponent>(spriteBG);
-			spriteComponent.tilingFactor = {0.3f, 0.3f};
+			spriteComponent.tilingFactor = {0.6f, 0.6f};
+		}
+		
+		if (backgroundSDL == nullptr)
+		{
+			backgroundSDL = CreateEntity("Background");
+			backgroundSDL->AddComponent<CSE::PositionComponent>(0.75f, 0.25f);
+			CSE::TransformComponent& transform = backgroundSDL->AddComponent<CSE::TransformComponent>();
+			transform.size = {0.5f, 0.5f};
+			spriteSDL = new CSE::Texture("./CSE/assets/SDL_logo.png", GetLayer()->GetWindow()->GetRenderer(), {0, 0, 0});
+			CSE::SpriteComponent& spriteComponent = backgroundSDL->AddComponent<CSE::SpriteComponent>(spriteSDL);
+			spriteComponent.tilingFactor = {0.4f, 0.4f};
 		}
 		
 		if (player1 == nullptr)
@@ -225,7 +242,7 @@ public:
 			floor = CreateEntity("Floor");
 			CSE::PositionComponent& position = floor->AddComponent<CSE::PositionComponent>(0.5f, 0.9f);
 			CSE::TransformComponent& transform = floor->AddComponent<CSE::TransformComponent>();
-			transform.size = {0.03f, 0.5f};
+			transform.size = {0.01f, 0.5f};
 			
 			CSE::StateMachineComponent& stateMachine = floor->AddComponent<CSE::StateMachineComponent>();
 			stateMachine.AddState(CSE::EntityStates::STAND);
@@ -413,10 +430,12 @@ public:
 private:
 	CSE::Texture* sprite = nullptr;
 	CSE::Texture* spriteBG = nullptr;
+	CSE::Texture* spriteSDL = nullptr;
 	CSE::Entity* player1 = nullptr;
 	CSE::Entity* player2 = nullptr;
 	CSE::Entity* floor = nullptr;
 	CSE::Entity* background = nullptr;
+	CSE::Entity* backgroundSDL = nullptr;
 };
 
 // Layers of the main (default) window, which is created with the application start.

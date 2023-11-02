@@ -133,12 +133,11 @@ namespace CSE
 				windowSize.y * transform.size.y,
 			};
 
+			// CSE_CORE_LOG("Entity ", e.GetComponent<CSE::NameComponent>().value);
 			CSE::Renderer::DrawTiledTexture(
 				spriteComponent.texture->GetTexture(),
 				&place,
 				&frame,
-				m_Layer->GetWindow()->GetScale().x,
-				m_Layer->GetWindow()->GetScale().y,
 				spriteComponent.tilingFactor
 				);
 			CSE::Renderer::DrawRect({position.x, position.y}, {transform.size.x, transform.size.y});
