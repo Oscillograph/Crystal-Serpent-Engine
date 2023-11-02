@@ -7,6 +7,7 @@ namespace CSE
 	SDL_Renderer* Renderer::m_Renderer = nullptr;
 	Scene* Renderer::m_Scene = nullptr;
 	glm::vec2 Renderer::m_PixelSize = glm::vec2(1.0f);
+	glm::uvec4 Renderer::m_BackgroundColor = glm::uvec4(1.0f);
 	
 	void Renderer::SetActiveRenderer(SDL_Renderer* renderer)
 	{
@@ -25,6 +26,7 @@ namespace CSE
 	
 	void Renderer::SetBackgroundColor(const glm::u8vec4& color)
 	{
+		m_BackgroundColor = color;
 		SDL_SetRenderDrawColor(GetActiveRenderer(), color.x, color.y, color.z, color.w);
 	}
 	
@@ -200,6 +202,24 @@ namespace CSE
 		
 		delete place;
 		delete source;
+	}
+	
+	void Renderer::DrawRect(SDL_FPoint center, SDL_FPoint size)
+	{
+		float scaleX = m_Scene->GetLayer()->GetWindow()->GetPrefs().width * m_Scene->GetLayer()->GetWindow()->GetScale().x;
+		float scaleY = m_Scene->GetLayer()->GetWindow()->GetPrefs().height * m_Scene->GetLayer()->GetWindow()->GetScale().y;
+		
+		SDL_Rect rect = 
+		{
+			(int)round(scaleX * (center.x - size.x/2)), 
+			(int)round(scaleY * (center.y - size.y/2)), 
+			(int)round(scaleX * size.x), 
+			(int)round(scaleY * size.y)
+		};
+		
+		SDL_SetRenderDrawColor(GetActiveRenderer(), 255, 255, 255, 255);
+		SDL_RenderDrawRect(GetActiveRenderer(), &rect);
+		SetBackgroundColor(m_BackgroundColor);
 	}
 	
 	void Renderer::Update()

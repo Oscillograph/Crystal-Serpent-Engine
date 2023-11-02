@@ -141,6 +141,7 @@ namespace CSE
 				m_Layer->GetWindow()->GetScale().y,
 				spriteComponent.tilingFactor
 				);
+			CSE::Renderer::DrawRect({position.x, position.y}, {transform.size.x, transform.size.y});
 		}
 	}
 	

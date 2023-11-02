@@ -52,6 +52,9 @@ public:
 		if (sprite != nullptr)
 			delete sprite;
 		sprite = nullptr;
+		if (spriteBG != nullptr)
+			delete spriteBG;
+		spriteBG = nullptr;
 		if (player1 != nullptr)
 			delete player1;
 		player1 = nullptr;
@@ -61,10 +64,24 @@ public:
 		if (floor != nullptr)
 			delete floor;
 		floor = nullptr;
+		if (background != nullptr)
+			delete background;
+		background = nullptr;
 	}
 	
 	void Init()
 	{
+		if (background == nullptr)
+		{
+			background = CreateEntity("Background");
+			background->AddComponent<CSE::PositionComponent>(0.25f, 0.25f);
+			CSE::TransformComponent& transform = background->AddComponent<CSE::TransformComponent>();
+			transform.size = {0.25f, 0.25f};
+			spriteBG = new CSE::Texture("./CSE/assets/CSE_logo.png", GetLayer()->GetWindow()->GetRenderer(), {0, 0, 0});
+			CSE::SpriteComponent& spriteComponent = background->AddComponent<CSE::SpriteComponent>(spriteBG);
+			spriteComponent.tilingFactor = {0.3f, 0.3f};
+		}
+		
 		if (player1 == nullptr)
 		{
 			// a player1 entity on the screen
@@ -208,7 +225,7 @@ public:
 			floor = CreateEntity("Floor");
 			CSE::PositionComponent& position = floor->AddComponent<CSE::PositionComponent>(0.5f, 0.9f);
 			CSE::TransformComponent& transform = floor->AddComponent<CSE::TransformComponent>();
-			transform.size = {0.003f, 0.5f};
+			transform.size = {0.03f, 0.5f};
 			
 			CSE::StateMachineComponent& stateMachine = floor->AddComponent<CSE::StateMachineComponent>();
 			stateMachine.AddState(CSE::EntityStates::STAND);
@@ -236,6 +253,7 @@ public:
 		CSE::KeyBoardComponent& player1KeyBoard = player1->GetComponent<CSE::KeyBoardComponent>();
 		CSE::AnimationComponent& player1Animation = player1->GetComponent<CSE::AnimationComponent>();
 		CSE::PositionComponent& player1Position = player1->GetComponent<CSE::PositionComponent>();
+		CSE::TransformComponent& player1Transform = player1->GetComponent<CSE::TransformComponent>();
 		CSE::StateMachineComponent& player1StateMachine = player1->GetComponent<CSE::StateMachineComponent>();
 		
 		if ((CSE::Input::IsButtonPressed(player1KeyBoard.controls[CSE::Commands::KBCommand_Left]))
@@ -299,6 +317,7 @@ public:
 				if (CSE::Input::IsButtonPressed(player1KeyBoard.controls[CSE::Commands::KBCommand_Right]))
 					player1Position.x += 0.002f;
 				CSE_LOG("player1 coordinates: (", player1Position.x, "; ", player1Position.y, ")");
+				CSE_LOG("player1 size: (", player1Transform.size.x, "; ", player1Transform.size.y, ")");
 			}
 		} else {
 			if (player1StateMachine.GetState()->data == CSE::EntityStates::WALK)
@@ -393,9 +412,11 @@ public:
 	
 private:
 	CSE::Texture* sprite = nullptr;
+	CSE::Texture* spriteBG = nullptr;
 	CSE::Entity* player1 = nullptr;
 	CSE::Entity* player2 = nullptr;
 	CSE::Entity* floor = nullptr;
+	CSE::Entity* background = nullptr;
 };
 
 // Layers of the main (default) window, which is created with the application start.

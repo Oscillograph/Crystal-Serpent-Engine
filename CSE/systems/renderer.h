@@ -36,6 +36,8 @@ namespace CSE
 		static void DrawTiledTexture(SDL_Texture* texture, SDL_FRect* destRect, SDL_Rect* srcRect, float scaleX, float scaleY, const glm::vec2& tilingFactor);
 		static void GeneralDrawTexture(SDL_Texture* texture, SDL_FRect* destRect, SDL_Rect* srcRect, float scaleX, float scaleY, glm::vec2 tilingFactor, const glm::vec4& tintColor);
 		
+		static void DrawRect(SDL_FPoint center, SDL_FPoint size);
+		
 		// mid-level methods (advanced renderer commands)
 		static void Update();
 		
@@ -46,6 +48,7 @@ namespace CSE
 		static Scene* m_Scene;
 		
 		static glm::vec2 m_PixelSize;
+		static glm::uvec4 m_BackgroundColor;
 	};
 }
 
