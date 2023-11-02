@@ -12,6 +12,7 @@ Changelog:
 + Custom Input class and keycode/scancode predefines support;
 + Made sure that inverted animations supported;
 + Renderer supports tiling;
++ Engine draws Wireframes if necessary to debug rendering;
 
 ## 0.2.2 ##
 Changelog:
