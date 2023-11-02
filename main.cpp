@@ -76,14 +76,29 @@ public:
 			transform.size = {0.1f, 0.15f};
 			
 			CSE::StateMachineComponent& stateMachine = player1->AddComponent<CSE::StateMachineComponent>();
-			CSE::State* player1WalkState = stateMachine.AddState(CSE::EntityStates::WALK);
-			CSE::State* player1StandState = stateMachine.AddState(CSE::EntityStates::STAND);
+			CSE::State* walkState = stateMachine.AddState(CSE::EntityStates::WALK);
+			CSE::State* standState = stateMachine.AddState(CSE::EntityStates::STAND);
+			CSE::State* jumpState = stateMachine.AddState(CSE::EntityStates::JUMP);
+			CSE::State* flyState = stateMachine.AddState(CSE::EntityStates::FLY);
+			CSE::State* fallState = stateMachine.AddState(CSE::EntityStates::FALL);
 
-			player1WalkState->AllowEntryFrom(player1StandState->data); 
-			player1WalkState->AllowExitTo(player1StandState->data);
+			walkState->AllowEntryFrom(standState->data); 
+			walkState->AllowExitTo(standState->data);
 			
-			player1StandState->AllowEntryFrom(player1WalkState->data);
-			player1StandState->AllowExitTo(player1WalkState->data);
+			standState->AllowEntryFrom(walkState->data);
+			standState->AllowExitTo(walkState->data);
+			
+			jumpState->AllowEntryFrom(standState->data);
+			jumpState->AllowEntryFrom(walkState->data);
+			jumpState->AllowExitTo(flyState->data);
+			
+			flyState->AllowEntryFrom(jumpState->data);
+			flyState->AllowExitTo(fallState->data);
+			
+			fallState->AllowEntryFrom(flyState->data);
+			fallState->AllowExitTo(standState->data);
+			fallState->AllowExitTo(walkState->data);
+			
 			stateMachine.SetState(CSE::EntityStates::STAND);
 			
 			std::unordered_map<int, SDL_Keycode> player1KBControls = {
@@ -193,7 +208,7 @@ public:
 			floor = CreateEntity("Floor");
 			CSE::PositionComponent& position = floor->AddComponent<CSE::PositionComponent>(0.5f, 0.9f);
 			CSE::TransformComponent& transform = floor->AddComponent<CSE::TransformComponent>();
-			transform.size = {0.05f, 0.5f};
+			transform.size = {0.003f, 0.5f};
 			
 			CSE::StateMachineComponent& stateMachine = floor->AddComponent<CSE::StateMachineComponent>();
 			stateMachine.AddState(CSE::EntityStates::STAND);

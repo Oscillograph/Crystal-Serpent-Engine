@@ -85,6 +85,8 @@ namespace CSE
 	
 	void Scene::Draw()
 	{
+		Renderer::SetActiveScene(this);
+		
 		for (auto entity : m_Registry.view<SpriteComponent>())
 		{
 			Entity e = Entity(entity, this);

@@ -1,13 +1,26 @@
 #include <CSE/systems/renderer.h>
 #include <CSE/systems/application.h>
+#include <CSE/systems/scene.h>
 
 namespace CSE
 {
 	SDL_Renderer* Renderer::m_Renderer = nullptr;
+	Scene* Renderer::m_Scene = nullptr;
+	glm::vec2 Renderer::m_PixelSize = glm::vec2(1.0f);
 	
 	void Renderer::SetActiveRenderer(SDL_Renderer* renderer)
 	{
 		m_Renderer = renderer;
+	}
+	
+	void Renderer::SetActiveScene(Scene* scene)
+	{
+		m_Scene = scene;
+		
+		int newWidth, newHeight;
+		SDL_GetWindowSize(m_Scene->GetLayer()->GetWindow()->GetNativeWindow(), &newWidth, &newHeight);
+		m_PixelSize.x = newWidth / m_Scene->GetLayer()->GetWindow()->GetPrefs().width;
+		m_PixelSize.y = newHeight / m_Scene->GetLayer()->GetWindow()->GetPrefs().height;
 	}
 	
 	void Renderer::SetBackgroundColor(const glm::u8vec4& color)
@@ -114,7 +127,7 @@ namespace CSE
 			} else { // not only prevent division by zero, but also allow no-tiling at all
 				xNum = 1;
 				xMod = 0;
-				tilingFactor.x = 1.0f; // prevent multiplying by zero
+				tilingFactor.x = (*place).w / scaleX; // prevent multiplying by zero
 			}
 			
 			if (tilingFactor.y > 0.0f)
@@ -126,7 +139,7 @@ namespace CSE
 			} else { // not only prevent division by zero, but also allow no-tiling at all
 				yNum = 1;
 				yMod = 0;
-				tilingFactor.y = 1.0f; // prevent multiplying by zero
+				tilingFactor.y = (*place).h / scaleY; // prevent multiplying by zero
 			}
 			
 			SDL_Rect* newPlace = new SDL_Rect;

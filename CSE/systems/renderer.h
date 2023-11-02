@@ -11,6 +11,8 @@
 
 namespace CSE
 {
+	class Scene;
+	
 	// TODO: Draw graphic primitives
 	// TODO: Draw text messages using raster fonts
 	// TODO: Draw text messages using TTF (ex.: FreeType)
@@ -20,6 +22,7 @@ namespace CSE
 	{
 	public:
 		static void SetActiveRenderer(SDL_Renderer* renderer);
+		static void SetActiveScene(Scene* scene);
 		
 		static void SetBackgroundColor(const glm::u8vec4& color);
 		static void ClearScreen();
@@ -40,7 +43,9 @@ namespace CSE
 		
 	private:
 		static SDL_Renderer* m_Renderer;
+		static Scene* m_Scene;
 		
+		static glm::vec2 m_PixelSize;
 	};
 }
 
