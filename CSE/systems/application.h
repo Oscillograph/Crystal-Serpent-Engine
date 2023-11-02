@@ -46,6 +46,7 @@ namespace CSE
 				delete m_ApplicationInstance; 
 			m_ApplicationInstance = app; 
 		}
+		inline static bool IsRenderWireframes() { return m_RenderWireframes; }
 		
 	protected:
 		bool m_Running = true;
@@ -61,6 +62,8 @@ namespace CSE
 		float m_TimeDelta = 0;
 		float m_TimeDeltaLimit = 0.0f;
 		// float m_TimeDeltaLimit = CSE_FPS60;
+		
+		static bool m_RenderWireframes;
 	};
 	
 	Application* CreateApplication();

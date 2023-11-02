@@ -3,6 +3,7 @@
 namespace CSE
 {
 	Application* Application::m_ApplicationInstance = nullptr;
+	bool Application::m_RenderWireframes = false;
 	
 	Application::Application()
 	{
@@ -102,6 +103,15 @@ namespace CSE
 						if (event.key.keysym.scancode == ScanCode::Esc)
 						{
 							m_Running = false;
+							break;
+						}
+					}
+					
+					if (event.type == SDL_KEYUP)
+					{
+						if (event.key.keysym.scancode == ScanCode::Tilde)
+						{
+							m_RenderWireframes = !m_RenderWireframes;
 							break;
 						}
 					}

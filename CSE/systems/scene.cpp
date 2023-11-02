@@ -3,6 +3,7 @@
 #include <CSE/systems/components.h>
 #include <CSE/systems/physics.h>
 
+#include <CSE/systems/application.h>
 #include <CSE/systems/renderer.h>
 #include <CSE/systems/window.h>
 #include <CSE/systems/layer.h>
@@ -140,7 +141,8 @@ namespace CSE
 				&frame,
 				spriteComponent.tilingFactor
 				);
-			CSE::Renderer::DrawRect({position.x, position.y}, {transform.size.x, transform.size.y});
+			if (Application::IsRenderWireframes())
+				CSE::Renderer::DrawRect({position.x, position.y}, {transform.size.x, transform.size.y});
 		}
 	}
 	
