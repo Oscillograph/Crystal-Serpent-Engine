@@ -116,11 +116,15 @@ public:
 			CSE::State* flyState = stateMachine.AddState(CSE::EntityStates::FLY);
 			CSE::State* fallState = stateMachine.AddState(CSE::EntityStates::FALL);
 
-			walkState->AllowEntryFrom(standState->data); 
+			walkState->AllowEntryFrom(standState->data);
+			walkState->AllowEntryFrom(fallState->data);
 			walkState->AllowExitTo(standState->data);
+			walkState->AllowExitTo(jumpState->data);
 			
 			standState->AllowEntryFrom(walkState->data);
+			standState->AllowEntryFrom(fallState->data);
 			standState->AllowExitTo(walkState->data);
+			standState->AllowExitTo(jumpState->data);
 			
 			jumpState->AllowEntryFrom(standState->data);
 			jumpState->AllowEntryFrom(walkState->data);
@@ -138,7 +142,7 @@ public:
 			std::unordered_map<int, SDL_Keycode> player1KBControls = {
 				{CSE::Commands::KBCommand_Left, CSE::ScanCode::Left}, 
 				{CSE::Commands::KBCommand_Right, CSE::ScanCode::Right},
-				{CSE::Commands::KBCommand_Up, CSE::ScanCode::Up},
+				{CSE::Commands::KBCommand_Jump, CSE::ScanCode::Up},
 				{CSE::Commands::KBCommand_Down, CSE::ScanCode::Down}
 			};
 			
@@ -199,7 +203,7 @@ public:
 			std::unordered_map<int, SDL_Keycode> player2KBControls = {
 				{CSE::Commands::KBCommand_Left, CSE::ScanCode::A}, 
 				{CSE::Commands::KBCommand_Right, CSE::ScanCode::D},
-				{CSE::Commands::KBCommand_Up, CSE::ScanCode::W},
+				{CSE::Commands::KBCommand_Jump, CSE::ScanCode::W},
 				{CSE::Commands::KBCommand_Down, CSE::ScanCode::S}
 			};
 			
@@ -278,60 +282,67 @@ public:
 			CSE::TransformComponent& transform = player.GetComponent<CSE::TransformComponent>();
 			CSE::StateMachineComponent& stateMachine = player.GetComponent<CSE::StateMachineComponent>();
 			
-			if ((CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Left]))
-				|| (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Right]))
-				|| (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Up]))
-				|| (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Down])))
+			// process states
+			// TODO: Implement physics: an update should take into consideration the app inner time
+			if (stateMachine.GetState()->data == CSE::EntityStates::STAND)
 			{
 				// change state
-				if (stateMachine.GetState()->data == CSE::EntityStates::STAND)
-				{
+				if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Left]))
 					stateMachine.SetState(CSE::EntityStates::WALK);
-					
-					// recover previous animation if a substate did not change
-					animation.Set((position.direction == 1) ? CSE::EntityStates::WALK1 : CSE::EntityStates::WALK2);
+				if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Right]))
+					stateMachine.SetState(CSE::EntityStates::WALK);
+				if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Jump]))
+					stateMachine.SetState(CSE::EntityStates::JUMP);
+				
+				// recover previous animation if a substate did not change
+				if ((CSE::EntityStates::STAND1 != animation.Get()) && (CSE::EntityStates::STAND2 != animation.Get()))
+				{
+					animation.Set((position.direction == 1) ? CSE::EntityStates::STAND1 : CSE::EntityStates::STAND2);
 					animation.Start();
 				}
-				
-				// change substate
-				if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Left]))
+			}
+			
+			if (stateMachine.GetState()->data == CSE::EntityStates::WALK)
+			{
+				if ((CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Left]))
+					|| (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Right]))
+					|| (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Jump])))
 				{
 					// change substate
-					if (position.direction != -1)
+					if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Left]))
 					{
-						position.direction = -1;
+						// change substate
+						if (position.direction != -1)
+						{
+							position.direction = -1;
+						}
+						
+						// set a proper animation
+						if (CSE::EntityStates::WALK2 != animation.Get())
+						{
+							animation.Set(CSE::EntityStates::WALK2);
+							animation.Start();
+						}
 					}
 					
-					// set a proper animation
-					if (CSE::EntityStates::WALK2 != animation.Get())
+					// change substate
+					if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Right]))
 					{
-						animation.Set(CSE::EntityStates::WALK2);
-						animation.Start();
-					}
-				}
-				
-				// change substate
-				if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Right]))
-				{
-					if (position.direction != 1)
-					{
-						position.direction = 1;
+						if (position.direction != 1)
+						{
+							position.direction = 1;
+						}
+						
+						// set a proper animation
+						if (CSE::EntityStates::WALK1 != animation.Get())
+						{
+							animation.Set(CSE::EntityStates::WALK1);
+							animation.Start();
+						}
 					}
 					
-					// set a proper animation
-					if (CSE::EntityStates::WALK1 != animation.Get())
-					{
-						animation.Set(CSE::EntityStates::WALK1);
-						animation.Start();
-					}
-				}
-				
-				// process states
-				// TODO: Implement physics: an update should take into consideration the app inner time
-				if (stateMachine.GetState()->data == CSE::EntityStates::WALK)
-				{
-					if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Up]))
-						position.y -= 0.002f;
+					if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Jump]))
+						stateMachine.SetState(CSE::EntityStates::JUMP);
 					if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Down]))
 						position.y += 0.002f;
 					if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Left]))
@@ -340,14 +351,44 @@ public:
 						position.x += 0.002f;
 					CSE_LOG(player.GetComponent<CSE::NameComponent>().value, " coordinates: (", position.x, "; ", position.y, ")");
 					CSE_LOG(player.GetComponent<CSE::NameComponent>().value, " size: (", transform.size.x, "; ", transform.size.y, ")");
-				}
-			} else {
-				if (stateMachine.GetState()->data == CSE::EntityStates::WALK)
-				{
+				} else {
 					stateMachine.SetState(CSE::EntityStates::STAND);
-					
-					animation.Set((position.direction == 1) ? CSE::EntityStates::STAND1 : CSE::EntityStates::STAND2);
+				}
+			}
+			
+			if (stateMachine.GetState()->data == CSE::EntityStates::JUMP)
+			{
+				if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Jump]))
+				{
+					if (position.y > 0.75f)
+					{
+						position.y -= 0.002f;
+					} else {
+						stateMachine.SetState(CSE::EntityStates::FLY);
+					}
+				} else {
+					stateMachine.SetState(CSE::EntityStates::FLY);
+				}
+				
+				if ((CSE::EntityStates::JUMP1 != animation.Get()) && (CSE::EntityStates::JUMP2 != animation.Get()))
+				{
+					animation.Set((position.direction == 1) ? CSE::EntityStates::JUMP1 : CSE::EntityStates::JUMP2);
 					animation.Start();
+				}
+			}
+			
+			if (stateMachine.GetState()->data == CSE::EntityStates::FLY)
+			{
+				stateMachine.SetState(CSE::EntityStates::FALL);
+			}
+			
+			if (stateMachine.GetState()->data == CSE::EntityStates::FALL)
+			{
+				if (position.y < 0.9f)
+				{
+					position.y += 0.002f;
+				} else {
+					stateMachine.SetState(CSE::EntityStates::STAND);
 				}
 			}
 			// \ THE player SECTION

@@ -16,78 +16,78 @@ namespace CSE
 	{
 		typedef enum {
 			// pour some syntax sugar on meh
-			BEGIN,
+			BEGIN		= 0,
 			
-			NONE, // this should be set  in stateStack component constructor
-			BIRTH,
-			IDLE,
-			
-			// one state/animation is simply not enough
-			ATTACK,
-			ATTACK1, 
-			ATTACK2,
-			ATTACK3,
+			NONE		= 1, // this should be set  in stateStack component constructor
+			BIRTH		= 2,
+			IDLE		= 3,
 			
 			// one state/animation is simply not enough
-			CAST,
-			CAST1,
-			CAST2,
-			CAST3,
+			ATTACK		= 4,
+			ATTACK1		= 5, 
+			ATTACK2		= 6,
+			ATTACK3		= 7,
 			
 			// one state/animation is simply not enough
-			STAND,
-			STAND1,
-			STAND2,
-			STAND3,
-			
-			CROUCH,
+			CAST		= 8,
+			CAST1		= 9,
+			CAST2		= 10,
+			CAST3		= 11,
 			
 			// one state/animation is simply not enough
-			WALK,
-			WALK1, 
-			WALK2,
-			WALK3,
+			STAND		= 12,
+			STAND1		= 13,
+			STAND2		= 14,
+			STAND3		= 15,
+			
+			CROUCH		= 16,
 			
 			// one state/animation is simply not enough
-			RUN,
-			RUN1,
-			RUN2,
-			RUN3,
+			WALK		= 17,
+			WALK1		= 18, 
+			WALK2		= 19,
+			WALK3		= 20,
 			
 			// one state/animation is simply not enough
-			JUMP,
-			JUMP1, // first, they jump
-			JUMP2, 
-			JUMP3,
+			RUN			= 21,
+			RUN1		= 22,
+			RUN2		= 23,
+			RUN3		= 24,
 			
 			// one state/animation is simply not enough
-			FLY,
-			FLY1, // then, they fly
-			FLY2,
-			FLY3,
+			JUMP		= 25,
+			JUMP1		= 26, // first, they jump
+			JUMP2		= 27, 
+			JUMP3		= 28,
 			
 			// one state/animation is simply not enough
-			FALL,
-			FALL1, // finally, they fall to somewhere
-			FALL2,
-			FALL3,
+			FLY			= 29,
+			FLY1		= 30, // then, they fly
+			FLY2		= 31,
+			FLY3		= 32,
 			
 			// one state/animation is simply not enough
-			HIT,
-			HIT1, // fallen/other state
-			HIT2,
-			HIT3,
+			FALL		= 33,
+			FALL1		= 34, // finally, they fall to somewhere
+			FALL2		= 35,
+			FALL3		= 36,
 			
-			DAMAGED,
-			STUNNED,
-			SLEEP,
-			DEATH,
-			CORPSE,
-			RESURRECT, // Death is only the beginning (c) Imhotep, "Mummy"
-			REMOVE, // this should force entity removal
+			// one state/animation is simply not enough
+			HIT			= 37,
+			HIT1		= 38, // fallen/other state
+			HIT2		= 39,
+			HIT3		= 40,
+			
+			DAMAGED		= 41,
+			STUNNED		= 42,
+			SLEEP		= 43,
+			DEATH		= 44,
+			CORPSE		= 45,
+			RESURRECT	= 46, // Death is only the beginning (c) Imhotep, "Mummy"
+			REMOVE		= 47, // this should force entity removal
 			
 			// pour some syntax sugar on meh
-			TOTAL
+			TOTAL		= 48
 		} EntityState;
 	}
 	

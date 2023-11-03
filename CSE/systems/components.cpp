@@ -129,10 +129,10 @@ namespace CSE
 							m_CurrentState->OnEnter();
 							return true; // conditions met, procedures ran
 						} else {
-							CSE_CORE_LOG("Enter from the state is not allowed to this one.");
+							CSE_CORE_LOG("Enter from the state ", state, " to ", States[i]->data, " is not allowed.");
 						}
 					} else {
-						CSE_CORE_LOG("Exit to the scene is not allowed from this one");
+						CSE_CORE_LOG("Exit to the state ", state, " from ", States[i]->data, " is not allowed.");
 					}
 					
 					return false; // conditions not met -> can't set the new state
