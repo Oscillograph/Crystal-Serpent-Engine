@@ -6,6 +6,7 @@
 
 // bricks of the renderer system
 #include <CSE/systems/renderer/texture.h>
+#include <CSE/systems/renderer/camera2d.h>
 
 // TODO: Consider developing Render class into a per-scene object instead of a static global
 
@@ -23,11 +24,13 @@ namespace CSE
 	public:
 		static void SetActiveRenderer(SDL_Renderer* renderer);
 		static void SetActiveScene(Scene* scene);
+		static void SetActiveCamera(Camera2D* camera);
 		
 		static void SetBackgroundColor(const glm::u8vec4& color);
 		static void ClearScreen();
 		
 		inline static SDL_Renderer* GetActiveRenderer() { return m_Renderer; }
+		inline static Camera2D* GetActiveCamera() { return m_ActiveCamera; };
 		
 		
 		// low-level methods (draw pixels, primitives, operate with data)
@@ -46,6 +49,7 @@ namespace CSE
 	private:
 		static SDL_Renderer* m_Renderer;
 		static Scene* m_Scene;
+		static Camera2D* m_ActiveCamera;
 		
 		static glm::vec2 m_PixelSize;
 		static glm::uvec4 m_BackgroundColor;
