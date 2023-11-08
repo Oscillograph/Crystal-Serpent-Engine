@@ -342,13 +342,27 @@ public:
 					}
 					
 					if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Jump]))
+					{
 						stateMachine.SetState(CSE::EntityStates::JUMP);
+					}
+					
 					if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Down]))
+					{
 						position.y += 0.002f;
+					}
+					
 					if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Left]))
+					{
 						position.x -= 0.002f;
+						m_SceneCamera.MoveBy({-0.002f, 0.0f});
+					}
+					
 					if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Right]))
+					{
 						position.x += 0.002f;
+						m_SceneCamera.MoveBy({0.002f, 0.0f});
+					}
+					
 					CSE_LOG(player.GetComponent<CSE::NameComponent>().value, " coordinates: (", position.x, "; ", position.y, ")");
 					CSE_LOG(player.GetComponent<CSE::NameComponent>().value, " size: (", transform.size.x, "; ", transform.size.y, ")");
 				} else {

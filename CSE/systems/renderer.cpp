@@ -95,6 +95,12 @@ namespace CSE
 	{
 		SDL_Rect* place = new SDL_Rect;
 		SDL_Rect* source = new SDL_Rect;
+		
+		int windowWidth;
+		int windowHeight;
+		// TODO: find out why Application::Get()->GetWindows() is not allowed to be accessed from here
+		SDL_GetWindowSize(m_Scene->GetLayer()->GetWindow()->GetNativeWindow(), &windowWidth, &windowHeight);
+		
 		SDL_FPoint dXY = {0.0f, 0.0f};
 		if (m_ActiveCamera != nullptr)
 		{
@@ -118,18 +124,13 @@ namespace CSE
 		{
 			*place = 
 			{ 
-				(int)floorf((destRect->x - dXY.x) * scaleX), 
-				(int)floorf((destRect->y - dXY.y) * scaleY), 
+				(int)floorf(destRect->x * scaleX - dXY.x * windowWidth), 
+				(int)floorf(destRect->y * scaleY - dXY.y * windowHeight), 
 				(int)floorf(destRect->w * scaleX), 
 				(int)floorf(destRect->h * scaleY) 
 			};
 		} else {
 			// not making it NULL is important for the next step - tiling
-			int windowWidth;
-			int windowHeight;
-			// TODO: find out why Application::Get()->GetWindows() is not allowed to be accessed from here
-			SDL_GetWindowSize(m_Scene->GetLayer()->GetWindow()->GetNativeWindow(), &windowWidth, &windowHeight);
-			
 			*place = 
 			{ 
 				(int)floorf(0 - dXY.x * windowWidth), 
@@ -140,7 +141,8 @@ namespace CSE
 		}
 		
 		// draw only if it's on screen
-		if ((((*place).x + (*place).w) > 0) && (((*place).y + (*place).h) > 0))
+		if ((((*place).x + (*place).w) > 0) && (((*place).y + (*place).h) > 0) &&
+			((*place).x < windowWidth) && ((*place).y < windowHeight))
 		{
 			// tiling texture across the place rectangle
 			// TODO: Adjust tiling to pixel size
@@ -206,8 +208,8 @@ namespace CSE
 						// CSE_LOG("scaleX: ", scaleX, "; scaleY: ", scaleY);
 						*newPlace = 
 						{
-							(int)floorf(scaleX * ((*destRect).x + x * (*source).w * tilingFactor.x)), 
-							(int)floorf(scaleY * ((*destRect).y + y * (*source).h * tilingFactor.y)), 
+							(int)floorf(scaleX * ((*destRect).x + x * (*source).w * tilingFactor.x) - dXY.x * windowWidth), 
+							(int)floorf(scaleY * ((*destRect).y + y * (*source).h * tilingFactor.y) - dXY.y * windowHeight), 
 							(int)floorf(scaleX * tileWidth * tilingFactor.x), 
 							(int)floorf(scaleY * tileHeight * tilingFactor.y) 
 						};

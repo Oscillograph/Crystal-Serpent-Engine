@@ -37,11 +37,22 @@ namespace CSE
 		m_TranslationAllowed = true;
 	}
 	
-	bool Camera2D::Move(SDL_FPoint& newPosition)
+	bool Camera2D::MoveTo(SDL_FPoint newPosition)
 	{
 		if (m_TranslationAllowed)
 		{
 			m_Position = newPosition;
+			return true;
+		}
+		return false;
+	}
+	
+	bool Camera2D::MoveBy(SDL_FPoint newPosition)
+	{
+		if (m_TranslationAllowed)
+		{
+			m_Position.x += newPosition.x;
+			m_Position.y += newPosition.y;
 			return true;
 		}
 		return false;

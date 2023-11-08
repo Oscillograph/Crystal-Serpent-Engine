@@ -5,12 +5,15 @@
 
 #include <CSE/systems/platform.h>
 
+#include <CSE/systems/renderer/camera2d.h>
+
 #include <CSE/vendor/entt/entt.hpp>
 
 namespace CSE
 {
 	class Layer;
 	class Entity;
+	// class Camera2D;
 	
 	// TODO: Scene serialization mechanism
 	// TODO: Scene reset mechanism
@@ -41,6 +44,7 @@ namespace CSE
 		
 		inline void SetLayer(Layer* layer) { m_Layer = layer; }
 		inline Layer* GetLayer() { return m_Layer; }
+		inline Camera2D& GetCamera() { return m_SceneCamera; }
 		
 		// Picks every entity it has and updates their components depending on the system involved.
 		virtual void UpdateGraphics(TimeType sceneTime);
@@ -58,6 +62,7 @@ namespace CSE
 	protected:
 		Layer* m_Layer; // so that the scene knows where it is loaded
 		uint32_t m_SceneID;
+		Camera2D m_SceneCamera;
 		bool m_Running = false;
 		bool m_Paused = false;
 		entt::registry m_Registry;

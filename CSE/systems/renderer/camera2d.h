@@ -19,7 +19,8 @@ namespace CSE
 		void Lock();
 		void UnLock();
 		
-		bool Move(SDL_FPoint& newPosition);
+		bool MoveTo(SDL_FPoint newPosition);
+		bool MoveBy(SDL_FPoint newPosition);
 		SDL_FPoint& GetPosition();
 		
 		void Retarget(SDL_FPoint& newTarget);
