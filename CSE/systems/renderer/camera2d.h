@@ -2,7 +2,6 @@
 #define CSE_CAMERA2D_H
 
 #include <CSE/core.h>
-// #include <CSE/systems/platform.h>
 
 namespace CSE
 {

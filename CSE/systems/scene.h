@@ -5,8 +5,6 @@
 
 #include <CSE/systems/platform.h>
 
-// #include <CSE/systems/renderer/camera2d.h>
-
 #include <CSE/vendor/entt/entt.hpp>
 
 namespace CSE
