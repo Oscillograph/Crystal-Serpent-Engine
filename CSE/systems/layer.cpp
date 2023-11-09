@@ -57,7 +57,7 @@ namespace CSE
 	
 	bool Layer::OnDisplay()
 	{
-		Renderer::SetActiveCamera(&(m_Scene->GetCamera()));
+		Renderer::SetActiveCamera(m_Scene->GetCamera());
 		m_Scene->UpdateGraphics(CSE::Platform::GetTimeMs());
 		
 		return true;

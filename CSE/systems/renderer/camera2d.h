@@ -2,7 +2,7 @@
 #define CSE_CAMERA2D_H
 
 #include <CSE/core.h>
-#include <CSE/systems/platform.h>
+// #include <CSE/systems/platform.h>
 
 namespace CSE
 {
@@ -10,7 +10,7 @@ namespace CSE
 	{
 	public:
 		Camera2D();
-		Camera2D(SDL_FPoint targetXY, float aspectRatio, float size);
+		Camera2D(glm::vec2 targetXY, float aspectRatio, float size);
 		~Camera2D();
 		
 		float& GetAspectRatio();
@@ -19,22 +19,22 @@ namespace CSE
 		void Lock();
 		void UnLock();
 		
-		bool MoveTo(SDL_FPoint newPosition);
-		bool MoveBy(SDL_FPoint newPosition);
-		SDL_FPoint& GetPosition();
+		bool MoveTo(glm::vec2 newPosition);
+		bool MoveBy(glm::vec2 newPosition);
+		glm::vec2& GetPosition();
 		
-		void Retarget(SDL_FPoint& newTarget);
-		SDL_FPoint& GetTarget();
+		void Retarget(glm::vec2 newTarget);
+		glm::vec2& GetTarget();
 		
 		// rotate clockwise by angle in radians
 		bool Rotate(float rotation);
 		float& GetRotation();
 		
 	private:
-		SDL_FPoint m_Target = {0.0f, 0.0f};
+		glm::vec2 m_Target = {0.0f, 0.0f};
 		float m_AspectRatio = 0.0f;
 		float m_Size = 0.0f;
-		SDL_FPoint m_Position = {0.0f, 0.0f};
+		glm::vec2 m_Position = {0.0f, 0.0f};
 		float m_Rotation = 0.0f; // in radians
 		
 		bool m_RotationAllowed = true;

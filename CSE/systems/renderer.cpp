@@ -101,11 +101,11 @@ namespace CSE
 		// TODO: find out why Application::Get()->GetWindows() is not allowed to be accessed from here
 		SDL_GetWindowSize(m_Scene->GetLayer()->GetWindow()->GetNativeWindow(), &windowWidth, &windowHeight);
 		
-		SDL_FPoint dXY = {0.0f, 0.0f};
+		glm::vec2 dXY = {0.0f, 0.0f};
 		if (m_ActiveCamera != nullptr)
 		{
-			dXY.x = m_ActiveCamera->GetPosition().x;
-			dXY.y = m_ActiveCamera->GetPosition().y;
+			dXY.x = GetActiveCamera()->GetPosition().x;
+			dXY.y = GetActiveCamera()->GetPosition().y;
 		}
 		
 		float scaleX = m_Scene->GetLayer()->GetWindow()->GetScale().x;
@@ -249,10 +249,10 @@ namespace CSE
 		float scaleX = m_Scene->GetLayer()->GetWindow()->GetPrefs().width * m_Scene->GetLayer()->GetWindow()->GetScale().x;
 		float scaleY = m_Scene->GetLayer()->GetWindow()->GetPrefs().height * m_Scene->GetLayer()->GetWindow()->GetScale().y;
 		
-		SDL_FPoint dXY = {0.0f, 0.0f};
-		if (m_ActiveCamera != nullptr)
+		glm::vec2 dXY = {0.0f, 0.0f};
+		if (GetActiveCamera() != nullptr)
 		{
-			dXY = m_ActiveCamera->GetPosition();
+			dXY = GetActiveCamera()->GetPosition();
 		}
 		
 		SDL_Rect rect = 

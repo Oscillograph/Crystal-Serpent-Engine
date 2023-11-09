@@ -6,7 +6,7 @@ namespace CSE
 	{
 	};
 	
-	Camera2D::Camera2D(SDL_FPoint targetXY, float aspectRatio, float size)
+	Camera2D::Camera2D(glm::vec2 targetXY, float aspectRatio, float size)
 		: m_Target(targetXY), m_AspectRatio(aspectRatio), m_Size(size) 
 	{
 	};
@@ -37,7 +37,7 @@ namespace CSE
 		m_TranslationAllowed = true;
 	}
 	
-	bool Camera2D::MoveTo(SDL_FPoint newPosition)
+	bool Camera2D::MoveTo(glm::vec2 newPosition)
 	{
 		if (m_TranslationAllowed)
 		{
@@ -47,7 +47,7 @@ namespace CSE
 		return false;
 	}
 	
-	bool Camera2D::MoveBy(SDL_FPoint newPosition)
+	bool Camera2D::MoveBy(glm::vec2 newPosition)
 	{
 		if (m_TranslationAllowed)
 		{
@@ -58,17 +58,17 @@ namespace CSE
 		return false;
 	}
 	
-	SDL_FPoint& Camera2D::GetPosition()
+	glm::vec2& Camera2D::GetPosition()
 	{
 		return m_Position;
 	}
 	
-	void Camera2D::Retarget(SDL_FPoint& newTarget)
+	void Camera2D::Retarget(glm::vec2 newTarget)
 	{
 		m_Target = newTarget;
 	}
 	
-	SDL_FPoint& Camera2D::GetTarget()
+	glm::vec2& Camera2D::GetTarget()
 	{
 		return m_Target;
 	}

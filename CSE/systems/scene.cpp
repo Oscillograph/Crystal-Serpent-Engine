@@ -5,6 +5,7 @@
 
 #include <CSE/systems/application.h>
 #include <CSE/systems/renderer.h>
+#include <CSE/systems/renderer/camera2d.h>
 #include <CSE/systems/window.h>
 #include <CSE/systems/layer.h>
 
@@ -12,11 +13,16 @@ namespace CSE
 {
 	Scene::Scene()
 	{
+		m_SceneCamera = new Camera2D();
 	}
 	
 	Scene::~Scene()
 	{
 		m_Layer = nullptr;
+		
+		if (m_SceneCamera != nullptr)
+			delete m_SceneCamera;
+		m_SceneCamera = nullptr;
 	}
 	
 	void Scene::Init()
