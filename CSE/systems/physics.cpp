@@ -37,12 +37,14 @@ namespace CSE
 				// if it is possible, then make sure if it happened
 			}
 			
+			/*
 			// others react on this one
 			if ((physicsComponent.bodyType == PhysicsDefines::BodyType::Static)
 				|| (physicsComponent.bodyType == PhysicsDefines::BodyType::Dynamic))
 			{
 				
 			}
+			*/
 			
 			// this one reacts to others
 			if ((physicsComponent.bodyType == PhysicsDefines::BodyType::Astral)

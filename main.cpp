@@ -354,13 +354,13 @@ public:
 					if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Left]))
 					{
 						position.x -= 0.002f;
-						GetCamera()->MoveBy({-0.002f, 0.0f});
+						GetDefaultCamera()->MoveBy({-0.002f, 0.0f});
 					}
 					
 					if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Right]))
 					{
 						position.x += 0.002f;
-						GetCamera()->MoveBy({0.002f, 0.0f});
+						GetDefaultCamera()->MoveBy({0.002f, 0.0f});
 					}
 					
 					CSE_LOG(player.GetComponent<CSE::NameComponent>().value, " coordinates: (", position.x, "; ", position.y, ")");

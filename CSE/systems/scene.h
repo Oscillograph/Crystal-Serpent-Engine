@@ -42,7 +42,7 @@ namespace CSE
 		
 		inline void SetLayer(Layer* layer) { m_Layer = layer; }
 		inline Layer* GetLayer() { return m_Layer; }
-		inline Camera2D* GetCamera() { return m_SceneCamera; }
+		inline Camera2D* GetDefaultCamera() { return m_SceneCamera; }
 		
 		// Picks every entity it has and updates their components depending on the system involved.
 		virtual void UpdateGraphics(TimeType sceneTime);

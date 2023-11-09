@@ -57,7 +57,8 @@ namespace CSE
 	
 	bool Layer::OnDisplay()
 	{
-		Renderer::SetActiveCamera(m_Scene->GetCamera());
+		// TODO: Ability to change cameras without changing the default one
+		Renderer::SetActiveCamera(m_Scene->GetDefaultCamera());
 		m_Scene->UpdateGraphics(CSE::Platform::GetTimeMs());
 		
 		return true;
