@@ -43,6 +43,9 @@ namespace CSE
 		inline void SetLayer(Layer* layer) { m_Layer = layer; }
 		inline Layer* GetLayer() { return m_Layer; }
 		inline Camera2D* GetDefaultCamera() { return m_SceneCamera; }
+		inline Camera2D* GetActiveCamera() { return (m_ActiveCamera == nullptr) ? GetDefaultCamera() : m_ActiveCamera; }
+		inline void SetCamera(Camera2D* camera) { m_ActiveCamera = camera; }
+		inline void SetCameraDefault() { m_ActiveCamera = nullptr; } // there must be always a camera
 		
 		// Picks every entity it has and updates their components depending on the system involved.
 		virtual void UpdateGraphics(TimeType sceneTime);
@@ -61,6 +64,7 @@ namespace CSE
 		Layer* m_Layer; // so that the scene knows where it is loaded
 		uint32_t m_SceneID;
 		Camera2D* m_SceneCamera = nullptr;
+		Camera2D* m_ActiveCamera = nullptr; // should be set from the client app
 		bool m_Running = false;
 		bool m_Paused = false;
 		entt::registry m_Registry;
