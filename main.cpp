@@ -349,18 +349,19 @@ public:
 					if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Down]))
 					{
 						position.y += 0.002f;
+						GetActiveCamera()->MoveBy({0.0f, 0.002f});
 					}
 					
 					if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Left]))
 					{
 						position.x -= 0.002f;
-						GetDefaultCamera()->MoveBy({-0.002f, 0.0f});
+						GetActiveCamera()->MoveBy({-0.002f, 0.0f});
 					}
 					
 					if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Right]))
 					{
 						position.x += 0.002f;
-						GetDefaultCamera()->MoveBy({0.002f, 0.0f});
+						GetActiveCamera()->MoveBy({0.002f, 0.0f});
 					}
 					
 					CSE_LOG(player.GetComponent<CSE::NameComponent>().value, " coordinates: (", position.x, "; ", position.y, ")");
@@ -377,11 +378,24 @@ public:
 					if (position.y > 0.75f)
 					{
 						position.y -= 0.002f;
+						GetActiveCamera()->MoveBy({0.0f, -0.002f});
 					} else {
 						stateMachine.SetState(CSE::EntityStates::FLY);
 					}
 				} else {
 					stateMachine.SetState(CSE::EntityStates::FLY);
+				}
+				
+				if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Left]))
+				{
+					position.x -= 0.002f;
+					GetActiveCamera()->MoveBy({-0.002f, 0.0f});
+				}
+				
+				if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Right]))
+				{
+					position.x += 0.002f;
+					GetActiveCamera()->MoveBy({0.002f, 0.0f});
 				}
 				
 				if ((CSE::EntityStates::JUMP1 != animation.Get()) && (CSE::EntityStates::JUMP2 != animation.Get()))
@@ -398,9 +412,22 @@ public:
 			
 			if (stateMachine.GetState()->data == CSE::EntityStates::FALL)
 			{
+				if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Left]))
+				{
+					position.x -= 0.002f;
+					GetActiveCamera()->MoveBy({-0.002f, 0.0f});
+				}
+				
+				if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Right]))
+				{
+					position.x += 0.002f;
+					GetActiveCamera()->MoveBy({0.002f, 0.0f});
+				}
+				
 				if (position.y < 0.9f)
 				{
 					position.y += 0.002f;
+					GetActiveCamera()->MoveBy({0.0f, 0.002f});
 				} else {
 					stateMachine.SetState(CSE::EntityStates::STAND);
 				}
