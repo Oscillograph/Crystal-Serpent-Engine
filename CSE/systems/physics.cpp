@@ -5,6 +5,62 @@
 
 namespace CSE
 {
+	// World Collection
+	WorldCollection::WorldCollection()
+	{
+	}
+	
+	WorldCollection::~WorldCollection()
+	{
+		for (Entity* e : entities)
+		{
+			if (e != nullptr)
+				delete e;
+			e = nullptr;
+		}
+	}
+	
+	void WorldCollection::AddEntity(Entity& e)
+	{
+		Entity* entity = new Entity(e.GetID(), e.GetScene());
+		entities.push_back(entity);
+	}
+	
+	void WorldCollection::RemoveEntity(Entity* e)
+	{
+		if (e != nullptr)
+		{
+			for (auto it = entities.begin(); it != entities.end(); it++)
+			{
+				if (*it == e)
+				{
+					delete *it;
+					*it = nullptr;
+					entities.erase(it);
+					break;
+				}
+			}
+		}
+	}
+	
+	// Physics Processor
+	std::vector<WorldCollection> PhysicsProcessor::m_Worlds;
+	
+	int PhysicsProcessor::CreateWorld()
+	{
+	}
+	
+	void PhysicsProcessor::DestroyWorld()
+	{
+	}
+	
+	WorldCollection* PhysicsProcessor::AccessWorld(int id)
+	{
+		if (id < m_Worlds.size())
+			return &(m_Worlds[id]);
+		return nullptr;
+	}
+	
 	void PhysicsProcessor::CollisionSelection(Entity* A, Entity* B)
 	{
 	}
@@ -53,5 +109,41 @@ namespace CSE
 				
 			}
 		}
+	}
+	
+	void PhysicsProcessor::Move(Entity* A)
+	{
+		PhysicsComponent& physics = A->GetComponent<PhysicsComponent>();
+		
+		// translational movement
+		physics.velocity.x += physics.acceleration.x * physics.time;
+		physics.velocity.y += physics.acceleration.y * physics.time;
+		
+		float moveX = physics.velocity.x * physics.time;
+		float moveY = physics.velocity.y * physics.time;
+		
+		// move center of mass if it's that easy
+		// += moveX
+		// += moveY
+		
+		// affect hitboxes
+	}
+	
+	void PhysicsProcessor::UnMove(Entity* A)
+	{
+		PhysicsComponent& physics = A->GetComponent<PhysicsComponent>();
+		
+		// translational movement
+		// physics.velocity.x += physics.acceleration.x * physics.time;
+		// physics.velocity.y += physics.acceleration.y * physics.time;
+		
+		float moveX = physics.velocity.x * physics.time;
+		float moveY = physics.velocity.y * physics.time;
+		
+		// move center of mass if it's that easy
+		// -= moveX
+		// -= moveY
+		
+		// affect hitboxes
 	}
 }

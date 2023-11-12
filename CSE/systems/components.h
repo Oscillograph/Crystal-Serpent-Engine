@@ -215,6 +215,8 @@ namespace CSE
 		// characteristics
 		float mass = 0.0f; // kg
 		
+		int world = 0;
+		
 		PhysicsComponent();
 		PhysicsComponent(const PhysicsComponent&) = default;
 		~PhysicsComponent();
