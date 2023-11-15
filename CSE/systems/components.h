@@ -10,7 +10,7 @@
 #include <initializer_list>
 
 // special systems
-#include <CSE/vendor/box2d/include/box2d.h>
+#include <CSE/vendor/box2d/box2d.h>
 
 namespace CSE
 {

@@ -1,15 +1,30 @@
 #include <CSE/systems/physics/box2dphysics.h>
 
+#include <CSE/vendor/box2d/b2_world.h>
+
 namespace CSE
 {
+	// b2World Box2DPhysics::m_Box2DWorld;
+	
+	Box2DPhysics::Box2DPhysics()
+	{
+	}
+	
+	Box2DPhysics::~Box2DPhysics()
+	{
+	}
+	
 	void Box2DPhysics::CreateWorld(const WorldProperties& props)
 	{
 		b2Vec2 box2DGravity = { props.gravity.x, props.gravity.y };
-		m_Box2DWorld(box2DGravity);
+		m_Box2DWorld = new b2World(box2DGravity);
 	}
 	
-	void Box2DPhysics::DestroyWorld(World* world) 
+	void Box2DPhysics::DestroyWorld(int worldID) 
 	{
+		if (m_Box2DWorld != nullptr)
+			delete m_Box2DWorld;
+		m_Box2DWorld = nullptr;
 	}
 	
 	// collisions

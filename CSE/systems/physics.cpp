@@ -6,7 +6,7 @@
 namespace CSE
 {
 	// Physics Processor
-	std::vector<World> PhysicsProcessor::m_Worlds;
+	std::vector<World*> PhysicsProcessor::m_Worlds;
 	PhysicsAPI* PhysicsProcessor::m_API = nullptr;
 	
 	World* PhysicsProcessor::CreateWorld()
@@ -18,7 +18,7 @@ namespace CSE
 		World* world = new World(props);
 		m_Worlds.push_back(world);
 		
-		PhysicsAPI::CreateWorld(props);
+		m_API->CreateWorld(props);
 		
 		return world;
 	}
@@ -29,8 +29,10 @@ namespace CSE
 		World* world = new World(props);
 		m_Worlds.push_back(world);
 		
-		b2Vec2 box2DGravity = {props.gravity.x, props.gravity.y};
-		m_Box2DWorld(box2DGravity);
+		// b2Vec2 box2DGravity = {props.gravity.x, props.gravity.y};
+		// m_Box2DWorld(box2DGravity);
+		
+		m_API->CreateWorld(props);
 		
 		return world;
 	}
@@ -54,7 +56,7 @@ namespace CSE
 	World* PhysicsProcessor::AccessWorld(int id)
 	{
 		if (id < m_Worlds.size())
-			return &(m_Worlds[id]);
+			return m_Worlds[id];
 		return nullptr;
 	}
 	
