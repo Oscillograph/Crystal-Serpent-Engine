@@ -9,6 +9,9 @@
 
 #include <initializer_list>
 
+// special systems
+#include <CSE/vendor/box2d/include/box2d.h>
+
 namespace CSE
 {
 	class Window;
@@ -216,6 +219,15 @@ namespace CSE
 		float mass = 0.0f; // kg
 		
 		int world = 0;
+		
+		// box2D stuff
+		b2BodyDef bodyDefinition; // bodyDefinition.position.Set(x, y)
+		// bodyDefinition.type = b2_staticBody || b2_dynamicBody || b2_kinematicBody;
+		b2Body* body = nullptr; // created by wolrd.CreateBody(bodyDefinition);
+		
+		// basically, this is a hitbox
+		b2PolygonShape polygonShape; // polygonShape.SetAsBox(width, height)
+		// body->CreateFixture(&polygonShape, 0.0f) // static bodies have 0 mass
 		
 		PhysicsComponent();
 		PhysicsComponent(const PhysicsComponent&) = default;

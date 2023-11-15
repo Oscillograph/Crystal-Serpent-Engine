@@ -5,56 +5,53 @@
 
 namespace CSE
 {
-	// World Collection
-	WorldCollection::WorldCollection()
+	// Physics Processor
+	std::vector<World> PhysicsProcessor::m_Worlds;
+	PhysicsAPI* PhysicsProcessor::m_API = nullptr;
+	
+	World* PhysicsProcessor::CreateWorld()
 	{
+		// default world properties
+		WorldProperties props = WorldProperties();
+		
+		// create a new world
+		World* world = new World(props);
+		m_Worlds.push_back(world);
+		
+		PhysicsAPI::CreateWorld(props);
+		
+		return world;
 	}
 	
-	WorldCollection::~WorldCollection()
+	World* PhysicsProcessor::CreateWorld(const WorldProperties& props)
 	{
-		for (Entity* e : entities)
+		// create a new world
+		World* world = new World(props);
+		m_Worlds.push_back(world);
+		
+		b2Vec2 box2DGravity = {props.gravity.x, props.gravity.y};
+		m_Box2DWorld(box2DGravity);
+		
+		return world;
+	}
+	
+	void PhysicsProcessor::DestroyWorld(World* world)
+	{
+		if (world != nullptr)
 		{
-			if (e != nullptr)
-				delete e;
-			e = nullptr;
-		}
-	}
-	
-	void WorldCollection::AddEntity(Entity& e)
-	{
-		Entity* entity = new Entity(e.GetID(), e.GetScene());
-		entities.push_back(entity);
-	}
-	
-	void WorldCollection::RemoveEntity(Entity* e)
-	{
-		if (e != nullptr)
-		{
-			for (auto it = entities.begin(); it != entities.end(); it++)
+			for (auto it = m_Worlds.begin(); it != m_Worlds.end(); it++)
 			{
-				if (*it == e)
+				if (*it == world)
 				{
 					delete *it;
-					*it = nullptr;
-					entities.erase(it);
-					break;
+					m_Worlds.erase(it);
+					world = nullptr;
 				}
 			}
 		}
 	}
 	
-	// Physics Processor
-	std::vector<WorldCollection> PhysicsProcessor::m_Worlds;
-	
-	int PhysicsProcessor::CreateWorld()
-	{
-	}
-	
-	void PhysicsProcessor::DestroyWorld()
-	{
-	}
-	
-	WorldCollection* PhysicsProcessor::AccessWorld(int id)
+	World* PhysicsProcessor::AccessWorld(int id)
 	{
 		if (id < m_Worlds.size())
 			return &(m_Worlds[id]);
@@ -145,5 +142,25 @@ namespace CSE
 		// -= moveY
 		
 		// affect hitboxes
+	}
+	
+	void PhysicsProcessor::Init()
+	{
+		m_API = CreatePhysicsProcessor();
+	}
+	
+	void PhysicsProcessor::Shutdown()
+	{
+		for (uint32_t i = 0; i < m_Worlds.size(); i++)
+		{
+			if (m_Worlds[i] != nullptr)
+			{
+				// delete box2DWorld
+				
+				// delete CSE physics world
+				delete m_Worlds[i];
+			}
+			m_Worlds[i] = nullptr;
+		}
 	}
 }

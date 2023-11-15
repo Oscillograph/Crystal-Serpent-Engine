@@ -2,35 +2,32 @@
 #define CSE_PHYSICS_H
 
 #include <CSE/core.h>
+#include <CSE/systems/physics/world.h>
+
+// implementation-specific
+#include <CSE/systems/physics/physicsAPI.h>
+
 
 namespace CSE
 {
+	// forward declarations
 	class Scene;
 	class Entity;
+	// --------------------
 	
 	// An entity can have a component PhysicsComponent.
 	// PhysicsComponent ties the entity to a specific world.
 	// Every world is basically a collection with a set of rules applied to all entities in it.
 	// We don't need to check scene registry for entities if we have this collection.
-	struct WorldCollection
-	{
-		int id;
-		std::vector<Entity*> entities;
-		
-		WorldCollection();
-		~WorldCollection();
-		
-		void AddEntity(Entity& e);
-		void RemoveEntity(Entity* e);
-	};
 	
 	class PhysicsProcessor
 	{
 	public:
 		// world management
-		static int CreateWorld();
-		static void DestroyWorld();
-		static WorldCollection* AccessWorld(int id);
+		static World* CreateWorld();
+		static World* CreateWorld(const WorldProperties& props);
+		static void DestroyWorld(World* world);
+		static World* AccessWorld(int id);
 		
 		// collisions
 		static void CollisionSelection(Entity* A, Entity* B);
@@ -40,11 +37,15 @@ namespace CSE
 		// reactions
 		
 		// processors
-		
 		static void GeneralRoutine(Scene* scene);
 		
+		// general
+		static void Init();
+		static void Shutdown();
+		
 	private:
-		static std::vector<WorldCollection> m_Worlds;
+		static std::vector<World*> m_Worlds;
+		static PhysicsAPI* m_API; 
 		
 		static void Move(Entity* A);
 		static void UnMove(Entity* A);
