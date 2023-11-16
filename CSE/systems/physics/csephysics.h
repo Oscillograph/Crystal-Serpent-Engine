@@ -1,18 +1,19 @@
-#ifndef CSE_PHYSICS_BOX2DPHYSICS_H
-#define CSE_PHYSICS_BOX2DPHYSICS_H
+#ifndef CSE_PHYSICS_CSEPHYSICS_H
+#define CSE_PHYSICS_CSEPHYSICS_H
 
 #include <CSE/core.h>
 #include <CSE/systems/physics.h>
 
-#include <CSE/vendor/box2d/box2d.h>
-
 namespace CSE
 {
-	class Box2DPhysics : public PhysicsAPI 
+	
+	// native physics system
+	
+	class CSEPhysics : public PhysicsAPI 
 	{
 	public:
-		Box2DPhysics();
-		~Box2DPhysics();
+		CSEPhysics();
+		~CSEPhysics();
 		
 		virtual void CreateWorld(const WorldProperties& props) override;
 		virtual void DestroyWorld(int worldID) override;
@@ -31,7 +32,7 @@ namespace CSE
 		virtual void Shutdown() override;
 		
 	private:
-		b2World* m_Box2DWorld = nullptr; // according to the tutorial, Box2D world must be in scope as it is defined in the stack, we just follow the example here until we feel strong enough to create our own magic
+		// CSEWorld* m_Box2DWorld = nullptr; // according to the tutorial, Box2D world must be in scope as it is defined in the stack, we just follow the example here until we feel strong enough to create our own magic
 	};
 }
 

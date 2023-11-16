@@ -10,6 +10,12 @@ namespace CSE
 	class Entity;
 	// --------------------
 	
+	enum class PhysicsSystem 
+	{
+		CSE	 		= 0,
+		Box2D		= 1
+	};
+	
 	// This is an API to use any suitable physics engine.
 	// The need for it arised from that physics engines are very complex, and their management parts
 	// are not to interfere with other game engine systems.
@@ -35,7 +41,7 @@ namespace CSE
 		virtual void Shutdown() = 0;
 	};
 	
-	extern PhysicsAPI* CreatePhysicsProcessor();
+	PhysicsAPI* CreatePhysicsProcessor(PhysicsSystem psID);
 }
 
 #endif
