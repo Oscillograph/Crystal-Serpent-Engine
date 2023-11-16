@@ -9,6 +9,8 @@ namespace CSE
 	{	
 		switch (psID)
 		{
+			case PhysicsSystem::None :
+				return nullptr;
 			case PhysicsSystem::CSE : 
 				return new CSEPhysics(); 
 				break;

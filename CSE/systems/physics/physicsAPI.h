@@ -2,6 +2,7 @@
 #define CSE_PHYSICS_PHYSICSAPI_H
 
 #include <CSE/core.h>
+#include <CSE/systems/physics/world.h>
 
 namespace CSE
 {
@@ -12,8 +13,9 @@ namespace CSE
 	
 	enum class PhysicsSystem 
 	{
-		CSE	 		= 0,
-		Box2D		= 1
+		None		= 0,
+		CSE	 		= 1,
+		Box2D		= 2
 	};
 	
 	// This is an API to use any suitable physics engine.

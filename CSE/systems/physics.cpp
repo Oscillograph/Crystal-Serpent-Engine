@@ -7,6 +7,7 @@ namespace CSE
 {
 	// Physics Processor
 	std::vector<World*> PhysicsProcessor::m_Worlds;
+	PhysicsSystem PhysicsProcessor::m_PhysicsSystemSelected = PhysicsSystem::None;
 	PhysicsAPI* PhysicsProcessor::m_API = nullptr;
 	
 	World* PhysicsProcessor::CreateWorld()
@@ -148,7 +149,7 @@ namespace CSE
 	
 	void PhysicsProcessor::Init()
 	{
-		m_API = CreatePhysicsProcessor();
+		m_API = CreatePhysicsProcessor(PhysicsSystem::CSE);
 	}
 	
 	void PhysicsProcessor::Shutdown()

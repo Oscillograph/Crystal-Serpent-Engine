@@ -45,6 +45,7 @@ namespace CSE
 		
 	private:
 		static std::vector<World*> m_Worlds;
+		static PhysicsSystem m_PhysicsSystemSelected;
 		static PhysicsAPI* m_API; 
 		
 		static void Move(Entity* A);
