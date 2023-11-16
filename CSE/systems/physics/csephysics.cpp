@@ -18,6 +18,14 @@ namespace CSE
 	{
 	}
 	
+	void CSEPhysics::RegisterEntity(Entity* A) // make the entity seen by the physics processor
+	{
+	}
+	
+	void CSEPhysics::UnregisterEntity(Entity* A) // make it invisible again
+	{
+	}
+	
 	// collisions
 	void CSEPhysics::CollisionSelection(Entity* A, Entity* B) 
 	{

@@ -1,5 +1,6 @@
 #include <CSE/systems/components.h>
 #include <CSE/systems/window.h>
+#include <CSE/systems/physics.h>
 
 namespace CSE
 {
@@ -323,13 +324,29 @@ namespace CSE
 		parent = nullptr;
 	}
 	
-	// Physics Component - HitBox
+	// Physics Component
 	PhysicsComponent::PhysicsComponent()
 	{
+		// constructor should somehow register the entity in the physics processor registry
+		// the problem is that a component is unaware of entity it is tied to
+		// so i might need a callback to set in Entity class
+	}
+	
+	PhysicsComponent::PhysicsComponent(const Entity& A)
+	{
+		
+		// this constructor should automatically register entity in the physics processor registry
+		entity = A;
+		PhysicsProcessor::RegisterEntity(&entity);
 	}
 	
 	PhysicsComponent::~PhysicsComponent()
 	{
+		// destructor should unregister the entity from the physics processor registry
+		if (entity.GetScene() != nullptr)
+		{
+			PhysicsProcessor::UnregisterEntity(&entity);
+		}
 	}
 }
 

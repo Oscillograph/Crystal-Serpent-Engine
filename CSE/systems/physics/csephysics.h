@@ -18,6 +18,9 @@ namespace CSE
 		virtual void CreateWorld(const WorldProperties& props) override;
 		virtual void DestroyWorld(int worldID) override;
 		
+		virtual void RegisterEntity(Entity* A) override; // make the entity seen by the physics processor
+		virtual void UnregisterEntity(Entity* A) override; // make it invisible again
+		
 		// collisions
 		virtual void CollisionSelection(Entity* A, Entity* B) override;
 		virtual void CollisionDetection(Entity* A, Entity* B) override;

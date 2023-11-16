@@ -29,6 +29,9 @@ namespace CSE
 		virtual void CreateWorld(const WorldProperties& props) = 0;
 		virtual void DestroyWorld(int worldID) = 0;
 		
+		virtual void RegisterEntity(Entity* A) = 0; // make the entity seen by the physics processor
+		virtual void UnregisterEntity(Entity* A) = 0; // make it invisible again
+		
 		// collisions
 		virtual void CollisionSelection(Entity* A, Entity* B) = 0;
 		virtual void CollisionDetection(Entity* A, Entity* B) = 0;

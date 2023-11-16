@@ -79,7 +79,7 @@ namespace CSE
 		
 	private:
 		entt::entity m_EntityID;
-		Scene* m_Scene;
+		Scene* m_Scene = nullptr;
 	};
 }
 

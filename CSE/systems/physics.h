@@ -29,6 +29,9 @@ namespace CSE
 		static void DestroyWorld(World* world);
 		static World* AccessWorld(int id);
 		
+		static void RegisterEntity(Entity* A); // make the entity seen by the physics processor
+		static void UnregisterEntity(Entity* A); // make it invisible again
+		
 		// collisions
 		static void CollisionSelection(Entity* A, Entity* B);
 		static void CollisionDetection(Entity* A, Entity* B);

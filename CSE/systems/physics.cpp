@@ -61,6 +61,14 @@ namespace CSE
 		return nullptr;
 	}
 	
+	void PhysicsProcessor::RegisterEntity(Entity* A) // make the entity seen by the physics processor
+	{
+	}
+	
+	void PhysicsProcessor::UnregisterEntity(Entity* A) // make it invisible again
+	{
+	}
+	
 	void PhysicsProcessor::CollisionSelection(Entity* A, Entity* B)
 	{
 	}

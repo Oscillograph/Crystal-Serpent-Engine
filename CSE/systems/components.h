@@ -6,11 +6,12 @@
 #include <CSE/systems/renderer/texture.h>
 
 #include <CSE/systems/components/states.h>
+#include <CSE/systems/entity.h>
 
 #include <initializer_list>
 
 // special systems
-#include <CSE/vendor/box2d/box2d.h>
+// #include <CSE/vendor/box2d/box2d.h>
 
 namespace CSE
 {
@@ -168,6 +169,7 @@ namespace CSE
 	// ================================================
 	
 	// ==================  Physics  ===================
+	// TODO: tie out from box2d
 	namespace PhysicsDefines
 	{
 		typedef enum
@@ -220,6 +222,10 @@ namespace CSE
 		
 		int world = 0;
 		
+		// automation stuff
+		Entity entity;
+		
+		/*
 		// box2D stuff
 		b2BodyDef bodyDefinition; // bodyDefinition.position.Set(x, y)
 		// bodyDefinition.type = b2_staticBody || b2_dynamicBody || b2_kinematicBody;
@@ -228,8 +234,10 @@ namespace CSE
 		// basically, this is a hitbox
 		b2PolygonShape polygonShape; // polygonShape.SetAsBox(width, height)
 		// body->CreateFixture(&polygonShape, 0.0f) // static bodies have 0 mass
+		*/
 		
 		PhysicsComponent();
+		PhysicsComponent(const Entity& A); // to automatically register
 		PhysicsComponent(const PhysicsComponent&) = default;
 		~PhysicsComponent();
 	};

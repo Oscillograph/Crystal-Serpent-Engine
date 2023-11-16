@@ -27,6 +27,14 @@ namespace CSE
 		m_Box2DWorld = nullptr;
 	}
 	
+	void Box2DPhysics::RegisterEntity(Entity* A) // make the entity seen by the physics processor
+	{
+	}
+	
+	void Box2DPhysics::UnregisterEntity(Entity* A) // make it invisible again
+	{
+	}
+	
 	// collisions
 	void Box2DPhysics::CollisionSelection(Entity* A, Entity* B) 
 	{
