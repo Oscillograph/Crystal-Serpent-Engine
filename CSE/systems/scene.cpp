@@ -174,8 +174,20 @@ namespace CSE
 		return entity; 
 	}
 	
+	Entity* Scene::CreatePhysicalEntity(const std::string& name)
+	{
+		Entity* entity = CreateEntity(name);
+		entity->AddComponent<PhysicsComponent>();
+		PhysicsProcessor::RegisterEntity(entity);
+		
+		return entity;
+	}
+	
 	void Scene::DestroyEntity(Entity& entity)
 	{
+		if (entity.HasComponent<PhysicsComponent>())
+			PhysicsProcessor::UnregisterEntity(&entity);
+		
 		m_Registry.destroy(entity.GetID());
 	}
 }

@@ -55,6 +55,7 @@ namespace CSE
 		
 		Entity* CreateEntity(const std::string& name = "");
 		Entity* CreateEntityWithUUID(const std::string& name = "", uint64_t uuid = 0);
+		Entity* CreatePhysicalEntity(const std::string& name = "");
 		void DestroyEntity(Entity& entity);
 		
 		inline entt::registry& GetRegistry() { return m_Registry; };
