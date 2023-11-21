@@ -4,14 +4,6 @@ namespace CSE
 {
 	std::unordered_multimap<CanbanEvents, Entity*> Canban::board;
 	
-	Canban::Canban()
-	{
-	}
-	
-	Canban::~Canban()
-	{
-	}
-	
 	bool Canban::GetTask(CanbanEvents event, Entity* entity)
 	{
 		auto it = board.find(event);

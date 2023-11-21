@@ -3,10 +3,10 @@
 
 #include <CSE/core.h>
 
-#include <CSE/systems/entity.h>
-
 namespace CSE
 {
+	class Entity;
+	
 	enum class CanbanEvents
 	{
 		None				= 0,
@@ -18,12 +18,9 @@ namespace CSE
 	{
 		static std::unordered_multimap<CanbanEvents, Entity*> board;
 		
-		Canban();
-		~Canban();
-		
-		bool GetTask(CanbanEvents event, Entity* entity);
-		void PutTask(CanbanEvents event, Entity* entity);
-		void Clear();
+		static bool GetTask(CanbanEvents event, Entity* entity);
+		static void PutTask(CanbanEvents event, Entity* entity);
+		static void Clear();
 	};
 }
 
