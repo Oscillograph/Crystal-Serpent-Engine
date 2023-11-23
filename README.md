@@ -75,3 +75,4 @@ Crystal Serpent Engine/CSE/common.h
 + **[GLM](https://github.com/g-truc/glm)** (math library)
 + **[EnTT](https://github.com/skypjack/entt)** (entities and components management in scenes)
 + **[Color Console](https://github.com/aafulei/color-console)** (Windows-only)
++ **[Box2D](https://github.com/erincatto/box2d)** (basic 2D physics)

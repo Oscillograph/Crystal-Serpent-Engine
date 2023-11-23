@@ -6,7 +6,8 @@
 // random numbers generators
 #include <CSE/utils/math/random.h>
 
-// General CSE maths library
+// General CSE maths library.
+// It is intended to be included only there, where it is needed.
 namespace CSE
 {
 	
