@@ -7,6 +7,10 @@ namespace CSE
 {
 	class Entity;
 	
+	
+	// the pattern is
+	// XXX - for Canban-specific events
+	// YYY_ZZZ - ZZZ event for a system YYY
 	enum class CanbanEvents
 	{
 		None				= 0,
