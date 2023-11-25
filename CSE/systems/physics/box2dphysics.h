@@ -3,11 +3,14 @@
 
 #include <CSE/core.h>
 #include <CSE/systems/physics.h>
+#include <CSE/systems/entity.h>
 
 #include <CSE/vendor/box2d/box2d.h>
 
 namespace CSE
 {
+	class Entity;
+	
 	class Box2DPhysics : public PhysicsAPI 
 	{
 	public:
@@ -35,6 +38,10 @@ namespace CSE
 		
 	private:
 		b2World* m_Box2DWorld = nullptr; // according to the tutorial, Box2D world must be in scope as it is defined in the stack, we just follow the example here until we feel strong enough to create our own magic
+		float m_TimeStep = CSE_FPS60;
+		int32 m_VelocityIterations = 6;
+		int32 m_PositionIterations = 2;
+		std::unordered_map<b2Body*, Entity> m_Bodies = {}; // all the bodies to be registered and unregistered
 	};
 }
 
