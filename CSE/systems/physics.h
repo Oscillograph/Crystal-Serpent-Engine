@@ -23,36 +23,41 @@ namespace CSE
 	class PhysicsProcessor
 	{
 	public:
-		// world management
-		static World* CreateWorld();
-		static World* CreateWorld(const WorldProperties& props);
-		static void DestroyWorld(World* world);
-		static World* AccessWorld(int id);
+		PhysicsProcessor();
+		PhysicsProcessor(const PhysicsSystem& physicsSystem);
+		~PhysicsProcessor();
 		
-		static void RegisterEntity(Entity* A); // make the entity seen by the physics processor
-		static void UnregisterEntity(Entity* A); // make it invisible again
+		// world management
+		World* CreateWorld();
+		World* CreateWorld(const WorldProperties& props);
+		void DestroyWorld(World* world);
+		World* AccessWorld(int id);
+		
+		void RegisterEntity(Entity* A); // make the entity seen by the physics processor
+		void UnregisterEntity(Entity* A); // make it invisible again
 		
 		// collisions
-		static void CollisionSelection(Entity* A, Entity* B);
-		static void CollisionDetection(Entity* A, Entity* B);
-		static void CollisionReaction(Entity* A, Entity* B);
+		void CollisionSelection(Entity* A, Entity* B);
+		void CollisionDetection(Entity* A, Entity* B);
+		void CollisionReaction(Entity* A, Entity* B);
 		
 		// reactions
 		
 		// processors
-		static void GeneralRoutine(Scene* scene);
+		void GeneralRoutine(Scene* scene);
 		
 		// general
-		static void Init();
-		static void Shutdown();
+		void Init(const PhysicsSystem& physicsSystem);
+		void Shutdown();
+		void Restart(const PhysicsSystem& physicsSystem);
 		
 	private:
-		static std::vector<World*> m_Worlds;
-		static PhysicsSystem m_PhysicsSystemSelected;
-		static PhysicsAPI* m_API; 
+		std::vector<World*> m_Worlds = {};
+		PhysicsSystem m_PhysicsSystemSelected = PhysicsSystem::None;
+		PhysicsAPI* m_API = nullptr; 
 		
-		static void Move(Entity* A);
-		static void UnMove(Entity* A);
+		void Move(Entity* A);
+		void UnMove(Entity* A);
 	};
 }
 

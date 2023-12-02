@@ -6,9 +6,25 @@
 namespace CSE
 {
 	// Physics Processor
-	std::vector<World*> PhysicsProcessor::m_Worlds;
-	PhysicsSystem PhysicsProcessor::m_PhysicsSystemSelected = PhysicsSystem::None;
-	PhysicsAPI* PhysicsProcessor::m_API = nullptr;
+	// std::vector<World*> PhysicsProcessor::m_Worlds;
+	// PhysicsSystem PhysicsProcessor::m_PhysicsSystemSelected = PhysicsSystem::None;
+	// PhysicsAPI* PhysicsProcessor::m_API = nullptr;
+	
+	PhysicsProcessor::PhysicsProcessor()
+	{
+		Init(PhysicsSystem::CSE);
+	}
+	
+	PhysicsProcessor::PhysicsProcessor(const PhysicsSystem& physicsSystem)
+	{
+		Init(physicsSystem);
+	}
+	
+	PhysicsProcessor::~PhysicsProcessor()
+	{
+		Shutdown();
+	}
+	
 	
 	World* PhysicsProcessor::CreateWorld()
 	{
@@ -155,9 +171,9 @@ namespace CSE
 		// affect hitboxes
 	}
 	
-	void PhysicsProcessor::Init()
+	void PhysicsProcessor::Init(const PhysicsSystem& physicsSystem)
 	{
-		m_API = CreatePhysicsProcessor(PhysicsSystem::CSE);
+		m_API = CreatePhysicsProcessor(physicsSystem);
 	}
 	
 	void PhysicsProcessor::Shutdown()
@@ -173,5 +189,16 @@ namespace CSE
 			}
 			m_Worlds[i] = nullptr;
 		}
+		
+		if (m_API != nullptr)
+			delete m_API;
+		m_API = nullptr;
+	}
+	
+	void PhysicsProcessor::Restart(const PhysicsSystem& physicsSystem)
+	{
+		Shutdown();
+		
+		Init(physicsSystem);
 	}
 }

@@ -14,6 +14,15 @@ namespace CSE
 	Scene::Scene()
 	{
 		m_SceneCamera = new Camera2D();
+		
+		m_PhysicsProcessor = new PhysicsProcessor(PhysicsSystem::CSE);
+	}
+	
+	Scene::Scene(const PhysicsSystem& physicsSystem)
+	{
+		m_SceneCamera = new Camera2D();
+		
+		m_PhysicsProcessor = new PhysicsProcessor(PhysicsSystem::None);
 	}
 	
 	Scene::~Scene()
@@ -152,6 +161,14 @@ namespace CSE
 		}
 	}
 	
+	void Scene::UpdatePhysics(TimeType sceneTime) // calls physics processor general routine
+	{
+		if (m_PhysicsProcessor != nullptr)
+		{
+			m_PhysicsProcessor->GeneralRoutine(this);
+		}
+	}
+	
 	Entity* Scene::CreateEntity(const std::string& name)
 	{
 		Entity* entity = new Entity( m_Registry.create(), this );
@@ -178,7 +195,7 @@ namespace CSE
 	{
 		Entity* entity = CreateEntity(name);
 		entity->AddComponent<PhysicsComponent>();
-		PhysicsProcessor::RegisterEntity(entity);
+		m_PhysicsProcessor->RegisterEntity(entity);
 		
 		return entity;
 	}
@@ -186,7 +203,7 @@ namespace CSE
 	void Scene::DestroyEntity(Entity& entity)
 	{
 		if (entity.HasComponent<PhysicsComponent>())
-			PhysicsProcessor::UnregisterEntity(&entity);
+			m_PhysicsProcessor->UnregisterEntity(&entity);
 		
 		m_Registry.destroy(entity.GetID());
 	}

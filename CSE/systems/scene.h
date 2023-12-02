@@ -4,6 +4,7 @@
 #include <CSE/core.h>
 
 #include <CSE/systems/platform.h>
+#include <CSE/systems/physics.h>
 
 #include <CSE/vendor/entt/entt.hpp>
 
@@ -24,6 +25,7 @@ namespace CSE
 	class Scene {
 	public:
 		Scene();
+		Scene(const PhysicsSystem& physicsSystem);
 		virtual ~Scene();
 		
 		virtual void Init(); // should be called after constructor
@@ -42,6 +44,7 @@ namespace CSE
 		
 		inline void SetLayer(Layer* layer) { m_Layer = layer; }
 		inline Layer* GetLayer() { return m_Layer; }
+		inline PhysicsProcessor* GetPhysicsProcessor() { return m_PhysicsProcessor; }
 		inline Camera2D* GetDefaultCamera() { return m_SceneCamera; }
 		inline Camera2D* GetActiveCamera() { return (m_ActiveCamera == nullptr) ? GetDefaultCamera() : m_ActiveCamera; }
 		inline void SetCamera(Camera2D* camera) { m_ActiveCamera = camera; }
@@ -52,6 +55,7 @@ namespace CSE
 		// void Input();
 		void Animate(TimeType sceneTime); // updates AnimationComponent
 		void Draw(); // draw anything with SpriteComponent
+		void UpdatePhysics(TimeType sceneTime); // calls physics processor general routine
 		
 		Entity* CreateEntity(const std::string& name = "");
 		Entity* CreateEntityWithUUID(const std::string& name = "", uint64_t uuid = 0);
@@ -69,6 +73,7 @@ namespace CSE
 		bool m_Running = false;
 		bool m_Paused = false;
 		entt::registry m_Registry;
+		PhysicsProcessor* m_PhysicsProcessor;
 	};
 }
 

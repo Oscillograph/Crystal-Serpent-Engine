@@ -73,7 +73,8 @@ namespace CSE
 	{
 		if (m_Scene != nullptr)
 		{
-			m_Scene->OnUpdate(time);
+			m_Scene->OnUpdate(time); // user-defined update scene function
+			m_Scene->UpdatePhysics(time); // engine-defined physics update mechanic
 		}
 		return true;
 	}

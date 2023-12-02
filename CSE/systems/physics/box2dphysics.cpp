@@ -90,6 +90,7 @@ namespace CSE
 		{
 			if ((*it).second.GetID() == A->GetID())
 			{
+				m_Box2DWorld->DestroyBody(it->first);
 				m_Bodies.erase(it);
 				break;
 			}

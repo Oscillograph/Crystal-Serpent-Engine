@@ -1,6 +1,7 @@
 #include <CSE/systems/components.h>
 #include <CSE/systems/window.h>
 #include <CSE/systems/physics.h>
+#include <CSE/systems/scene.h>
 
 namespace CSE
 {
@@ -337,7 +338,12 @@ namespace CSE
 		
 		// this constructor should automatically register entity in the physics processor registry
 		entity = A;
-		PhysicsProcessor::RegisterEntity(&entity);
+		if (entity.GetScene()->GetPhysicsProcessor() != nullptr)
+		{
+			entity.GetScene()->GetPhysicsProcessor()->RegisterEntity(&entity);
+		} else {
+			CSE_CORE_LOG("Can't register physical entity due to lack of Physics Processor in scene ", entity.GetScene());
+		}
 	}
 	
 	PhysicsComponent::~PhysicsComponent()
@@ -345,7 +351,8 @@ namespace CSE
 		// destructor should unregister the entity from the physics processor registry
 		if (entity.GetScene() != nullptr)
 		{
-			PhysicsProcessor::UnregisterEntity(&entity);
+			if (entity.GetScene()->GetPhysicsProcessor() != nullptr)
+				entity.GetScene()->GetPhysicsProcessor()->UnregisterEntity(&entity);
 		}
 	}
 }
