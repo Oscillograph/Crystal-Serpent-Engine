@@ -3,6 +3,7 @@
 #include <CSE/systems/physics/box2dphysics.h>
 
 #include <CSE/vendor/box2d/b2_world.h>
+#include <CSE/vendor/entt/entt.hpp>
 
 namespace CSE
 {
@@ -63,7 +64,7 @@ namespace CSE
 					}
 					break;
 				
-			case PhysicsDefines::HitBoxType::Rectangle:
+			case PhysicsDefines::HitBoxType::Rectangle: // TODO: Rectangular shapes
 				{
 					// create a fixture shape
 					// add the fixture to the body
@@ -80,18 +81,60 @@ namespace CSE
 		  b2PolygonShape polygonShape; // polygonShape.SetAsBox(width, height)
 		  // body->CreateFixture(&polygonShape, 0.0f) // static bodies have 0 mass
 		*/
-		Entity temp = { A->GetID(), A->GetScene() };
-		m_Bodies.emplace(body, temp);
+		// Entity temp = { A->GetID(), A->GetScene() };
+		m_Bodies.emplace(body, (uint32_t)(A->GetID()));
+		m_Entities.emplace((uint32_t)(A->GetID()), body);
+	}
+	
+	void Box2DPhysics::ChangeType(Entity* A)
+	{
+		PhysicsComponent& physics = A->GetComponent<PhysicsComponent>();
+		
+		// reminder:
+		// Banned  - no interaction possible
+		// Static  - doesn't react to other bodies, but other bodies react on this one
+		// Astral  - reacts to other bodies, but other bodies don't react to this one
+		// Dynamic - full interaction with bodies
+		
+		switch (physics.bodyType)
+		{
+			case PhysicsDefines::BodyType::Banned:
+				{
+					m_Entities[(uint32_t)(A->GetID())]->SetEnabled(false);
+				}
+				break;
+			case PhysicsDefines::BodyType::Static:
+				{
+					m_Entities[(uint32_t)(A->GetID())]->SetEnabled(true);
+					m_Entities[(uint32_t)(A->GetID())]->SetType(b2BodyType::b2_staticBody);
+				}
+				break;
+			case PhysicsDefines::BodyType::Astral: // Box2D doesn't support this, so it is an alias for kinematic here
+				{
+					m_Entities[(uint32_t)(A->GetID())]->SetEnabled(true);
+					m_Entities[(uint32_t)(A->GetID())]->SetType(b2BodyType::b2_kinematicBody);
+				}
+				break;
+			case PhysicsDefines::BodyType::Dynamic:
+				{
+					m_Entities[(uint32_t)(A->GetID())]->SetEnabled(true);
+					m_Entities[(uint32_t)(A->GetID())]->SetType(b2BodyType::b2_dynamicBody);
+				}
+				break;
+		}
 	}
 	
 	void Box2DPhysics::UnregisterEntity(Entity* A) // make it invisible again
 	{
-		for (auto it = m_Bodies.begin(); it != m_Bodies.end(); it++)
+		for (auto bodyIterator = m_Bodies.begin(); bodyIterator != m_Bodies.end(); bodyIterator++)
 		{
-			if ((*it).second.GetID() == A->GetID())
+			if ((*bodyIterator).second == (uint32_t)(A->GetID()))
 			{
-				m_Box2DWorld->DestroyBody(it->first);
-				m_Bodies.erase(it);
+				auto entityIterator = m_Entities.find((*bodyIterator).second);
+				m_Entities.erase(entityIterator);
+				
+				m_Box2DWorld->DestroyBody((*bodyIterator).first);
+				m_Bodies.erase(bodyIterator);
 				break;
 			}
 		}
@@ -126,7 +169,7 @@ namespace CSE
 		while(currentBody != nullptr)
 		{
 			// fetch the corresponding entity - we gonna store user data somehow
-			e = m_Bodies[currentBody];
+			e = {(entt::entity)(m_Bodies[currentBody]), scene};
 			
 			PhysicsComponent &physics = e.GetComponent<PhysicsComponent>();
 			PositionComponent& position = e.GetComponent<PositionComponent>();

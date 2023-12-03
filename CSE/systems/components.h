@@ -174,7 +174,7 @@ namespace CSE
 	{
 		typedef enum
 		{
-			Dynamic, // interaction with different bodies
+			Dynamic, // full interaction with bodies
 			Static, // doesn't react to other bodies, but other bodies react on this one
 			Astral, // reacts to other bodies, but other bodies don't react to this one
 			Banned // no interaction possible
@@ -239,6 +239,7 @@ namespace CSE
 		PhysicsComponent();
 		PhysicsComponent(const Entity& A); // to automatically register
 		PhysicsComponent(const PhysicsComponent&) = default;
+		void ChangeType(PhysicsDefines::BodyType newType);
 		~PhysicsComponent();
 	};
 	// ================================================

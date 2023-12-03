@@ -2,6 +2,7 @@
 #include <CSE/systems/scene.h>
 #include <CSE/systems/entity.h>
 #include <CSE/systems/components.h>
+#include <CSE/systems/canban.h>
 
 namespace CSE
 {
@@ -102,8 +103,20 @@ namespace CSE
 		entt::registry& entityRegistry = scene->GetRegistry();
 		auto physicsCollection = entityRegistry.view<PhysicsComponent>();
 		
-		// check for groups of objects that could possibly collide
+		// read canban board
+		Entity* entity;
+		if (Canban::GetTask(CanbanEvents::Physics_ChangeType, entity))
+		{
+			// The reason to transfer type change to physics implementation is that
+			// each implementation has its own way of dealing with world processing,
+			// and the general engine abstraction can't know it beforehand.
+			m_API->ChangeType(entity); 
+		}
 		
+		m_API->GeneralRoutine(scene);
+		
+		/*
+		// check for groups of objects that could possibly collide
 		for (auto e : physicsCollection)
 		{
 			Entity entity(e, scene);
@@ -117,14 +130,14 @@ namespace CSE
 				// if it is possible, then make sure if it happened
 			}
 			
-			/*
+			
 			// others react on this one
-			if ((physicsComponent.bodyType == PhysicsDefines::BodyType::Static)
-				|| (physicsComponent.bodyType == PhysicsDefines::BodyType::Dynamic))
-			{
-				
-			}
-			*/
+			// if ((physicsComponent.bodyType == PhysicsDefines::BodyType::Static)
+			//	|| (physicsComponent.bodyType == PhysicsDefines::BodyType::Dynamic))
+			// {
+			//	
+			// }
+			
 			
 			// this one reacts to others
 			if ((physicsComponent.bodyType == PhysicsDefines::BodyType::Astral)
@@ -133,6 +146,7 @@ namespace CSE
 				
 			}
 		}
+		*/
 	}
 	
 	void PhysicsProcessor::Move(Entity* A)

@@ -22,6 +22,10 @@ namespace CSE
 	{
 	}
 	
+	void CSEPhysics::ChangeType(Entity* A)
+	{
+	}
+	
 	void CSEPhysics::UnregisterEntity(Entity* A) // make it invisible again
 	{
 	}

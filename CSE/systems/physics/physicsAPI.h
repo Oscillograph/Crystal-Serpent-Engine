@@ -30,6 +30,7 @@ namespace CSE
 		virtual void DestroyWorld(int worldID) = 0;
 		
 		virtual void RegisterEntity(Entity* A) = 0; // make the entity seen by the physics processor
+		virtual void ChangeType(Entity* A) = 0;
 		virtual void UnregisterEntity(Entity* A) = 0; // make it invisible again
 		
 		// collisions

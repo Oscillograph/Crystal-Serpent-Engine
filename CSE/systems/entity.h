@@ -8,6 +8,8 @@
 
 namespace CSE
 {
+	// reminder: entt:entity = id_type = ENTT_ID_TYPE = uint32_t 
+	
 	// It is basically a couple of variables with an interface to the scene's registry
 	class Entity
 	{

@@ -19,6 +19,7 @@ namespace CSE
 		virtual void DestroyWorld(int worldID) override;
 		
 		virtual void RegisterEntity(Entity* A) override; // make the entity seen by the physics processor
+		virtual void ChangeType(Entity* A) override;
 		virtual void UnregisterEntity(Entity* A) override; // make it invisible again
 		
 		// collisions

@@ -2,6 +2,7 @@
 #include <CSE/systems/window.h>
 #include <CSE/systems/physics.h>
 #include <CSE/systems/scene.h>
+#include <CSE/systems/canban.h>
 
 namespace CSE
 {
@@ -344,6 +345,12 @@ namespace CSE
 		} else {
 			CSE_CORE_LOG("Can't register physical entity due to lack of Physics Processor in scene ", entity.GetScene());
 		}
+	}
+	
+	void PhysicsComponent::ChangeType(PhysicsDefines::BodyType newType)
+	{
+		bodyType = newType;
+		Canban::PutTask(CanbanEvents::Physics_ChangeType, &entity);
 	}
 	
 	PhysicsComponent::~PhysicsComponent()

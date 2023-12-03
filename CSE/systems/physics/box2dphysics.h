@@ -21,6 +21,7 @@ namespace CSE
 		virtual void DestroyWorld(int worldID) override;
 		
 		virtual void RegisterEntity(Entity* A) override; // make the entity seen by the physics processor
+		virtual void ChangeType(Entity* A) override;
 		virtual void UnregisterEntity(Entity* A) override; // make it invisible again
 		
 		// collisions
@@ -41,7 +42,9 @@ namespace CSE
 		float m_TimeStep = CSE_FPS60;
 		int32 m_VelocityIterations = 6;
 		int32 m_PositionIterations = 2;
-		std::unordered_map<b2Body*, Entity> m_Bodies = {}; // all the bodies to be registered and unregistered
+		// std::unordered_map<b2Body*, uint32_t> m_Bodies = {}; // all the bodies to be registered and unregistered
+		std::unordered_map<b2Body*, uint32_t> m_Bodies = {}; // all the bodies to be registered and unregistered
+		std::unordered_map<uint32_t, b2Body*> m_Entities = {}; // all the bodies to be registered and unregistered
 	};
 }
 
