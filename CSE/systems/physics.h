@@ -6,7 +6,7 @@
 
 // implementation-specific
 #include <CSE/systems/physics/physicsAPI.h>
-
+#include <CSE/systems/platform.h>
 
 namespace CSE
 {
@@ -44,7 +44,7 @@ namespace CSE
 		// reactions
 		
 		// processors
-		void GeneralRoutine(Scene* scene);
+		void GeneralRoutine(Scene* scene, TimeType sceneTime);
 		
 		// general
 		void Init(const PhysicsSystem& physicsSystem);

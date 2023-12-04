@@ -11,6 +11,7 @@ namespace CSE
 	
 	Box2DPhysics::Box2DPhysics()
 	{
+		CSE_CORE_LOG("Box2DPhysics Engine initialized");
 	}
 	
 	Box2DPhysics::~Box2DPhysics()
@@ -21,6 +22,7 @@ namespace CSE
 	{
 		b2Vec2 box2DGravity = { props.gravity.x, props.gravity.y };
 		m_Box2DWorld = new b2World(box2DGravity);
+		// CSE_CORE_LOG("Is the world even created?");
 	}
 	
 	void Box2DPhysics::DestroyWorld(int worldID) 
@@ -41,17 +43,18 @@ namespace CSE
 		bodyDefinition.type = (physics.bodyType == PhysicsDefines::BodyType::Static) ? b2_staticBody : b2_dynamicBody;
 		
 		b2Body* body = m_Box2DWorld->CreateBody(&bodyDefinition);
-		
+		CSE_CORE_LOG("Do we even register anyfin?");
 		// TODO: implement hitbox children processing
 		for (int i = 0; i < physics.hitBoxes.size(); i++)
 		{
+			CSE_CORE_LOG("Registering hitbox #", i);
 			switch (physics.hitBoxes[i].hitBoxType)
 			{
 				case PhysicsDefines::HitBoxType::Circle:
 					{
 						// create a fixture shape
 						b2CircleShape shape;
-						shape.m_p = { physics.hitBoxes[i].points[0].x, physics.hitBoxes[i].points[0].y };
+						shape.m_p = { position.x + physics.hitBoxes[i].points[0].x, position.y + physics.hitBoxes[i].points[0].y };
 						shape.m_radius = physics.hitBoxes[i].radius;
 						
 						// add the fixture to the body
@@ -64,12 +67,25 @@ namespace CSE
 					}
 					break;
 				
-			case PhysicsDefines::HitBoxType::Rectangle: // TODO: Rectangular shapes
-				{
-					// create a fixture shape
-					// add the fixture to the body
-				}
-				break;
+				case PhysicsDefines::HitBoxType::Rectangle: // TODO: Rectangular shapes
+					{
+						// create a fixture shape
+						b2PolygonShape shape;
+						shape.m_count = 4;
+						shape.m_vertices[0].Set(position.x + physics.hitBoxes[i].points[0].x, position.y + physics.hitBoxes[i].points[0].y);
+						shape.m_vertices[1].Set(position.x + physics.hitBoxes[i].points[1].x, position.y + physics.hitBoxes[i].points[1].y);
+						shape.m_vertices[2].Set(position.x + physics.hitBoxes[i].points[2].x, position.y + physics.hitBoxes[i].points[2].y);
+						shape.m_vertices[3].Set(position.x + physics.hitBoxes[i].points[3].x, position.y + physics.hitBoxes[i].points[3].y);
+						
+						// add the fixture to the body
+						b2FixtureDef fixtureDefinition;
+						fixtureDefinition.shape = &shape;
+						fixtureDefinition.density = 1.0f;
+						fixtureDefinition.friction = 0.3f;
+						
+						body->CreateFixture(&fixtureDefinition);
+					}
+					break;
 			}
 		}
 		
@@ -156,20 +172,22 @@ namespace CSE
 	// reactions
 	
 	// processors
-	void Box2DPhysics::GeneralRoutine(Scene* scene) 
+	void Box2DPhysics::GeneralRoutine(Scene* scene, TimeType sceneTime) 
 	{
 		// update world
 		m_Box2DWorld->Step(m_TimeStep, m_VelocityIterations, m_PositionIterations);
-		
+		// CSE_CORE_LOG("Box2D: Step");
 		// update components
 		int32 bodyCount = m_Box2DWorld->GetBodyCount();
 		b2Body* bodies = m_Box2DWorld->GetBodyList();
-		b2Body* currentBody = bodies->GetNext();
+		b2Body* currentBody = bodies;
+		// CSE_CORE_LOG("Box2D: First body selected");
 		Entity e;
 		while(currentBody != nullptr)
 		{
 			// fetch the corresponding entity - we gonna store user data somehow
 			e = {(entt::entity)(m_Bodies[currentBody]), scene};
+			CSE_CORE_LOG("Box2D: Entity #", (uint32_t)(e.GetID()), " constructed from initializers");
 			
 			PhysicsComponent &physics = e.GetComponent<PhysicsComponent>();
 			PositionComponent& position = e.GetComponent<PositionComponent>();
@@ -181,8 +199,9 @@ namespace CSE
 			
 			b2Vec2 bodyVelocity = currentBody->GetLinearVelocity();
 			physics.velocity = { bodyVelocity.x, bodyVelocity.y };
-			
+			currentBody->GetNext();
 		}
+		// CSE_CORE_LOG("Box2D: All bodies processed");
 	}
 	
 	// general

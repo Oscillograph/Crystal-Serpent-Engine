@@ -342,6 +342,7 @@ namespace CSE
 		if (entity.GetScene()->GetPhysicsProcessor() != nullptr)
 		{
 			entity.GetScene()->GetPhysicsProcessor()->RegisterEntity(&entity);
+			// CSE_CORE_LOG("Physics processor registered entity \"", (uint32_t)(entity.GetID()), "\"");
 		} else {
 			CSE_CORE_LOG("Can't register physical entity due to lack of Physics Processor in scene ", entity.GetScene());
 		}

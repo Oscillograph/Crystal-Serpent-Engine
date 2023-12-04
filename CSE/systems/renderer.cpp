@@ -244,7 +244,7 @@ namespace CSE
 		delete source;
 	}
 	
-	void Renderer::DrawRect(SDL_FPoint center, SDL_FPoint size)
+	void Renderer::DrawRect(SDL_FPoint center, SDL_FPoint size, SDL_Color color)
 	{
 		float scaleX = m_Scene->GetLayer()->GetWindow()->GetPrefs().width * m_Scene->GetLayer()->GetWindow()->GetScale().x;
 		float scaleY = m_Scene->GetLayer()->GetWindow()->GetPrefs().height * m_Scene->GetLayer()->GetWindow()->GetScale().y;
@@ -263,8 +263,47 @@ namespace CSE
 			(int)roundf(scaleY * size.y)
 		};
 		
-		SDL_SetRenderDrawColor(GetActiveRenderer(), 128, 255, 255, 255);
+		SDL_SetRenderDrawColor(GetActiveRenderer(), color.r, color.g, color.b, color.a);
 		SDL_RenderDrawRect(GetActiveRenderer(), &rect);
+		SetBackgroundColor(m_BackgroundColor);
+	}
+	
+	void Renderer::DrawRect(SDL_FPoint p1, SDL_FPoint p2, SDL_FPoint p3, SDL_FPoint p4, SDL_Color color)
+	{
+		float scaleX = m_Scene->GetLayer()->GetWindow()->GetPrefs().width * m_Scene->GetLayer()->GetWindow()->GetScale().x;
+		float scaleY = m_Scene->GetLayer()->GetWindow()->GetPrefs().height * m_Scene->GetLayer()->GetWindow()->GetScale().y;
+		
+		glm::vec2 dXY = {0.0f, 0.0f};
+		if (GetActiveCamera() != nullptr)
+		{
+			dXY = GetActiveCamera()->GetPosition();
+		}
+		
+		SDL_Point points[5] = {
+			{
+				(int)roundf(scaleX * (p1.x - dXY.x)),
+				(int)roundf(scaleY * (p1.y - dXY.y)),
+			}, 
+			{
+				(int)roundf(scaleX * (p2.x - dXY.x)),
+				(int)roundf(scaleY * (p2.y - dXY.y)),
+			},  
+			{
+				(int)roundf(scaleX * (p3.x - dXY.x)),
+				(int)roundf(scaleY * (p3.y - dXY.y)),
+			}, 
+			{
+				(int)roundf(scaleX * (p4.x - dXY.x)),
+				(int)roundf(scaleY * (p4.y - dXY.y)),
+			},
+			{
+				(int)roundf(scaleX * (p1.x - dXY.x)),
+				(int)roundf(scaleY * (p1.y - dXY.y)),
+			}
+		};
+		
+		SDL_SetRenderDrawColor(GetActiveRenderer(), color.r, color.g, color.b, color.a);
+		SDL_RenderDrawLines(GetActiveRenderer(), points, 5);
 		SetBackgroundColor(m_BackgroundColor);
 	}
 	

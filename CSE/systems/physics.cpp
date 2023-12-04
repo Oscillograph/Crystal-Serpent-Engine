@@ -98,7 +98,7 @@ namespace CSE
 	{
 	}
 	
-	void PhysicsProcessor::GeneralRoutine(Scene* scene)
+	void PhysicsProcessor::GeneralRoutine(Scene* scene, TimeType sceneTime)
 	{
 		entt::registry& entityRegistry = scene->GetRegistry();
 		auto physicsCollection = entityRegistry.view<PhysicsComponent>();
@@ -112,8 +112,8 @@ namespace CSE
 			// and the general engine abstraction can't know it beforehand.
 			m_API->ChangeType(entity); 
 		}
-		
-		m_API->GeneralRoutine(scene);
+		// CSE_CORE_LOG("Canban processed");
+		m_API->GeneralRoutine(scene, sceneTime);
 		
 		/*
 		// check for groups of objects that could possibly collide
@@ -188,6 +188,7 @@ namespace CSE
 	void PhysicsProcessor::Init(const PhysicsSystem& physicsSystem)
 	{
 		m_API = CreatePhysicsProcessor(physicsSystem);
+		CreateWorld();
 	}
 	
 	void PhysicsProcessor::Shutdown()

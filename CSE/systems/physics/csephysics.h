@@ -30,7 +30,7 @@ namespace CSE
 		// reactions
 		
 		// processors
-		virtual void GeneralRoutine(Scene* scene) override;
+		virtual void GeneralRoutine(Scene* scene, TimeType sceneTime) override;
 		
 		// general
 		virtual void Shutdown() override;

@@ -43,7 +43,7 @@ class SceneGame : public CSE::Scene
 {
 public:
 	SceneGame()
-		: CSE::Scene()
+		: CSE::Scene(CSE::PhysicsSystem::Box2D)
 	{
 	};
 	
@@ -177,6 +177,20 @@ public:
 				);
 			animationComponent.Set(CSE::EntityStates::STAND1);
 			animationComponent.Start();
+			
+			CSE::PhysicsComponent& physicsComponent = player1->AddComponent<CSE::PhysicsComponent>();
+			CSE::PhysicsHitBox hitbox;
+			hitbox.hitBoxType = CSE::PhysicsDefines::HitBoxType::Circle;
+			hitbox.points = {{0.0f, 0.0f}};
+			hitbox.radius = 0.0f;
+			
+			physicsComponent.entity = *player1;
+			physicsComponent.hitBoxes.push_back(hitbox);
+			physicsComponent.velocity = {0.0f, 0.0f};
+			physicsComponent.acceleration = {0.0f, 0.0f};
+			physicsComponent.mass = 1.0f;
+			physicsComponent.bodyType = CSE::PhysicsDefines::BodyType::Static;
+			GetPhysicsProcessor()->RegisterEntity(player1);
 		}
 		
 		if (player2 == nullptr)
@@ -264,7 +278,18 @@ public:
 			animationComponent.Start();
 			
 			CSE::PhysicsComponent& physicsComponent = floor->AddComponent<CSE::PhysicsComponent>();
-			physicsComponent.bodyType = CSE::PhysicsDefines::BodyType::Static;
+			CSE::PhysicsHitBox hitbox; // match rectangle points coordinates to transform size
+			hitbox.hitBoxType = CSE::PhysicsDefines::HitBoxType::Rectangle;
+			hitbox.points = {{-0.005f, 0.25f}, {0.005f, 0.25f}, {0.005f, -0.25f}, {-0.005f, -0.25f}};
+			hitbox.radius = 0.0f;
+			
+			physicsComponent.entity = *floor;
+			physicsComponent.hitBoxes.push_back(hitbox);
+			physicsComponent.velocity = {0.0f, 0.0f};
+			physicsComponent.acceleration = {0.0f, 0.0f};
+			physicsComponent.mass = 1.0f;
+			physicsComponent.bodyType = CSE::PhysicsDefines::BodyType::Dynamic;
+			GetPhysicsProcessor()->RegisterEntity(floor);
 		}
 	}
 	
@@ -390,14 +415,29 @@ public:
 				{
 					position.x -= 0.002f;
 					GetActiveCamera()->MoveBy({-0.002f, 0.0f});
+					
+					// change animation if needed
+					if (CSE::EntityStates::JUMP2 != animation.Get())
+					{
+						animation.Set(CSE::EntityStates::JUMP2);
+						animation.Start();
+					}
 				}
 				
 				if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Right]))
 				{
 					position.x += 0.002f;
 					GetActiveCamera()->MoveBy({0.002f, 0.0f});
+					
+					// change animation if needed 
+					if (CSE::EntityStates::JUMP1 != animation.Get())
+					{
+						animation.Set(CSE::EntityStates::JUMP1);
+						animation.Start();
+					}
 				}
 				
+				// if the animation is set the first time
 				if ((CSE::EntityStates::JUMP1 != animation.Get()) && (CSE::EntityStates::JUMP2 != animation.Get()))
 				{
 					animation.Set((position.direction == 1) ? CSE::EntityStates::JUMP1 : CSE::EntityStates::JUMP2);
@@ -416,12 +456,26 @@ public:
 				{
 					position.x -= 0.002f;
 					GetActiveCamera()->MoveBy({-0.002f, 0.0f});
+					
+					// change animation if needed
+					if (CSE::EntityStates::JUMP2 != animation.Get())
+					{
+						animation.Set(CSE::EntityStates::JUMP2);
+						animation.Start();
+					}
 				}
 				
 				if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Right]))
 				{
 					position.x += 0.002f;
 					GetActiveCamera()->MoveBy({0.002f, 0.0f});
+					
+					// change animation if needed
+					if (CSE::EntityStates::JUMP1 != animation.Get())
+					{
+						animation.Set(CSE::EntityStates::JUMP1);
+						animation.Start();
+					}
 				}
 				
 				if (position.y < 0.9f)

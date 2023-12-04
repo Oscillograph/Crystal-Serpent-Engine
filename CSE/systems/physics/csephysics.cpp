@@ -46,7 +46,7 @@ namespace CSE
 	// reactions
 	
 	// processors
-	void CSEPhysics::GeneralRoutine(Scene* scene) 
+	void CSEPhysics::GeneralRoutine(Scene* scene, TimeType sceneTime) 
 	{
 	}
 	

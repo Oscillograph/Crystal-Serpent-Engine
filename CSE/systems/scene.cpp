@@ -22,7 +22,7 @@ namespace CSE
 	{
 		m_SceneCamera = new Camera2D();
 		
-		m_PhysicsProcessor = new PhysicsProcessor(PhysicsSystem::None);
+		m_PhysicsProcessor = new PhysicsProcessor(physicsSystem);
 	}
 	
 	Scene::~Scene()
@@ -150,14 +150,51 @@ namespace CSE
 			};
 
 			// CSE_CORE_LOG("Entity ", e.GetComponent<CSE::NameComponent>().value);
-			CSE::Renderer::DrawTiledTexture(
+			Renderer::DrawTiledTexture(
 				spriteComponent.texture->GetTexture(),
 				&place,
 				&frame,
 				spriteComponent.tilingFactor
 				);
 			if (Application::IsRenderWireframes())
-				CSE::Renderer::DrawRect({position.x, position.y}, {transform.size.x, transform.size.y});
+			{
+				if (e.HasComponent<PhysicsComponent>())
+				{
+					// draw hitboxes
+					PhysicsComponent& physicsComponent = e.GetComponent<PhysicsComponent>();
+					for (int i = 0; i < physicsComponent.hitBoxes.size(); i++)
+					{
+						switch (physicsComponent.hitBoxes[i].hitBoxType)
+						{
+						case PhysicsDefines::HitBoxType::Circle:
+							{
+								SDL_FPoint center = physicsComponent.hitBoxes[i].points[0];
+								Renderer::DrawRect(
+									{position.x + center.x, position.y + center.y}, 
+									{transform.size.x, transform.size.y},
+									{255, 128, 255, 255}
+									);
+							}
+							break;
+						case PhysicsDefines::HitBoxType::Rectangle:
+							{
+								Renderer::DrawRect(
+									{position.x + physicsComponent.hitBoxes[i].points[0].x, position.y + physicsComponent.hitBoxes[i].points[0].y},
+									{position.x + physicsComponent.hitBoxes[i].points[1].x, position.y + physicsComponent.hitBoxes[i].points[1].y},
+									{position.x + physicsComponent.hitBoxes[i].points[2].x, position.y + physicsComponent.hitBoxes[i].points[2].y},
+									{position.x + physicsComponent.hitBoxes[i].points[3].x, position.y + physicsComponent.hitBoxes[i].points[3].y},
+									{255, 128, 255, 255}
+									);
+							}
+							break;
+						default:
+							Renderer::DrawRect({position.x, position.y}, {transform.size.x, transform.size.y}, {255, 255, 255, 255});
+						}
+					}
+				} else {
+					Renderer::DrawRect({position.x, position.y}, {transform.size.x, transform.size.y});
+				}
+			}
 		}
 	}
 	
@@ -165,7 +202,8 @@ namespace CSE
 	{
 		if (m_PhysicsProcessor != nullptr)
 		{
-			m_PhysicsProcessor->GeneralRoutine(this);
+			m_PhysicsProcessor->GeneralRoutine(this, sceneTime);
+			// CSE_CORE_LOG("Physics processor general routine called and processed");
 		}
 	}
 	

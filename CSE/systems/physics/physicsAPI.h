@@ -3,6 +3,7 @@
 
 #include <CSE/core.h>
 #include <CSE/systems/physics/world.h>
+#include <CSE/systems/platform.h>
 
 namespace CSE
 {
@@ -41,7 +42,7 @@ namespace CSE
 		// reactions
 		
 		// processors
-		virtual void GeneralRoutine(Scene* scene) = 0;
+		virtual void GeneralRoutine(Scene* scene, TimeType sceneTime) = 0;
 		
 		// general
 		virtual void Shutdown() = 0;
