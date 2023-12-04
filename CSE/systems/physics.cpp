@@ -80,10 +80,12 @@ namespace CSE
 	
 	void PhysicsProcessor::RegisterEntity(Entity* A) // make the entity seen by the physics processor
 	{
+		m_API->RegisterEntity(A);
 	}
 	
 	void PhysicsProcessor::UnregisterEntity(Entity* A) // make it invisible again
 	{
+		m_API->UnregisterEntity(A);
 	}
 	
 	void PhysicsProcessor::CollisionSelection(Entity* A, Entity* B)
