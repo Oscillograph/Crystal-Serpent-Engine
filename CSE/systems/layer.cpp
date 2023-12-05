@@ -84,7 +84,12 @@ namespace CSE
 	{
 		m_Scene = scene;
 		m_Scene->SetLayer(this);
-		m_Scene->Init();
+		if (!m_Scene->IsInitialized())
+		{
+			m_Scene->Init();
+			m_Scene->OnInitialized();
+		}
+		m_Scene->Load();
 		m_Scene->OnLoaded();
 		return true;
 	}
@@ -93,6 +98,7 @@ namespace CSE
 	{
 		scene->SetLayer(nullptr);
 		m_Scene = nullptr;
+		scene->Unload();
 		scene->OnUnloaded();
 		return true;
 	}

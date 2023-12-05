@@ -38,12 +38,35 @@ namespace CSE
 	{
 	}
 	
+	void Scene::OnInitialized()
+	{
+		m_Initialized = true;
+	}
+	
+	void Scene::Load()
+	{
+	}
+	
 	void Scene::OnLoaded()
+	{
+	}
+	
+	void Scene::Unload() // should be called before OnUnloaded
 	{
 	}
 	
 	void Scene::OnUnloaded()
 	{
+		if (m_PhysicsProcessor != nullptr)
+		{
+			delete m_PhysicsProcessor;
+			m_PhysicsProcessor = nullptr;
+		}
+		if (m_CurrentWorld != nullptr)
+		{
+			delete m_CurrentWorld;
+			m_CurrentWorld = nullptr;
+		}
 	}
 	
 	void Scene::OnUpdate(TimeType sceneTime)

@@ -13,6 +13,7 @@ namespace CSE
 	class Layer;
 	class Entity;
 	class Camera2D;
+	class World;
 	
 	// TODO: Scene serialization mechanism
 	// TODO: Scene reset mechanism
@@ -28,8 +29,11 @@ namespace CSE
 		Scene(const PhysicsSystem& physicsSystem);
 		virtual ~Scene();
 		
-		virtual void Init(); // should be called after constructor
+		virtual void Init(); // user-defined, should be called after constructor
+		virtual void OnInitialized();
+		virtual void Load(); // user-defined
 		virtual void OnLoaded();
+		virtual void Unload(); // user-defined
 		virtual void OnUnloaded();
 		virtual void OnUpdate(TimeType sceneTime); // before the update happens
 		
@@ -42,6 +46,7 @@ namespace CSE
 		inline bool IsRunning() { return m_Running; }
 		inline bool IsPaused() { return m_Paused; }
 		
+		inline bool IsInitialized() { return m_Initialized; }
 		inline void SetLayer(Layer* layer) { m_Layer = layer; }
 		inline Layer* GetLayer() { return m_Layer; }
 		inline PhysicsProcessor* GetPhysicsProcessor() { return m_PhysicsProcessor; }
@@ -72,8 +77,10 @@ namespace CSE
 		Camera2D* m_ActiveCamera = nullptr; // should be set from the client app
 		bool m_Running = false;
 		bool m_Paused = false;
+		bool m_Initialized = false;
 		entt::registry m_Registry;
 		PhysicsProcessor* m_PhysicsProcessor;
+		World* m_CurrentWorld = nullptr;
 	};
 }
 
