@@ -43,7 +43,8 @@ namespace CSE
 		static void DrawRect(SDL_FPoint p1, SDL_FPoint p2, SDL_FPoint p3, SDL_FPoint p4, SDL_Color color = {128, 255, 255, 255});
 		
 		// mid-level methods (advanced renderer commands)
-		static void Update();
+		static void NewFrame(); 
+		static void ShowFrame(); 
 		
 		// high-level methods (complex graphics operations)
 		
@@ -54,6 +55,10 @@ namespace CSE
 		
 		static glm::vec2 m_PixelSize;
 		static glm::uvec4 m_BackgroundColor;
+		
+		static glm::vec2 m_FrameSize;
+		static glm::vec2 m_FrameScale;
+		static glm::vec2 m_CameraPosition;
 	};
 }
 

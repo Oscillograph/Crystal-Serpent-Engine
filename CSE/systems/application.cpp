@@ -217,7 +217,7 @@ namespace CSE
 						{
 							Renderer::SetActiveRenderer(window->GetRenderer());
 						}
-						Renderer::ClearScreen();
+						Renderer::NewFrame();
 						
 						// display every layer
 						for (Ref<Layer> layer : window->GetLayers())
@@ -230,7 +230,7 @@ namespace CSE
 								}
 							}
 						}
-						Renderer::Update();
+						Renderer::ShowFrame();
 					}
 				}
 				// TODO: 10. File I/O system

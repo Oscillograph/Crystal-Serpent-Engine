@@ -12,6 +12,7 @@ namespace CSE
 	struct WorldProperties
 	{
 		glm::vec2 gravity = {0.0f, 9.8f}; // up or down directions
+		glm::vec2 size = {100, 100}; // in meters
 		
 		WorldProperties();
 	};

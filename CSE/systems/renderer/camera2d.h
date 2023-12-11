@@ -35,6 +35,8 @@ namespace CSE
 		float m_Size = 0.0f;
 		glm::vec2 m_Position = {0.0f, 0.0f};
 		float m_Rotation = 0.0f; // in radians
+		// TODO: Control size of a frame through camera interface 
+		// glm::vec2 m_FrameSize = {100.0f, 100.0f}; // in meters
 		
 		bool m_RotationAllowed = true;
 		bool m_TranslationAllowed = true;

@@ -10,6 +10,9 @@ namespace CSE
 	
 	glm::vec2 Renderer::m_PixelSize = glm::vec2(1.0f);
 	glm::uvec4 Renderer::m_BackgroundColor = glm::uvec4(1.0f);
+	glm::vec2 Renderer::m_FrameSize = glm::vec2(1.0f);
+	glm::vec2 Renderer::m_FrameScale = glm::vec2(1.0f);
+	glm::vec2 Renderer::m_CameraPosition = glm::vec2(1.0f);
 	
 	void Renderer::SetActiveRenderer(SDL_Renderer* renderer)
 	{
@@ -101,13 +104,6 @@ namespace CSE
 		// TODO: find out why Application::Get()->GetWindows() is not allowed to be accessed from here
 		SDL_GetWindowSize(m_Scene->GetLayer()->GetWindow()->GetNativeWindow(), &windowWidth, &windowHeight);
 		
-		glm::vec2 dXY = {0.0f, 0.0f};
-		if (m_ActiveCamera != nullptr)
-		{
-			dXY.x = GetActiveCamera()->GetPosition().x;
-			dXY.y = GetActiveCamera()->GetPosition().y;
-		}
-		
 		float scaleX = m_Scene->GetLayer()->GetWindow()->GetScale().x;
 		float scaleY = m_Scene->GetLayer()->GetWindow()->GetScale().y;
 		
@@ -124,8 +120,8 @@ namespace CSE
 		{
 			*place = 
 			{ 
-				(int)floorf(destRect->x * scaleX - dXY.x * windowWidth), 
-				(int)floorf(destRect->y * scaleY - dXY.y * windowHeight), 
+				(int)floorf(destRect->x * scaleX - m_CameraPosition.x * windowWidth), 
+				(int)floorf(destRect->y * scaleY - m_CameraPosition.y * windowHeight), 
 				(int)floorf(destRect->w * scaleX), 
 				(int)floorf(destRect->h * scaleY) 
 			};
@@ -133,8 +129,8 @@ namespace CSE
 			// not making it NULL is important for the next step - tiling
 			*place = 
 			{ 
-				(int)floorf(0 - dXY.x * windowWidth), 
-				(int)floorf(0 - dXY.y * windowHeight), 
+				(int)floorf(0 - m_CameraPosition.x * windowWidth), 
+				(int)floorf(0 - m_CameraPosition.y * windowHeight), 
 				windowWidth, 
 				windowHeight 
 			};
@@ -208,8 +204,8 @@ namespace CSE
 						// CSE_LOG("scaleX: ", scaleX, "; scaleY: ", scaleY);
 						*newPlace = 
 						{
-							(int)floorf(scaleX * ((*destRect).x + x * (*source).w * tilingFactor.x) - dXY.x * windowWidth), 
-							(int)floorf(scaleY * ((*destRect).y + y * (*source).h * tilingFactor.y) - dXY.y * windowHeight), 
+							(int)floorf(scaleX * ((*destRect).x + x * (*source).w * tilingFactor.x) - m_CameraPosition.x * windowWidth), 
+							(int)floorf(scaleY * ((*destRect).y + y * (*source).h * tilingFactor.y) - m_CameraPosition.y * windowHeight), 
 							(int)floorf(scaleX * tileWidth * tilingFactor.x), 
 							(int)floorf(scaleY * tileHeight * tilingFactor.y) 
 						};
@@ -249,16 +245,10 @@ namespace CSE
 		float scaleX = m_Scene->GetLayer()->GetWindow()->GetPrefs().width * m_Scene->GetLayer()->GetWindow()->GetScale().x;
 		float scaleY = m_Scene->GetLayer()->GetWindow()->GetPrefs().height * m_Scene->GetLayer()->GetWindow()->GetScale().y;
 		
-		glm::vec2 dXY = {0.0f, 0.0f};
-		if (GetActiveCamera() != nullptr)
-		{
-			dXY = GetActiveCamera()->GetPosition();
-		}
-		
 		SDL_Rect rect = 
 		{
-			(int)roundf(scaleX * (center.x - dXY.x - size.x/2)), 
-			(int)roundf(scaleY * (center.y - dXY.y - size.y/2)), 
+			(int)roundf(scaleX * (center.x - m_CameraPosition.x - size.x/2)), 
+			(int)roundf(scaleY * (center.y - m_CameraPosition.y - size.y/2)), 
 			(int)roundf(scaleX * size.x), 
 			(int)roundf(scaleY * size.y)
 		};
@@ -273,32 +263,26 @@ namespace CSE
 		float scaleX = m_Scene->GetLayer()->GetWindow()->GetPrefs().width * m_Scene->GetLayer()->GetWindow()->GetScale().x;
 		float scaleY = m_Scene->GetLayer()->GetWindow()->GetPrefs().height * m_Scene->GetLayer()->GetWindow()->GetScale().y;
 		
-		glm::vec2 dXY = {0.0f, 0.0f};
-		if (GetActiveCamera() != nullptr)
-		{
-			dXY = GetActiveCamera()->GetPosition();
-		}
-		
 		SDL_Point points[5] = {
 			{
-				(int)roundf(scaleX * (p1.x - dXY.x)),
-				(int)roundf(scaleY * (p1.y - dXY.y)),
+				(int)roundf(scaleX * (p1.x - m_CameraPosition.x)),
+				(int)roundf(scaleY * (p1.y - m_CameraPosition.y)),
 			}, 
 			{
-				(int)roundf(scaleX * (p2.x - dXY.x)),
-				(int)roundf(scaleY * (p2.y - dXY.y)),
+				(int)roundf(scaleX * (p2.x - m_CameraPosition.x)),
+				(int)roundf(scaleY * (p2.y - m_CameraPosition.y)),
 			},  
 			{
-				(int)roundf(scaleX * (p3.x - dXY.x)),
-				(int)roundf(scaleY * (p3.y - dXY.y)),
+				(int)roundf(scaleX * (p3.x - m_CameraPosition.x)),
+				(int)roundf(scaleY * (p3.y - m_CameraPosition.y)),
 			}, 
 			{
-				(int)roundf(scaleX * (p4.x - dXY.x)),
-				(int)roundf(scaleY * (p4.y - dXY.y)),
+				(int)roundf(scaleX * (p4.x - m_CameraPosition.x)),
+				(int)roundf(scaleY * (p4.y - m_CameraPosition.y)),
 			},
 			{
-				(int)roundf(scaleX * (p1.x - dXY.x)),
-				(int)roundf(scaleY * (p1.y - dXY.y)),
+				(int)roundf(scaleX * (p1.x - m_CameraPosition.x)),
+				(int)roundf(scaleY * (p1.y - m_CameraPosition.y)),
 			}
 		};
 		
@@ -307,7 +291,17 @@ namespace CSE
 		SetBackgroundColor(m_BackgroundColor);
 	}
 	
-	void Renderer::Update()
+	void Renderer::NewFrame()
+	{
+		ClearScreen();
+		
+		if (GetActiveCamera() != nullptr)
+		{
+			m_CameraPosition = GetActiveCamera()->GetPosition();
+		}
+	}
+	
+	void Renderer::ShowFrame()
 	{
 		SDL_RenderPresent(GetActiveRenderer());
 	}
