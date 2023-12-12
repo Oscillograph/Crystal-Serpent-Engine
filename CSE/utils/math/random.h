@@ -102,45 +102,15 @@ namespace CSE
 			
 			void Init(int count = 0)
 			{
-				switch(count)
+				if (count > 0)
 				{
-				case 2:
-					m_Dice = {1, 2};
-					break;
-				case 3:
-					m_Dice = {1, 2, 3};
-					break;
-				case 4:
-					m_Dice = {1, 2, 3, 4};
-					break;
-				case 6:
-					m_Dice = {1, 2, 3, 4, 5, 6}; 
-					break;
-				case 7:
-					m_Dice = {1, 2, 3, 4, 5, 6, 7};
-					break;
-				case 8:
-					m_Dice = {1, 2, 3, 4, 5, 6, 7, 8};
-					break;
-				case 10:
-					m_Dice = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-					break;
-				case 12:
-					m_Dice = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
-					break;
-				case 16:
-					m_Dice = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
-					break;
-				case 20:
-					m_Dice = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20};
-					break;
-				case 100:
+					m_Dice.reserve(count);
 					for (int i = 1; i <= count; i++)
 						m_Dice.push_back(i);
-					break;
-				default:
+				} else {
 					m_Dice = {1, 2, 3, 4, 5, 6};
 				}
+				
 				m_RandomEngine = new RandomI(0, (m_Dice.size() - 1));
 				printf("Randomizer min and max: %d, %d\n", m_RandomEngine->GetMinimum(), m_RandomEngine->GetMaximum());
 				printf("Dice at 0 and last: %d, %d\n", m_Dice[0], m_Dice[m_Dice.size()-1]);
