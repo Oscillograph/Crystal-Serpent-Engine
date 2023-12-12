@@ -108,12 +108,10 @@ namespace CSE
 					for (int i = 1; i <= count; i++)
 						m_Dice.push_back(i);
 				} else {
-					m_Dice = {1, 2, 3, 4, 5, 6};
+					m_Dice = {1, 2, 3, 4, 5, 6}; // d6 by default
 				}
 				
 				m_RandomEngine = new RandomI(0, (m_Dice.size() - 1));
-				printf("Randomizer min and max: %d, %d\n", m_RandomEngine->GetMinimum(), m_RandomEngine->GetMaximum());
-				printf("Dice at 0 and last: %d, %d\n", m_Dice[0], m_Dice[m_Dice.size()-1]);
 				Roll(); // without this initial roll any first roll would be the same
 			};
 		};
