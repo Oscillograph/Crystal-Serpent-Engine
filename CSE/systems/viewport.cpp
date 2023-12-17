@@ -3,12 +3,11 @@
 namespace CSE
 {
 	Viewport::Viewport()
-	: m_Camera(nullptr)
 	{
 	}
 	
-	Viewport::Viewport(Camera2D* camera)
-	: m_Camera(camera)
+	Viewport::Viewport(Camera2D* camera, glm::vec4 place)
+		: m_Camera(camera), m_Place(place)
 	{
 	}
 	
