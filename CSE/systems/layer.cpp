@@ -1,5 +1,6 @@
 #include <CSE/systems/layer.h>
 #include <CSE/systems/renderer.h>
+#include <CSE/systems/viewport.h>
 
 namespace CSE
 {
@@ -23,7 +24,10 @@ namespace CSE
 	{
 		m_Layers.emplace(m_Layers.begin() + m_LayerInsertIndex, layer);
 		m_LayerInsertIndex++;
-		return layer->OnAttach();
+		if (layer->Attach())
+			if (layer->OnAttach())
+				return true;
+		return false;
 	}
 	
 	bool LayerStack::Detach(Ref<Layer> layer)
@@ -34,7 +38,11 @@ namespace CSE
 			m_Layers.erase(it);
 			m_LayerInsertIndex--;
 		}
-		return layer->OnDetach();
+		
+		if (layer->Detach())
+			if (layer->OnDetach())
+				return true;
+		return false;
 	}
 	
 	// ================= Layer =================
@@ -49,17 +57,27 @@ namespace CSE
 		m_Window = nullptr;
 	}
 	
-	bool Layer::OnAttach()
+	bool Layer::Attach()
 	{
 		// CSE_CORE_LOG("Layer ", m_Name, " attached.");
 		return true;
 	}
 	
-	bool Layer::OnDisplay()
+	bool Layer::OnAttach()
+	{
+		return true;
+	}
+	
+	bool Layer::Display()
 	{
 		Renderer::SetActiveCamera(m_Scene->GetActiveCamera());
 		m_Scene->UpdateGraphics(CSE::Platform::GetTimeMs());
 		
+		return true;
+	}
+	
+	bool Layer::OnDisplay()
+	{
 		return true;
 	}
 	
@@ -69,7 +87,7 @@ namespace CSE
 		return false;
 	}
 	
-	bool Layer::OnUpdate(TimeType time)
+	bool Layer::Update(TimeType time)
 	{
 		if (m_Scene != nullptr)
 		{
@@ -77,6 +95,11 @@ namespace CSE
 			if (m_Scene->GetPhysicsProcessor() != nullptr)
 				m_Scene->UpdatePhysics(time); // engine-defined physics update mechanic
 		}
+		return true;
+	}
+	
+	bool Layer::OnUpdate(TimeType time)
+	{
 		return true;
 	}
 	
@@ -103,10 +126,15 @@ namespace CSE
 		return true;
 	}
 	
-	bool Layer::OnDetach()
+	bool Layer::Detach()
 	{
 		// CSE_CORE_LOG("Layer ", m_Name, " detached.");
 		UnloadScene(m_Scene);
+		return true;
+	}
+	
+	bool Layer::OnDetach()
+	{
 		return true;
 	}
 	

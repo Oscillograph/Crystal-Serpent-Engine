@@ -183,6 +183,7 @@ namespace CSE
 						{
 							if (layer->HasScene())
 							{
+								layer->Update(m_TimeThisFrame);
 								layer->OnUpdate(m_TimeThisFrame);
 							}
 						}
@@ -226,6 +227,7 @@ namespace CSE
 							{
 								if (layer->HasScene())
 								{
+									layer->Display();
 									layer->OnDisplay();
 								}
 							}

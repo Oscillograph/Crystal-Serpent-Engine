@@ -29,13 +29,13 @@ namespace CSE
 	
 		// TODO: allow an entity to have a viewport
 		inline void SetScene(Scene* scene) { m_Scene = scene; }
-		inline Layer* GetScene() { return m_Scene; }
+		inline Scene* GetScene() { return m_Scene; }
 		// ----------------------------------------
 		
 	protected:
-		Camera2D* m_Camera = nullptr;
-		Layer* m_Layer = nullptr;
-		Scene* m_Scene = nullptr;
+		Layer* m_Layer = nullptr; // where it is attached to
+		Scene* m_Scene = nullptr; // what it is set up to show
+		Camera2D* m_Camera = nullptr; // how it is gonna show
 		
 		glm::vec4 m_Place = glm::vec4(0.0f); // where the viewport is located and what size it is
 		glm::vec2 m_ScaleToPixel = glm::vec2(0.0f); // how many meters are in one pixel

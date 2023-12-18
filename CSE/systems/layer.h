@@ -8,6 +8,7 @@
 namespace CSE
 {
 	class Window; // forward declaration so that a layer can store which window it belongs to.
+	class Viewport;
 	
 	// Every window is associated with its own layers stack.
 	// Every layer represents an abstraction capable of receiving and processing events.
@@ -21,12 +22,16 @@ namespace CSE
 		virtual ~Layer();
 		
 		// general API
+		bool Attach();
 		virtual bool OnAttach();
+		bool Display();
 		virtual bool OnDisplay();
-		virtual bool OnEvent(SDL_Event* event); // TODO: My own events wrapper around SDL_Event so that I can store events and decide when to pass them further 
+		virtual bool OnEvent(SDL_Event* event); // TODO: My own events wrapper around SDL_Event so that I can store events and decide when to pass them further
+		bool Update(TimeType time);
 		virtual bool OnUpdate(TimeType time);
-		virtual bool LoadScene(Scene* scene);
-		virtual bool UnloadScene(Scene* scene);
+		bool LoadScene(Scene* scene);
+		bool UnloadScene(Scene* scene);
+		bool Detach();
 		virtual bool OnDetach();
 		
 		// graphic user interface API
@@ -70,6 +75,7 @@ namespace CSE
 	protected:
 		std::vector<Ref<Layer>> m_Layers;
 		uint32_t m_LayerInsertIndex = 0;
+		Viewport* m_Viewport = nullptr; // TODO: allow a collection of viewports be set up for a single layer
 	};
 }
 
