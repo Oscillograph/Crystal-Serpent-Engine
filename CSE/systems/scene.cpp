@@ -89,11 +89,12 @@ namespace CSE
 	{
 	}
 	
+	/*
 	void Scene::UpdateGraphics(TimeType sceneTime)
 	{
 		// TODO: Scene Update mechanism
-		Animate(sceneTime);
-		Draw();
+		// Animate(sceneTime);
+		// Draw();
 	}
 	
 	void Scene::Animate(TimeType sceneTime)
@@ -220,6 +221,7 @@ namespace CSE
 			}
 		}
 	}
+	*/
 	
 	void Scene::UpdatePhysics(TimeType sceneTime) // calls physics processor general routine
 	{

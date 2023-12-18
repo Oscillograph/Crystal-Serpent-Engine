@@ -56,10 +56,10 @@ namespace CSE
 		inline void SetCameraDefault() { m_ActiveCamera = nullptr; } // there must be always a camera
 		
 		// Picks every entity it has and updates their components depending on the system involved.
-		virtual void UpdateGraphics(TimeType sceneTime);
 		// void Input();
-		void Animate(TimeType sceneTime); // updates AnimationComponent
-		void Draw(); // draw anything with SpriteComponent
+		// no need - virtual void UpdateGraphics(TimeType sceneTime);
+		// no need - void Animate(TimeType sceneTime); // updates AnimationComponent
+		// no need - void Draw(); // draw anything with SpriteComponent
 		void UpdatePhysics(TimeType sceneTime); // calls physics processor general routine
 		
 		Entity* CreateEntity(const std::string& name = "");

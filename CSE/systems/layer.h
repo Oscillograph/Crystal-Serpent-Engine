@@ -3,12 +3,12 @@
 
 #include <CSE/core.h>
 #include <CSE/systems/platform.h>
-#include <CSE/systems/scene.h>
 
 namespace CSE
 {
 	class Window; // forward declaration so that a layer can store which window it belongs to.
 	class Viewport;
+	class Scene;
 	
 	// Every window is associated with its own layers stack.
 	// Every layer represents an abstraction capable of receiving and processing events.
@@ -22,22 +22,26 @@ namespace CSE
 		virtual ~Layer();
 		
 		// general API
-		bool Attach();
 		virtual bool OnAttach();
-		bool Display();
+		bool Attach();
 		virtual bool OnDisplay();
+		bool Display();
 		virtual bool OnEvent(SDL_Event* event); // TODO: My own events wrapper around SDL_Event so that I can store events and decide when to pass them further
-		bool Update(TimeType time);
 		virtual bool OnUpdate(TimeType time);
+		bool Update(TimeType time);
 		bool LoadScene(Scene* scene);
 		bool UnloadScene(Scene* scene);
-		bool Detach();
 		virtual bool OnDetach();
+		bool Detach();
 		
 		// graphic user interface API
 		virtual void Begin();
 		virtual void OnGuiRender(float time);
 		virtual void End();
+		
+		// general routines
+		void Animate(TimeType sceneTime); // updates AnimationComponent
+		void Draw(); // draw anything with SpriteComponent
 		
 		// maintenance
 		inline std::string GetName() { return m_Name; }
