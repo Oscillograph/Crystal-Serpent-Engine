@@ -29,7 +29,8 @@ namespace CSE
 		Scene(const PhysicsSystem& physicsSystem);
 		virtual ~Scene();
 		
-		virtual void Init(); // user-defined, should be called after constructor
+		virtual void OnInit(); // user-defined, should be called after constructor
+		virtual void Init(); 
 		virtual void OnInitialized();
 		virtual void Load(); // user-defined
 		virtual void OnLoaded();

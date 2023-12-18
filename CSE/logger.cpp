@@ -32,7 +32,19 @@ namespace CSE
 				{
 					std::cout << dye::white(m_u8string);
 					break;
-				} 
+				}
+				
+				case 2: // dark red
+				{
+					std::cout << dye::red(m_u8string);
+					break;
+				}
+				
+				case 3: // light red
+				{
+					std::cout << dye::light_red(m_u8string);
+					break;
+				}
 				
 				default: // no idea who's log
 				{

@@ -30,9 +30,8 @@ namespace CSE
 	{
 		m_Layers.emplace(m_Layers.begin() + m_LayerInsertIndex, layer);
 		m_LayerInsertIndex++;
-		if (layer->OnAttach())
-			if (layer->Attach())
-				return true;
+		if (layer->Attach())
+			return true;
 		return false;
 	}
 	
@@ -45,9 +44,8 @@ namespace CSE
 			m_LayerInsertIndex--;
 		}
 		
-		if (layer->OnDetach())
-			if (layer->Detach())
-				return true;
+		if (layer->Detach())
+			return true;
 		return false;
 	}
 	
@@ -70,8 +68,20 @@ namespace CSE
 	
 	bool Layer::Attach()
 	{
-		// CSE_CORE_LOG("Layer ", m_Name, " attached.");
-		return true;
+		if (OnAttach())
+		{
+			// CSE_CORE_LOG("Layer ", m_Name, " attached.");
+			if (m_Viewport == nullptr)
+				if (HasScene())
+				{
+					m_Viewport = new Viewport(GetScene()->GetActiveCamera(), {0, 0, GetWindow()->GetPrefs().width, GetWindow()->GetPrefs().height});
+				} else {
+					CSE_CORE_ERROR("The layer has no scene initialized!");
+					m_Viewport = new Viewport(nullptr, {0, 0, GetWindow()->GetPrefs().width, GetWindow()->GetPrefs().height});
+				}
+			return true;
+		}
+		return false;
 	}
 	
 	bool Layer::OnDisplay()
@@ -81,6 +91,8 @@ namespace CSE
 	
 	bool Layer::Display()
 	{
+		OnDisplay();
+		
 		Renderer::SetActiveCamera(m_Scene->GetActiveCamera());
 		Animate(CSE::Platform::GetTimeMs());
 		Draw();
@@ -101,6 +113,8 @@ namespace CSE
 	
 	bool Layer::Update(TimeType time)
 	{
+		OnUpdate(time);
+		
 		if (m_Scene != nullptr)
 		{
 			m_Scene->OnUpdate(time); // user-defined update scene function
@@ -135,9 +149,19 @@ namespace CSE
 	
 	bool Layer::Detach()
 	{
-		// CSE_CORE_LOG("Layer ", m_Name, " detached.");
-		UnloadScene(m_Scene);
-		return true;
+		if (OnDetach())
+		{
+			// CSE_CORE_LOG("Layer ", m_Name, " detached.");
+			UnloadScene(m_Scene);
+			
+			if (m_Viewport != nullptr)
+				delete m_Viewport;
+			m_Viewport = nullptr;
+			
+			return true;
+		}
+		
+		return false;
 	}
 	
 	bool Layer::OnDetach()

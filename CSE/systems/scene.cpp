@@ -34,8 +34,13 @@ namespace CSE
 		m_SceneCamera = nullptr;
 	}
 	
+	void Scene::OnInit()
+	{
+	}
+	
 	void Scene::Init()
 	{
+		OnInit();
 	}
 	
 	void Scene::OnInitialized()

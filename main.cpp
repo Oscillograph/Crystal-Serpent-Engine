@@ -19,7 +19,7 @@ public:
 		logo = nullptr;
 	}
 	
-	void Init()
+	void OnInit()
 	{
 		// TODO: figure out how to de-initialize a scene for a proper scene unload mechanism
 		if (logo == nullptr)
@@ -75,7 +75,7 @@ public:
 		backgroundSDL = nullptr;
 	}
 	
-	void Init()
+	void OnInit()
 	{
 		if (background == nullptr)
 		{

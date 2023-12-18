@@ -48,6 +48,7 @@ namespace CSE
 		
 		inline bool HasScene() { return (m_Scene != nullptr); }
 		inline Scene* GetScene() { return m_Scene; }
+		inline void SetScene(Scene* scene) { m_Scene = scene; }
 		inline bool IsEnabled() { return m_Enabled; }
 		inline void Enable() { m_Enabled = true; }
 		inline void Disable() { m_Enabled = false; }
@@ -60,6 +61,7 @@ namespace CSE
 		bool m_Enabled;
 		Window* m_Window = nullptr;
 		Scene* m_Scene = nullptr;
+		Viewport* m_Viewport = nullptr; // TODO: allow a collection of viewports be set up for a single layer
 	};
 	
 	class LayerStack
@@ -79,7 +81,6 @@ namespace CSE
 	protected:
 		std::vector<Ref<Layer>> m_Layers;
 		uint32_t m_LayerInsertIndex = 0;
-		Viewport* m_Viewport = nullptr; // TODO: allow a collection of viewports be set up for a single layer
 	};
 }
 

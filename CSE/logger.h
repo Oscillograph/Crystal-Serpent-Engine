@@ -52,17 +52,21 @@ namespace CSE
 #ifndef CSE_LOGGER_CLASS
 	#define CSE_CORE_LOG(...)			std::cout << "CSE: " << __VA_ARGS__ << "\n";
 	#define CSE_CORE_DEBUG(...)			std::cout << "CSE: " << __VA_ARGS__ << "\n";
+	#define CSE_CORE_ERROR(...)			std::cout << "CSE: " << __VA_ARGS__ << "\n";
 	#define CSE_CORE_ASSERT(x, ...)		{ if (!(x)) { CSE_CORE_LOG(__VA_ARGS__); std::exit(); } }
 
 	#define CSE_LOG(...) 				std::cout << "App: " << __VA_ARGS__ << "\n";
 	#define CSE_DEBUG(...)				std::cout << "App: " << __VA_ARGS__ << "\n";
+	#define CSE_ERROR(...)				std::cout << "App: " << __VA_ARGS__ << "\n";
 	#define CSE_ASSERT(x, ...)			{ if (!(x)) { CSE_LOG(__VA_ARGS__); std::exit(); } }
 #else
 	#define CSE_CORE_LOG(...)			::CSE::Logger::Text("CSE: ", __VA_ARGS__); ::CSE::Logger::Flush(0, 0);
+	#define CSE_CORE_ERROR(...)			::CSE::Logger::Text("CSE: ", __VA_ARGS__); ::CSE::Logger::Flush(0, 3);
 	#define CSE_CORE_DEBUG(...)			::CSE::Logger::Text("CSE: ", __VA_ARGS__); ::CSE::Logger::Flush(1, 0);
 	#define CSE_CORE_ASSERT(x, ...)		{ if (!(x)) { CSE_CORE_LOG(__VA_ARGS__); std::exit(-4); } }
 
 	#define CSE_LOG(...)				::CSE::Logger::Text("App: ", __VA_ARGS__); ::CSE::Logger::Flush(0, 1);
+	#define CSE_ERROR(...)				::CSE::Logger::Text("App: ", __VA_ARGS__); ::CSE::Logger::Flush(0, 3);
 	#define CSE_DEBUG(...)				::CSE::Logger::Text("App: ", __VA_ARGS__); ::CSE::Logger::Flush(1, 1);
 	#define CSE_ASSERT(x, ...)			{ if (!(x)) { CSE_LOG(__VA_ARGS__); std::exit(-4); } }
 #endif
