@@ -41,6 +41,8 @@ namespace CSE
 	void Scene::Init()
 	{
 		OnInit();
+		// ...
+		OnInitialized();
 	}
 	
 	void Scene::OnInitialized()
@@ -50,6 +52,8 @@ namespace CSE
 	
 	void Scene::Load()
 	{
+		// ...
+		OnLoaded();
 	}
 	
 	void Scene::OnLoaded()
@@ -58,6 +62,8 @@ namespace CSE
 	
 	void Scene::Unload() // should be called before OnUnloaded
 	{
+		// ...
+		OnUnloaded();
 	}
 	
 	void Scene::OnUnloaded()
