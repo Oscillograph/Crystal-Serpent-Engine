@@ -70,15 +70,6 @@ namespace CSE
 	{
 		if (OnAttach())
 		{
-			// CSE_CORE_LOG("Layer ", m_Name, " attached.");
-			if (m_Viewport == nullptr)
-				if (HasScene())
-				{
-					m_Viewport = new Viewport(GetScene()->GetActiveCamera(), {0, 0, GetWindow()->GetPrefs().width, GetWindow()->GetPrefs().height});
-				} else {
-					CSE_CORE_ERROR("The layer has no scene initialized!");
-					m_Viewport = new Viewport(nullptr, {0, 0, GetWindow()->GetPrefs().width, GetWindow()->GetPrefs().height});
-				}
 			return true;
 		}
 		return false;
@@ -133,6 +124,11 @@ namespace CSE
 			m_Scene->Init();
 		}
 		m_Scene->Load();
+		
+		// CSE_CORE_LOG("Layer ", m_Name, " attached.");
+		if (m_Viewport == nullptr)
+			m_Viewport = new Viewport(m_Scene->GetActiveCamera(), {0, 0, GetWindow()->GetPrefs().width, GetWindow()->GetPrefs().height});
+		
 		return true;
 	}
 	
@@ -141,6 +137,11 @@ namespace CSE
 		scene->SetLayer(nullptr);
 		m_Scene = nullptr;
 		scene->Unload();
+		
+		if (m_Viewport != nullptr)
+			delete m_Viewport;
+		m_Viewport = nullptr;
+		
 		return true;
 	}
 	
@@ -150,10 +151,6 @@ namespace CSE
 		{
 			// CSE_CORE_LOG("Layer ", m_Name, " detached.");
 			UnloadScene(m_Scene);
-			
-			if (m_Viewport != nullptr)
-				delete m_Viewport;
-			m_Viewport = nullptr;
 			
 			return true;
 		}
