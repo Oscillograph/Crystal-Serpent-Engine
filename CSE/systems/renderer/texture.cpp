@@ -50,6 +50,12 @@ namespace CSE
 		if(m_Surface == NULL)
 		{
 			CSE_CORE_LOG("Unable to load image ", path.c_str(), "! SDL_image Error: ", IMG_GetError());
+			m_Surface = IMG_Load("./CSE/assets/no_texture.bmp");
+		}
+		
+		if(m_Surface == NULL)
+		{
+			CSE_CORE_LOG("Unable to load no_texture.bmp image! SDL_image Error: ", IMG_GetError());
 		} else {
 			FreeTexture();
 			

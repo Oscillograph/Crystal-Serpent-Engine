@@ -28,8 +28,9 @@ public:
 			logo->AddComponent<CSE::PositionComponent>(0.5f, 0.5f);
 			CSE::TransformComponent& transform = logo->AddComponent<CSE::TransformComponent>();
 			transform.size = {1.0f, 1.0f};
-			sprite = new CSE::Texture("./CSE/assets/CSE_logo.png", GetLayer()->GetWindow()->GetRenderer());
+			sprite = new CSE::Texture("./CSE/assets/CSE_bogo.png", GetLayer()->GetWindow()->GetRenderer());
 			CSE::SpriteComponent& spriteComponent = logo->AddComponent<CSE::SpriteComponent>(sprite);
+			spriteComponent.clip = {100, 100};
 			// spriteComponent.tilingFactor = {0.0f, 0.0f};
 		}
 	}
