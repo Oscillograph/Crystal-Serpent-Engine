@@ -62,18 +62,12 @@ namespace CSE
 	
 	int Application::Run()
 	{
-		Texture* broscillograph = nullptr;
-		
 		for (Window* window : m_WindowStack)
 		{
 			Renderer::SetActiveRenderer(window->GetRenderer());
 			// Renderer::SetBackgroundColor({30, 50, 90, 255});
 			Renderer::SetBackgroundColor({60, 30, 50, 255});
 		}
-		
-		broscillograph = new Texture("./CSE/assets/CSE_logo.png", (m_WindowStack.GetContents())[0]->GetRenderer());
-		SDL_FRect stretchBro = {0, 0, 0, 0};
-		SDL_Rect srcRect = {0, 0, 80, 30};
 		
 		CSE_CORE_LOG("Starting FPS timer.");
 		m_TimeLastFrame = 0;
@@ -90,6 +84,11 @@ namespace CSE
 				// TODO: 0. Debug and profile system
 				// TODO: 1. Input management system
 				// 2. Events system
+				if (Canban::GetTask(CanbanEvents::Application_Shutdown, nullptr))
+				{
+					m_Running = true;
+				}
+				
 				while (SDL_PollEvent(&event))
 				{
 					if (event.type == SDL_QUIT)
@@ -243,13 +242,6 @@ namespace CSE
 				m_Running = false;
 		}
 		CSE_CORE_LOG("Exit from App main loop.");
-		
-		if (broscillograph != nullptr)
-		{
-			delete broscillograph; 
-			broscillograph = nullptr;
-		}
-		// CSE_CORE_LOG("Texture deleted.");
 		
 		return 0;
 	}

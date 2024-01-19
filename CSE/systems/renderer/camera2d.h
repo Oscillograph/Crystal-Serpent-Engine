@@ -33,7 +33,7 @@ namespace CSE
 		glm::vec2 m_Target = {0.0f, 0.0f};
 		float m_AspectRatio = 0.0f;
 		float m_Size = 0.0f;
-		glm::vec2 m_Position = {0.0f, 0.0f};
+		glm::vec2 m_Position = {0.0f, 0.0f}; // corresponds to the world coordinates in a scene
 		float m_Rotation = 0.0f; // in radians
 		// TODO: Control size of a frame through camera interface 
 		// glm::vec2 m_FrameSize = {100.0f, 100.0f}; // in meters

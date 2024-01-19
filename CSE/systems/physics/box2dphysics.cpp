@@ -35,7 +35,7 @@ namespace CSE
 	void Box2DPhysics::RegisterEntity(Entity* A) // make the entity seen by the physics processor
 	{
 		PhysicsComponent& physics = A->GetComponent<PhysicsComponent>();
-		PositionComponent& position = A->GetComponent<PositionComponent>();
+		// PositionComponent& position = A->GetComponent<PositionComponent>();
 		TransformComponent& transform = A->GetComponent<TransformComponent>();
 		
 		// create a body
@@ -54,7 +54,7 @@ namespace CSE
 					{
 						// create a fixture shape
 						b2CircleShape shape;
-						shape.m_p = { position.x + physics.hitBoxes[i].points[0].x, position.y + physics.hitBoxes[i].points[0].y };
+						shape.m_p = { physics.position.x + physics.hitBoxes[i].points[0].x, physics.position.y + physics.hitBoxes[i].points[0].y };
 						shape.m_radius = physics.hitBoxes[i].radius;
 						
 						// add the fixture to the body
@@ -72,10 +72,10 @@ namespace CSE
 						// create a fixture shape
 						b2PolygonShape shape;
 						shape.m_count = 4;
-						shape.m_vertices[0].Set(position.x + physics.hitBoxes[i].points[0].x, position.y + physics.hitBoxes[i].points[0].y);
-						shape.m_vertices[1].Set(position.x + physics.hitBoxes[i].points[1].x, position.y + physics.hitBoxes[i].points[1].y);
-						shape.m_vertices[2].Set(position.x + physics.hitBoxes[i].points[2].x, position.y + physics.hitBoxes[i].points[2].y);
-						shape.m_vertices[3].Set(position.x + physics.hitBoxes[i].points[3].x, position.y + physics.hitBoxes[i].points[3].y);
+						shape.m_vertices[0].Set(physics.position.x + physics.hitBoxes[i].points[0].x, physics.position.y + physics.hitBoxes[i].points[0].y);
+						shape.m_vertices[1].Set(physics.position.x + physics.hitBoxes[i].points[1].x, physics.position.y + physics.hitBoxes[i].points[1].y);
+						shape.m_vertices[2].Set(physics.position.x + physics.hitBoxes[i].points[2].x, physics.position.y + physics.hitBoxes[i].points[2].y);
+						shape.m_vertices[3].Set(physics.position.x + physics.hitBoxes[i].points[3].x, physics.position.y + physics.hitBoxes[i].points[3].y);
 						
 						// add the fixture to the body
 						b2FixtureDef fixtureDefinition;
@@ -190,12 +190,12 @@ namespace CSE
 			CSE_CORE_LOG("Box2D: Entity #", (uint32_t)(e.GetID()), " constructed from initializers");
 			
 			PhysicsComponent &physics = e.GetComponent<PhysicsComponent>();
-			PositionComponent& position = e.GetComponent<PositionComponent>();
+			// PositionComponent& position = e.GetComponent<PositionComponent>();
 			TransformComponent& transform = e.GetComponent<TransformComponent>();
 			
 			b2Vec2 bodyPosition = currentBody->GetPosition();
-			position.x = bodyPosition.x;
-			position.y = bodyPosition.y;
+			physics.position.x = bodyPosition.x;
+			physics.position.y = bodyPosition.y;
 			
 			b2Vec2 bodyVelocity = currentBody->GetLinearVelocity();
 			physics.velocity = { bodyVelocity.x, bodyVelocity.y };

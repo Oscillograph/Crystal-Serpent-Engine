@@ -16,6 +16,7 @@
 namespace CSE
 {
 	class Window;
+	class Camera2D;
 	
 	struct NameComponent 
 	{
@@ -38,6 +39,8 @@ namespace CSE
 		PositionComponent(float _x, float _y);
 	};
 	
+	// struct PhysicsComponent;
+	
 	struct TransformComponent // THIS CORRESPONDS TO HOW WE SEE IT
 	{
 		// coordinates and tranformations corresponding to the viewport
@@ -51,6 +54,8 @@ namespace CSE
 		
 		TransformComponent() = default;
 		TransformComponent(const TransformComponent&) = default;
+		
+		// void Update(PhysicsComponent& physics, Camera2D* camera);
 		
 		void NormalizeToWindow(Window* window);
 		glm::vec2 GetPositionNormalizedToWindow(Window* window);
@@ -227,6 +232,7 @@ namespace CSE
 		
 		// characteristics
 		float mass = 0.0f; // kg
+		glm::vec3 position {0.0f, 0.0f, 0.0f}; // meters in XYZ space coordinates
 		
 		int world = 0;
 		

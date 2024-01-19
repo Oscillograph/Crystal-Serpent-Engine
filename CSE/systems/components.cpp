@@ -4,6 +4,8 @@
 #include <CSE/systems/scene.h>
 #include <CSE/systems/canban.h>
 
+#include <CSE/systems/renderer/camera2d.h>
+
 namespace CSE
 {
 	// Name Component
@@ -30,6 +32,15 @@ namespace CSE
 	}
 	
 	// Transform Component
+	/*
+	void TransformComponent::Update(PhysicsComponent& physics, Camera2D* camera)
+	{
+		glm::vec2 cameraPosition = camera->GetPosition();
+		position.x = cameraPosition.x - physics.position.x;
+		position.y = cameraPosition.y - physics.position.y;
+	}
+	*/
+	
 	void TransformComponent::NormalizeToWindow(Window* window)
 	{
 		positionNormalized.x = position.x / (float)(window->GetPrefs().width);

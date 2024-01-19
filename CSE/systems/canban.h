@@ -13,9 +13,11 @@ namespace CSE
 	// YYY_ZZZ - ZZZ event for a system YYY
 	enum class CanbanEvents
 	{
-		None				= 0,
-		Clear				= 1,
-		Physics_ChangeType	= 2,
+		None					= 0,
+		Application_Shutdown 	= 1,
+		Clear					= 2,
+		Physics_ChangeType		= 3,
+		
 	};
 	
 	struct Canban

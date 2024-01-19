@@ -16,6 +16,8 @@
 #include <CSE/systems/entity.h>
 #include <CSE/systems/components.h>
 
+#include <CSE/systems/canban.h>
+
 namespace CSE
 {
 	// Main CSE application which can have windows
