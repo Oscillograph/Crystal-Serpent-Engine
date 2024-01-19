@@ -26,9 +26,9 @@ namespace CSE
 		NameComponent(const std::string& name);
 	};
 	
-	struct PositionComponent
+	struct PositionComponent // THIS CORRESPONDS TO HOW IT WORKS IN THE SCENE
 	{
-		// normalized coordinates corresponding to the scene world
+		// coordinates corresponding to the scene world
 		float x = 0.0f;
 		float y = 0.0f;
 		int direction = 0; // user defined meaning
@@ -36,19 +36,25 @@ namespace CSE
 		PositionComponent() = default;
 		PositionComponent(const PositionComponent&) = default;
 		PositionComponent(float _x, float _y);
-		
-		SDL_FPoint NormalizedToWindow(Window* window);
 	};
 	
-	struct TransformComponent
+	struct TransformComponent // THIS CORRESPONDS TO HOW WE SEE IT
 	{
-		glm::vec2 size = {1.0f, 1.0f}; // meters
+		// coordinates and tranformations corresponding to the viewport
+		glm::vec2 position = {0.0f, 0.0f}; // in pixels
+		glm::vec2 size = {1.0f, 1.0f}; // in pixels
+		
+		glm::vec2 positionNormalized = {0.0f, 0.0f};
+		glm::vec2 sizeNormalized = {1.0f, 1.0f};
+		
 		float rotation = 0.0f; // counter-clockwise, radians
 		
 		TransformComponent() = default;
 		TransformComponent(const TransformComponent&) = default;
 		
-		glm::vec2 NormalizedToWindow(Window* window);
+		void NormalizeToWindow(Window* window);
+		glm::vec2 GetPositionNormalizedToWindow(Window* window);
+		glm::vec2 GetSizeNormalizedToWindow(Window* window);
 	};
 	
 	struct UUIDComponent 

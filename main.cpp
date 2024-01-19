@@ -80,9 +80,15 @@ public:
 		if (background == nullptr)
 		{
 			background = CreateEntity("Background");
+			
+			// physical position in the scene world
 			background->AddComponent<CSE::PositionComponent>(0.25f, 0.25f);
+			
+			// screen representation
 			CSE::TransformComponent& transform = background->AddComponent<CSE::TransformComponent>();
 			transform.size = {0.5f, 0.5f};
+			
+			// sprite control
 			spriteBG = new CSE::Texture("./CSE/assets/CSE_logo.png", GetLayer()->GetWindow()->GetRenderer(), {0, 0, 0});
 			CSE::SpriteComponent& spriteComponent = background->AddComponent<CSE::SpriteComponent>(spriteBG);
 			spriteComponent.tilingFactor = {0.6f, 0.6f};
@@ -91,9 +97,15 @@ public:
 		if (backgroundSDL == nullptr)
 		{
 			backgroundSDL = CreateEntity("Background");
+			
+			// physical position
 			backgroundSDL->AddComponent<CSE::PositionComponent>(0.75f, 0.25f);
+			
+			// screen representation
 			CSE::TransformComponent& transform = backgroundSDL->AddComponent<CSE::TransformComponent>();
 			transform.size = {0.5f, 0.5f};
+			
+			// sprite control
 			spriteSDL = new CSE::Texture("./CSE/assets/SDL_logo.png", GetLayer()->GetWindow()->GetRenderer(), {0, 0, 0});
 			CSE::SpriteComponent& spriteComponent = backgroundSDL->AddComponent<CSE::SpriteComponent>(spriteSDL);
 			spriteComponent.tilingFactor = {0.4f, 0.4f};
@@ -103,12 +115,16 @@ public:
 		{
 			// a player1 entity on the screen
 			player1 = CreateEntity("Player 1");
+			
+			// physical position
 			CSE::PositionComponent& position = player1->AddComponent<CSE::PositionComponent>(0.75f, 0.9f);
 			position.direction = 1; // 1 means right, -1 means left
 			
+			// screen representation
 			CSE::TransformComponent& transform = player1->AddComponent<CSE::TransformComponent>();
 			transform.size = {0.1f, 0.15f};
 			
+			// state machine setup
 			CSE::StateMachineComponent& stateMachine = player1->AddComponent<CSE::StateMachineComponent>();
 			CSE::State* walkState = stateMachine.AddState(CSE::EntityStates::WALK);
 			CSE::State* standState = stateMachine.AddState(CSE::EntityStates::STAND);
@@ -146,10 +162,14 @@ public:
 				{CSE::Commands::KBCommand_Down, CSE::ScanCode::Down}
 			};
 			
+			// controls setup
 			CSE::KeyBoardComponent& keyboard = player1->AddComponent<CSE::KeyBoardComponent>(player1KBControls);
 			
+			// sprite control
 			sprite = new CSE::Texture("./App/Sprites.png", GetLayer()->GetWindow()->GetRenderer(), {0, 0, 0});
 			CSE::SpriteComponent& spriteComponent = player1->AddComponent<CSE::SpriteComponent>(sprite);
+			
+			// animation addon to sprite control
 			CSE::AnimationComponent& animationComponent = player1->AddComponent<CSE::AnimationComponent>();
 			animationComponent.Add(
 				CSE::EntityStates::STAND1, 
@@ -178,6 +198,7 @@ public:
 			animationComponent.Set(CSE::EntityStates::STAND1);
 			animationComponent.Start();
 			
+			// physics setup
 			CSE::PhysicsComponent& physicsComponent = player1->AddComponent<CSE::PhysicsComponent>();
 			CSE::PhysicsHitBox hitbox;
 			hitbox.hitBoxType = CSE::PhysicsDefines::HitBoxType::Circle;
@@ -197,12 +218,16 @@ public:
 		{
 			// a player1 entity on the screen
 			player2 = CreateEntity("Player 2");
+			
+			// physical position
 			CSE::PositionComponent& position = player2->AddComponent<CSE::PositionComponent>(0.25f, 0.9f);
 			position.direction = 1; // 1 means right, -1 means left
 			
+			// screen representation
 			CSE::TransformComponent& transform = player2->AddComponent<CSE::TransformComponent>();
 			transform.size = {0.1f, 0.15f};
 			
+			// state machine setup
 			CSE::StateMachineComponent& stateMachine = player2->AddComponent<CSE::StateMachineComponent>();
 			CSE::State* player2WalkState = stateMachine.AddState(CSE::EntityStates::WALK);
 			CSE::State* player2StandState = stateMachine.AddState(CSE::EntityStates::STAND);
@@ -221,10 +246,14 @@ public:
 				{CSE::Commands::KBCommand_Down, CSE::ScanCode::S}
 			};
 			
+			// controls setup
 			CSE::KeyBoardComponent& keyboard = player2->AddComponent<CSE::KeyBoardComponent>(player2KBControls);
 			
+			// sprite control
 			sprite = new CSE::Texture("./App/Sprites.png", GetLayer()->GetWindow()->GetRenderer(), {0, 0, 0});
 			CSE::SpriteComponent& spriteComponent = player2->AddComponent<CSE::SpriteComponent>(sprite);
+			
+			// animation addon to sprite control
 			CSE::AnimationComponent& animationComponent = player2->AddComponent<CSE::AnimationComponent>();
 			animationComponent.Add(
 				CSE::EntityStates::STAND1, 
@@ -258,17 +287,24 @@ public:
 		{
 			// a player1 entity on the screen
 			floor = CreateEntity("Floor");
+			
+			// physical position
 			CSE::PositionComponent& position = floor->AddComponent<CSE::PositionComponent>(0.5f, 0.9f);
+			
+			// screen representation
 			CSE::TransformComponent& transform = floor->AddComponent<CSE::TransformComponent>();
 			transform.size = {0.01f, 0.5f};
 			
+			// state machine setup
 			CSE::StateMachineComponent& stateMachine = floor->AddComponent<CSE::StateMachineComponent>();
 			stateMachine.AddState(CSE::EntityStates::STAND);
 			stateMachine.SetState(CSE::EntityStates::STAND);
 			
+			// sprite control
 			CSE::SpriteComponent& spriteComponent = floor->AddComponent<CSE::SpriteComponent>(sprite);
 			spriteComponent.tilingFactor = {0.0f, 2.0f};
 			
+			// animation addon to sprite control
 			CSE::AnimationComponent& animationComponent = floor->AddComponent<CSE::AnimationComponent>();
 			animationComponent.Add(
 				CSE::EntityStates::STAND1, 
@@ -277,6 +313,7 @@ public:
 			animationComponent.Set(CSE::EntityStates::STAND1);
 			animationComponent.Start();
 			
+			// physics setup
 			CSE::PhysicsComponent& physicsComponent = floor->AddComponent<CSE::PhysicsComponent>();
 			CSE::PhysicsHitBox hitbox; // match rectangle points coordinates to transform size
 			hitbox.hitBoxType = CSE::PhysicsDefines::HitBoxType::Rectangle;

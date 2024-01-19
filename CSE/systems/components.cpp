@@ -29,25 +29,24 @@ namespace CSE
 	{
 	}
 	
-	SDL_FPoint PositionComponent::NormalizedToWindow(Window* window)
+	// Transform Component
+	void TransformComponent::NormalizeToWindow(Window* window)
 	{
-		SDL_FPoint newXY;
-		newXY.x = window->GetPrefs().width * x;
-		newXY.y = window->GetPrefs().height * y;
+		positionNormalized.x = (float)(window->GetPrefs().width) / position.x;
+		positionNormalized.y = (float)(window->GetPrefs().height) / position.y;
 		
-		return newXY;
+		sizeNormalized.x = (float)(window->GetPrefs().width) / size.x;
+		sizeNormalized.y = (float)(window->GetPrefs().height) / size.y;
 	}
 	
-	// Transform Component
-	glm::vec2 TransformComponent::NormalizedToWindow(Window* window)
+	glm::vec2 TransformComponent::GetPositionNormalizedToWindow(Window* window)
 	{
-		glm::vec2 newSize = 
-		{
-			window->GetPrefs().width * size.x,
-			window->GetPrefs().height * size.y,
-		};
-		
-		return newSize;
+		return positionNormalized;
+	}
+	
+	glm::vec2 TransformComponent::GetSizeNormalizedToWindow(Window* window)
+	{
+		return sizeNormalized;
 	}
 	
 	// Sprite Component
