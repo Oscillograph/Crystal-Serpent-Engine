@@ -69,13 +69,15 @@ namespace CSE
 	struct SpriteComponent
 	{
 		Texture* texture = nullptr;
+		glm::vec2 clip = {1, 1}; // in pixels
 		glm::vec2 tilingFactor = {0.0f, 0.0f};
-		glm::vec2 size = {1.0f, 1.0f}; // meters
-		float rotation = 0.0f; // counter-clockwise, radians
+		// glm::vec2 size = {1.0f, 1.0f}; // meters
+		// float rotation = 0.0f; // counter-clockwise, radians
 		
 		SpriteComponent() = default;
 		SpriteComponent(const SpriteComponent&) = default;
 		SpriteComponent(Texture* value);
+		SpriteComponent(Texture* value, glm::vec2 _clip);
 	};
 	
 	struct KeyBoardComponent {

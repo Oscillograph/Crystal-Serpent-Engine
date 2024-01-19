@@ -238,8 +238,8 @@ namespace CSE
 				{
 					0, 
 					0, 
-					spriteComponent.texture->GetWidth(), 
-					spriteComponent.texture->GetHeight() 
+					spriteComponent.clip.x, 
+					spriteComponent.clip.y
 				};
 			}
 			

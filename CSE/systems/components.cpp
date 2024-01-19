@@ -53,6 +53,13 @@ namespace CSE
 	SpriteComponent::SpriteComponent(Texture* value)
 		: texture(value), tilingFactor(glm::vec2(0.0f))
 	{
+		clip.x = value->GetWidth();
+		clip.y = value->GetHeight();
+	};
+	
+	SpriteComponent::SpriteComponent(Texture* value, glm::vec2 _clip)
+	: texture(value), tilingFactor(glm::vec2(0.0f)), clip(_clip)
+	{
 	};
 	
 	// State Machine Component
