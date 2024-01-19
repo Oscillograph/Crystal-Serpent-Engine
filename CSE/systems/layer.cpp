@@ -208,7 +208,6 @@ namespace CSE
 		for (auto entity : GetScene()->GetRegistry().view<SpriteComponent>())
 		{
 			Entity e = Entity(entity, GetScene());
-			PositionComponent& position = e.GetComponent<PositionComponent>();
 			TransformComponent& transform = e.GetComponent<TransformComponent>();
 			SpriteComponent& spriteComponent = e.GetComponent<SpriteComponent>();
 			
@@ -245,10 +244,10 @@ namespace CSE
 			
 			place = 
 			{
-				windowSize.x * (position.x - transform.size.x/2), 
-				windowSize.y * (position.y - transform.size.y/2),
-				windowSize.x * transform.size.x,
-				windowSize.y * transform.size.y,
+				windowSize.x * transform.positionNormalized.x, 
+				windowSize.y * transform.positionNormalized.y,
+				windowSize.x * transform.sizeNormalized.x,
+				windowSize.y * transform.sizeNormalized.y,
 			};
 			
 			// CSE_CORE_LOG("Entity ", e.GetComponent<CSE::NameComponent>().value);
@@ -272,7 +271,7 @@ namespace CSE
 							{
 								SDL_FPoint center = physicsComponent.hitBoxes[i].points[0];
 								Renderer::DrawRect(
-									{position.x + center.x, position.y + center.y}, 
+									{transform.positionNormalized.x + center.x, transform.positionNormalized.y + center.y}, 
 									{transform.size.x, transform.size.y},
 									{255, 128, 255, 255}
 									);
@@ -281,20 +280,20 @@ namespace CSE
 						case PhysicsDefines::HitBoxType::Rectangle:
 							{
 								Renderer::DrawRect(
-									{position.x + physicsComponent.hitBoxes[i].points[0].x, position.y + physicsComponent.hitBoxes[i].points[0].y},
-									{position.x + physicsComponent.hitBoxes[i].points[1].x, position.y + physicsComponent.hitBoxes[i].points[1].y},
-									{position.x + physicsComponent.hitBoxes[i].points[2].x, position.y + physicsComponent.hitBoxes[i].points[2].y},
-									{position.x + physicsComponent.hitBoxes[i].points[3].x, position.y + physicsComponent.hitBoxes[i].points[3].y},
+									{transform.positionNormalized.x + physicsComponent.hitBoxes[i].points[0].x, transform.positionNormalized.y + physicsComponent.hitBoxes[i].points[0].y},
+									{transform.positionNormalized.x + physicsComponent.hitBoxes[i].points[1].x, transform.positionNormalized.y + physicsComponent.hitBoxes[i].points[1].y},
+									{transform.positionNormalized.x + physicsComponent.hitBoxes[i].points[2].x, transform.positionNormalized.y + physicsComponent.hitBoxes[i].points[2].y},
+									{transform.positionNormalized.x + physicsComponent.hitBoxes[i].points[3].x, transform.positionNormalized.y + physicsComponent.hitBoxes[i].points[3].y},
 									{255, 128, 255, 255}
 									);
 							}
 							break;
 						default:
-							Renderer::DrawRect({position.x, position.y}, {transform.size.x, transform.size.y}, {255, 255, 255, 255});
+							Renderer::DrawRect({transform.positionNormalized.x, transform.positionNormalized.y}, {transform.size.x, transform.size.y}, {255, 255, 255, 255});
 						}
 					}
 				} else {
-					Renderer::DrawRect({position.x, position.y}, {transform.size.x, transform.size.y});
+					Renderer::DrawRect({transform.positionNormalized.x, transform.positionNormalized.y}, {transform.size.x, transform.size.y});
 				}
 			}
 		}

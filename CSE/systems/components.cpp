@@ -32,11 +32,11 @@ namespace CSE
 	// Transform Component
 	void TransformComponent::NormalizeToWindow(Window* window)
 	{
-		positionNormalized.x = (float)(window->GetPrefs().width) / position.x;
-		positionNormalized.y = (float)(window->GetPrefs().height) / position.y;
+		positionNormalized.x = position.x / (float)(window->GetPrefs().width);
+		positionNormalized.y = position.y / (float)(window->GetPrefs().height);
 		
-		sizeNormalized.x = (float)(window->GetPrefs().width) / size.x;
-		sizeNormalized.y = (float)(window->GetPrefs().height) / size.y;
+		sizeNormalized.x = size.x / (float)(window->GetPrefs().width);
+		sizeNormalized.y = size.y / (float)(window->GetPrefs().height);
 	}
 	
 	glm::vec2 TransformComponent::GetPositionNormalizedToWindow(Window* window)
@@ -58,7 +58,7 @@ namespace CSE
 	};
 	
 	SpriteComponent::SpriteComponent(Texture* value, glm::vec2 _clip)
-	: texture(value), tilingFactor(glm::vec2(0.0f)), clip(_clip)
+		: texture(value), tilingFactor(glm::vec2(0.0f)), clip(_clip)
 	{
 	};
 	

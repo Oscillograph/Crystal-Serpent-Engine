@@ -25,12 +25,17 @@ public:
 		if (logo == nullptr)
 		{
 			logo = CreateEntity("CSE Logotype");
-			logo->AddComponent<CSE::PositionComponent>(0.5f, 0.5f);
+			
+			// screen position
 			CSE::TransformComponent& transform = logo->AddComponent<CSE::TransformComponent>();
-			transform.size = {1.0f, 1.0f};
-			sprite = new CSE::Texture("./CSE/assets/CSE_bogo.png", GetLayer()->GetWindow()->GetRenderer());
+			transform.position = {20, 40};
+			transform.size = {100, 100};
+			transform.NormalizeToWindow(GetLayer()->GetWindow());
+			
+			// sprite control
+			sprite = new CSE::Texture("./CSE/assets/CSE_pogo.png", GetLayer()->GetWindow()->GetRenderer());
 			CSE::SpriteComponent& spriteComponent = logo->AddComponent<CSE::SpriteComponent>(sprite);
-			spriteComponent.clip = {100, 100};
+			// spriteComponent.clip = {9000, 9000};
 			// spriteComponent.tilingFactor = {0.0f, 0.0f};
 		}
 	}
