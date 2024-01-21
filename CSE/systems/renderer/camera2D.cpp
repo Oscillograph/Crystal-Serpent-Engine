@@ -63,14 +63,28 @@ namespace CSE
 		return m_Position;
 	}
 	
-	void Camera2D::Retarget(glm::vec2 newTarget)
+	void Camera2D::Retarget(glm::vec4 newTargetArea)
 	{
-		m_Target = newTarget;
+		m_TargetArea = newTargetArea;
+		m_Position = {
+			(float)(2*newTargetArea.x + newTargetArea.z)/2,
+			(float)(2*newTargetArea.y + newTargetArea.w)/2
+		};
 	}
 	
-	glm::vec2& Camera2D::GetTarget()
+	glm::vec4& Camera2D::GetTarget()
 	{
 		return m_Target;
+	}
+	
+	void Camera2D::Zoom(glm::vec2 newZoom)
+	{
+		m_Zoom = newZoom;
+	}
+	
+	glm::vec2& Camera2D::GetZoom()
+	{
+		return m_Zoom;
 	}
 	
 	// rotate clockwise by angle in radians

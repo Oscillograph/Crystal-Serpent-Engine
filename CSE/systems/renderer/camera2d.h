@@ -22,22 +22,31 @@ namespace CSE
 		bool MoveBy(glm::vec2 newPosition);
 		glm::vec2& GetPosition();
 		
-		void Retarget(glm::vec2 newTarget);
-		glm::vec2& GetTarget();
+		void Retarget(glm::vec4 newTargetArea);
+		glm::vec4& GetTarget();
+		
+		void Zoom(glm::vec2 newZoom);
+		glm::vec2& GetZoom();
 		
 		// rotate clockwise by angle in radians
 		bool Rotate(float rotation);
 		float& GetRotation();
 		
 	private:
-		glm::vec2 m_Target = {0.0f, 0.0f};
-		float m_AspectRatio = 0.0f;
-		float m_Size = 0.0f;
-		glm::vec2 m_Position = {0.0f, 0.0f}; // corresponds to the world coordinates in a scene
+		glm::vec4 m_TargetArea = {0.0f, 0.0f}; // physical coordinates
+		glm::vec2 m_Position = {0.0f, 0.0f}; // the middle of m_TargetArea
+		glm::vec2 m_Zoom = {0.0f, 0.0f}; // zoom in both directions without changing target area
 		float m_Rotation = 0.0f; // in radians
+		
+		// TODO: Upgrade to 3D somehow
+		// glm::vec2 m_Target = {0.0f, 0.0f};
+		// float m_AspectRatio = 0.0f;
+		// float m_Size = 0.0f;
+		
 		// TODO: Control size of a frame through camera interface 
 		// glm::vec2 m_FrameSize = {100.0f, 100.0f}; // in meters
 		
+		bool m_ZoomAllowed = true;
 		bool m_RotationAllowed = true;
 		bool m_TranslationAllowed = true;
 	};

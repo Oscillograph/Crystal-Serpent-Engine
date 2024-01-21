@@ -84,7 +84,6 @@ namespace CSE
 	{
 		OnDisplay();
 		
-		Renderer::SetActiveCamera(m_Scene->GetActiveCamera());
 		Animate(CSE::Platform::GetTimeMs());
 		Draw();
 		
@@ -204,6 +203,7 @@ namespace CSE
 	void Layer::Draw()
 	{
 		Renderer::SetActiveScene(GetScene());
+		Renderer::SetActiveCamera(GetScene()->GetActiveCamera());
 		
 		for (auto entity : GetScene()->GetRegistry().view<SpriteComponent>())
 		{
