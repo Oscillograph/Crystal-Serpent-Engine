@@ -46,6 +46,9 @@ namespace CSE
 		// maintenance
 		inline std::string GetName() { return m_Name; }
 		
+		inline void SetWindow(Window* window) { m_Window = window; }
+		inline Window* GetWindow() { return m_Window; }
+		
 		inline bool HasScene() { return (m_Scene != nullptr); }
 		inline Scene* GetScene() { return m_Scene; }
 		inline void SetScene(Scene* scene) { m_Scene = scene; }
@@ -53,9 +56,8 @@ namespace CSE
 		inline void Enable() { m_Enabled = true; }
 		inline void Disable() { m_Enabled = false; }
 		
-		inline void SetWindow(Window* window) { m_Window = window; }
-		inline Window* GetWindow() { return m_Window; }
-		
+		inline void SetViewport(Viewport* viewport) { m_Viewport = viewport; }
+		inline Viewport* GetViewport() { return m_Viewport; }
 	protected:
 		std::string m_Name;
 		bool m_Enabled;

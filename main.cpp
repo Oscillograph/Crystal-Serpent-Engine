@@ -560,6 +560,12 @@ public:
 		if (scene != nullptr)
 			delete scene;
 		scene = nullptr;
+		if (viewport != nullptr)
+			delete viewport;
+		viewport = nullptr;
+		if (camera != nullptr)
+			delete camera;
+		camera = nullptr;
 	};
 	
 	bool OnAttach()
@@ -572,6 +578,11 @@ public:
 		scene = new SceneGame();
 		CSE_LOG("Scene \"scene\" has been created.");
 
+		// viewport = new CSE::Viewport();
+		// camera = new CSE::Camera2D();
+		// viewport->SetCamera(camera);
+		// viewport->SetScene(scene);
+		
 		return true;
 	}
 	
@@ -605,6 +616,8 @@ public:
 	
 	CSE::Scene* sceneLogo = nullptr;
 	CSE::Scene* scene = nullptr;
+	CSE::Viewport* viewport = nullptr;
+	CSE::Camera2D* camera = nullptr;
 };
 
 class Layer2 : public CSE::Layer

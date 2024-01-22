@@ -10,7 +10,7 @@ namespace CSE
 	class Scene;
 	
 	
-	// A viewport is attached to layer to give a look at scene through camera
+	// A viewport is attached to a layer to give a look into a scene through a camera
 	class Viewport {
 	public:
 		Viewport();
@@ -36,6 +36,7 @@ namespace CSE
 		Layer* m_Layer = nullptr; // where it is attached to
 		Scene* m_Scene = nullptr; // what it is set up to show
 		Camera2D* m_Camera = nullptr; // how it is gonna show
+		bool m_UseOwnCamera = false; // turn true if the viewport is initialized with its own camera
 		
 		glm::vec4 m_Place = glm::vec4(0.0f); // where the viewport is located and what size it is
 		glm::vec2 m_ScaleToPixel = glm::vec2(0.0f); // how many meters are in one pixel
