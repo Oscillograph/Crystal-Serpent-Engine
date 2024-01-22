@@ -51,6 +51,8 @@ namespace CSE
 		void Shutdown();
 		void Restart(const PhysicsSystem& physicsSystem);
 		
+		PhysicsSystem GetSystem();
+		
 	private:
 		std::vector<World*> m_Worlds = {};
 		PhysicsSystem m_PhysicsSystemSelected = PhysicsSystem::None;

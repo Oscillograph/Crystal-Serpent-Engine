@@ -218,4 +218,9 @@ namespace CSE
 		
 		Init(physicsSystem);
 	}
+	
+	PhysicsSystem PhysicsProcessor::GetSystem()
+	{
+		return m_PhysicsSystemSelected;
+	}
 }

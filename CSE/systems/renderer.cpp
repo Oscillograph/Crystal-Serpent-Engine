@@ -33,8 +33,8 @@ namespace CSE
 	{
 		m_ActiveCamera = camera;
 		m_CameraPosition = camera->GetPosition();
-		m_CameraPosition.x = m_CameraPosition / m_Scene->GetLayer()->GetWindow()->GetPrefs().width;
-		m_CameraPosition.y = m_CameraPosition / m_Scene->GetLayer()->GetWindow()->GetPrefs().height;
+		m_CameraPosition.x = m_CameraPosition.x / m_Scene->GetLayer()->GetWindow()->GetPrefs().width;
+		m_CameraPosition.y = m_CameraPosition.y / m_Scene->GetLayer()->GetWindow()->GetPrefs().height;
 	}
 	
 	void Renderer::SetBackgroundColor(const glm::u8vec4& color)

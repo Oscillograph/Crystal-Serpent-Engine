@@ -4,6 +4,7 @@
 #include <CSE/systems/scene.h>
 #include <CSE/systems/entity.h>
 #include <CSE/systems/components.h>
+#include <CSE/systems/physics/physicsAPI.h>
 #include <CSE/systems/renderer/camera2d.h>
 #include <CSE/systems/window.h>
 #include <CSE/systems/application.h>
@@ -125,8 +126,11 @@ namespace CSE
 		m_Scene->Load();
 		
 		// CSE_CORE_LOG("Layer ", m_Name, " attached.");
-		if (m_Viewport == nullptr)
-			m_Viewport = new Viewport(m_Scene->GetActiveCamera(), {0, 0, GetWindow()->GetPrefs().width, GetWindow()->GetPrefs().height});
+		if (m_Scene->GetPhysicsSystem() != PhysicsSystem::None)
+		{
+			if (m_Viewport == nullptr)
+				m_Viewport = new Viewport(m_Scene->GetActiveCamera(), {0, 0, GetWindow()->GetPrefs().width, GetWindow()->GetPrefs().height});
+		}
 		
 		return true;
 	}
@@ -207,93 +211,110 @@ namespace CSE
 		
 		for (auto entity : GetScene()->GetRegistry().view<SpriteComponent>())
 		{
+			bool mayDrawPhysicalEntity = false;
 			Entity e = Entity(entity, GetScene());
-			TransformComponent& transform = e.GetComponent<TransformComponent>();
-			SpriteComponent& spriteComponent = e.GetComponent<SpriteComponent>();
 			
-			SDL_FRect place; // where to draw
-			SDL_Rect frame; // what to draw from a spritesheet
-			
-			glm::vec2 windowSize = 
-			{ 
-				GetWindow()->GetPrefs().width, 
-				GetWindow()->GetPrefs().height 
-			};
-			
-			if (e.HasComponent<AnimationComponent>())
+			// Draw a physical entity only if the camera "sees" it
+			if (e.HasComponent<PhysicsComponent>())
 			{
-				AnimationComponent& animationComponent = e.GetComponent<AnimationComponent>();
-				AnimationFrames* frameset = animationComponent.frames[animationComponent.currentAnimation];
-				
-				frame = 
+				PhysicsComponent& physicsComponent = e.GetComponent<PhysicsComponent>();
+				if (Renderer::GetActiveCamera()->Sees(&physicsComponent))
 				{
-					frameset->begin.x + (frameset->width * animationComponent.currentFrame),
-					frameset->begin.y,
-					std::abs(frameset->width),
-					std::abs(frameset->height)
-				};
-			} else {
-				frame = 
-				{
-					0, 
-					0, 
-					(spriteComponent.clip.x <= spriteComponent.texture->GetWidth() ? spriteComponent.clip.x : spriteComponent.texture->GetWidth()), 
-					(spriteComponent.clip.y <= spriteComponent.texture->GetHeight() ? spriteComponent.clip.y : spriteComponent.texture->GetHeight())
-				};
+					mayDrawPhysicalEntity = true;
+				}
 			}
 			
-			place = 
+			if (!(e.HasComponent<PhysicsComponent>() && !mayDrawPhysicalEntity))
 			{
-				windowSize.x * transform.positionNormalized.x, 
-				windowSize.y * transform.positionNormalized.y,
-				windowSize.x * transform.sizeNormalized.x,
-				windowSize.y * transform.sizeNormalized.y,
-			};
-			
-			// CSE_CORE_LOG("Entity ", e.GetComponent<CSE::NameComponent>().value);
-			Renderer::DrawTiledTexture(
-				spriteComponent.texture->GetTexture(),
-				&place,
-				&frame,
-				spriteComponent.tilingFactor
-				);
-			if (Application::IsRenderWireframes())
-			{
-				if (e.HasComponent<PhysicsComponent>())
+				TransformComponent& transform = e.GetComponent<TransformComponent>();
+				SpriteComponent& spriteComponent = e.GetComponent<SpriteComponent>();
+				
+				SDL_FRect place; // where to draw
+				SDL_Rect frame; // what to draw from a spritesheet
+				
+				glm::vec2 windowSize = 
+				{ 
+					GetWindow()->GetPrefs().width, 
+					GetWindow()->GetPrefs().height 
+				};
+				
+				// if a sprite is animated, choose the correct frame
+				if (e.HasComponent<AnimationComponent>())
 				{
-					// draw hitboxes
-					PhysicsComponent& physicsComponent = e.GetComponent<PhysicsComponent>();
-					for (int i = 0; i < physicsComponent.hitBoxes.size(); i++)
+					AnimationComponent& animationComponent = e.GetComponent<AnimationComponent>();
+					AnimationFrames* frameset = animationComponent.frames[animationComponent.currentAnimation];
+					
+					frame = 
 					{
-						switch (physicsComponent.hitBoxes[i].hitBoxType)
-						{
-						case PhysicsDefines::HitBoxType::Circle:
-							{
-								SDL_FPoint center = physicsComponent.hitBoxes[i].points[0];
-								Renderer::DrawRect(
-									{transform.positionNormalized.x + center.x, transform.positionNormalized.y + center.y}, 
-									{transform.size.x, transform.size.y},
-									{255, 128, 255, 255}
-									);
-							}
-							break;
-						case PhysicsDefines::HitBoxType::Rectangle:
-							{
-								Renderer::DrawRect(
-									{transform.positionNormalized.x + physicsComponent.hitBoxes[i].points[0].x, transform.positionNormalized.y + physicsComponent.hitBoxes[i].points[0].y},
-									{transform.positionNormalized.x + physicsComponent.hitBoxes[i].points[1].x, transform.positionNormalized.y + physicsComponent.hitBoxes[i].points[1].y},
-									{transform.positionNormalized.x + physicsComponent.hitBoxes[i].points[2].x, transform.positionNormalized.y + physicsComponent.hitBoxes[i].points[2].y},
-									{transform.positionNormalized.x + physicsComponent.hitBoxes[i].points[3].x, transform.positionNormalized.y + physicsComponent.hitBoxes[i].points[3].y},
-									{255, 128, 255, 255}
-									);
-							}
-							break;
-						default:
-							Renderer::DrawRect({transform.positionNormalized.x, transform.positionNormalized.y}, {transform.size.x, transform.size.y}, {255, 255, 255, 255});
-						}
-					}
+						frameset->begin.x + (frameset->width * animationComponent.currentFrame),
+						frameset->begin.y,
+						std::abs(frameset->width),
+						std::abs(frameset->height)
+					};
 				} else {
-					Renderer::DrawRect({transform.positionNormalized.x, transform.positionNormalized.y}, {transform.size.x, transform.size.y});
+					frame = 
+					{
+						0, 
+						0, 
+						(spriteComponent.clip.x <= spriteComponent.texture->GetWidth() ? spriteComponent.clip.x : spriteComponent.texture->GetWidth()), 
+						(spriteComponent.clip.y <= spriteComponent.texture->GetHeight() ? spriteComponent.clip.y : spriteComponent.texture->GetHeight())
+					};
+				}
+				
+				place = 
+				{
+					windowSize.x * transform.positionNormalized.x, 
+					windowSize.y * transform.positionNormalized.y,
+					windowSize.x * transform.sizeNormalized.x,
+					windowSize.y * transform.sizeNormalized.y,
+				};
+				
+				// CSE_CORE_LOG("Entity ", e.GetComponent<CSE::NameComponent>().value);
+				Renderer::DrawTiledTexture(
+					spriteComponent.texture->GetTexture(),
+					&place,
+					&frame,
+					spriteComponent.tilingFactor
+					);
+				
+				if (Application::IsRenderWireframes())
+				{
+					if (e.HasComponent<PhysicsComponent>() && mayDrawPhysicalEntity)
+					{
+						// draw hitboxes
+						PhysicsComponent& physicsComponent = e.GetComponent<PhysicsComponent>();
+						for (int i = 0; i < physicsComponent.hitBoxes.size(); i++)
+						{
+							switch (physicsComponent.hitBoxes[i].hitBoxType)
+							{
+							case PhysicsDefines::HitBoxType::Circle:
+								{
+									SDL_FPoint center = physicsComponent.hitBoxes[i].points[0];
+									Renderer::DrawRect(
+										{transform.positionNormalized.x + center.x, transform.positionNormalized.y + center.y}, 
+										{transform.size.x, transform.size.y},
+										{255, 128, 255, 255}
+										);
+								}
+								break;
+							case PhysicsDefines::HitBoxType::Rectangle:
+								{
+									Renderer::DrawRect(
+										{transform.positionNormalized.x + physicsComponent.hitBoxes[i].points[0].x, transform.positionNormalized.y + physicsComponent.hitBoxes[i].points[0].y},
+										{transform.positionNormalized.x + physicsComponent.hitBoxes[i].points[1].x, transform.positionNormalized.y + physicsComponent.hitBoxes[i].points[1].y},
+										{transform.positionNormalized.x + physicsComponent.hitBoxes[i].points[2].x, transform.positionNormalized.y + physicsComponent.hitBoxes[i].points[2].y},
+										{transform.positionNormalized.x + physicsComponent.hitBoxes[i].points[3].x, transform.positionNormalized.y + physicsComponent.hitBoxes[i].points[3].y},
+										{255, 128, 255, 255}
+										);
+								}
+								break;
+							default:
+								Renderer::DrawRect({transform.positionNormalized.x, transform.positionNormalized.y}, {transform.size.x, transform.size.y}, {255, 255, 255, 255});
+							}
+						}
+					} else {
+						Renderer::DrawRect({transform.positionNormalized.x, transform.positionNormalized.y}, {transform.size.x, transform.size.y});
+					}
 				}
 			}
 		}

@@ -5,15 +5,17 @@
 
 namespace CSE
 {
+	struct PhysicsComponent;
+	
 	class Camera2D
 	{
 	public:
 		Camera2D();
-		Camera2D(glm::vec2 targetXY, float aspectRatio, float size);
+		// Camera2D(glm::vec4 targetXYZW, float aspectRatio, float size);
 		~Camera2D();
 		
-		float& GetAspectRatio();
-		float& GetSize();
+		// float& GetAspectRatio();
+		// float& GetSize();
 		
 		void Lock();
 		void UnLock();
@@ -23,7 +25,7 @@ namespace CSE
 		glm::vec2& GetPosition();
 		
 		void Retarget(glm::vec4 newTargetArea);
-		glm::vec4& GetTarget();
+		glm::vec4& GetTargetArea();
 		
 		void Zoom(glm::vec2 newZoom);
 		glm::vec2& GetZoom();
@@ -32,8 +34,12 @@ namespace CSE
 		bool Rotate(float rotation);
 		float& GetRotation();
 		
+		// Scene utilities
+		bool Sees(PhysicsComponent* physicsComponent);
+		
 	private:
-		glm::vec4 m_TargetArea = {0.0f, 0.0f}; // physical coordinates
+		glm::vec4 m_TargetArea = {0.0f, 0.0f, 0.0f, 0.0f}; // physical coordinates
+		glm::vec4 m_TargetAreaBorder = {0.0f, 0.0f, 0.0f, 0.0f}; // physical coordinates
 		glm::vec2 m_Position = {0.0f, 0.0f}; // the middle of m_TargetArea
 		glm::vec2 m_Zoom = {0.0f, 0.0f}; // zoom in both directions without changing target area
 		float m_Rotation = 0.0f; // in radians
