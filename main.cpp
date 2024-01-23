@@ -87,12 +87,10 @@ public:
 		{
 			background = CreateEntity("Background");
 			
-			// physical position in the scene world
-			background->AddComponent<CSE::PositionComponent>(0.25f, 0.25f);
-			
 			// screen representation
 			CSE::TransformComponent& transform = background->AddComponent<CSE::TransformComponent>();
-			transform.size = {1.0f, 1.0f};
+			transform.position = {80, 60};
+			transform.size = {160, 120};
 			
 			// sprite control
 			spriteBG = new CSE::Texture("./CSE/assets/CSE_logo.png", GetLayer()->GetWindow()->GetRenderer(), {0, 0, 0});
@@ -104,12 +102,10 @@ public:
 		{
 			backgroundSDL = CreateEntity("Background");
 			
-			// physical position
-			backgroundSDL->AddComponent<CSE::PositionComponent>(0.75f, 0.25f);
-			
 			// screen representation
 			CSE::TransformComponent& transform = backgroundSDL->AddComponent<CSE::TransformComponent>();
-			transform.size = {0.5f, 0.5f};
+			transform.position = {240, 60};
+			transform.size = {160, 120};
 			
 			// sprite control
 			spriteSDL = new CSE::Texture("./CSE/assets/SDL_logo.png", GetLayer()->GetWindow()->GetRenderer(), {0, 0, 0});
@@ -128,7 +124,8 @@ public:
 			
 			// screen representation
 			CSE::TransformComponent& transform = player1->AddComponent<CSE::TransformComponent>();
-			transform.size = {0.1f, 0.15f};
+			transform.position = {240, 216};
+			transform.size = {32, 36};
 			
 			// state machine setup
 			CSE::StateMachineComponent& stateMachine = player1->AddComponent<CSE::StateMachineComponent>();
@@ -209,7 +206,7 @@ public:
 			CSE::PhysicsHitBox hitbox;
 			hitbox.hitBoxType = CSE::PhysicsDefines::HitBoxType::Circle;
 			hitbox.points = {{0.0f, 0.0f}};
-			hitbox.radius = 0.0f;
+			hitbox.radius = 1.0f;
 			
 			physicsComponent.entity = *player1;
 			physicsComponent.hitBoxes.push_back(hitbox);
@@ -231,7 +228,8 @@ public:
 			
 			// screen representation
 			CSE::TransformComponent& transform = player2->AddComponent<CSE::TransformComponent>();
-			transform.size = {0.1f, 0.15f};
+			transform.position = {80, 216};
+			transform.size = {32, 36};
 			
 			// state machine setup
 			CSE::StateMachineComponent& stateMachine = player2->AddComponent<CSE::StateMachineComponent>();
@@ -299,7 +297,8 @@ public:
 			
 			// screen representation
 			CSE::TransformComponent& transform = floor->AddComponent<CSE::TransformComponent>();
-			transform.size = {0.01f, 0.5f};
+			transform.position = {160, 216};
+			transform.size = {3.2, 120};
 			
 			// state machine setup
 			CSE::StateMachineComponent& stateMachine = floor->AddComponent<CSE::StateMachineComponent>();
@@ -324,7 +323,7 @@ public:
 			CSE::PhysicsHitBox hitbox; // match rectangle points coordinates to transform size
 			hitbox.hitBoxType = CSE::PhysicsDefines::HitBoxType::Rectangle;
 			hitbox.points = {{-0.005f, 0.25f}, {0.005f, 0.25f}, {0.005f, -0.25f}, {-0.005f, -0.25f}};
-			hitbox.radius = 0.0f;
+			hitbox.radius = 1.0f;
 			
 			physicsComponent.entity = *floor;
 			physicsComponent.hitBoxes.push_back(hitbox);

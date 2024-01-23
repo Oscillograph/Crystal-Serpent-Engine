@@ -13,6 +13,7 @@ Changelog:
 + Made sure that inverted animations supported;
 + Renderer supports tiling;
 + Engine draws Wireframes if necessary to debug rendering;
++ Each layer supports up to one viewport to look at a scene contents;
 
 ## 0.2.2 ##
 Changelog:
