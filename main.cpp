@@ -28,12 +28,12 @@ public:
 			
 			// screen position
 			CSE::TransformComponent& transform = logo->AddComponent<CSE::TransformComponent>();
-			transform.position = {20, 40};
-			transform.size = {100, 100};
+			transform.position = {0, 0};
+			transform.size = {320, 240};
 			transform.NormalizeToWindow(GetLayer()->GetWindow());
 			
 			// sprite control
-			sprite = new CSE::Texture("./CSE/assets/CSE_pogo.png", GetLayer()->GetWindow()->GetRenderer());
+			sprite = new CSE::Texture("./CSE/assets/CSE_logo.png", GetLayer()->GetWindow()->GetRenderer());
 			CSE::SpriteComponent& spriteComponent = logo->AddComponent<CSE::SpriteComponent>(sprite);
 			// spriteComponent.clip = {9000, 9000};
 			// spriteComponent.tilingFactor = {0.0f, 0.0f};
@@ -92,7 +92,7 @@ public:
 			
 			// screen representation
 			CSE::TransformComponent& transform = background->AddComponent<CSE::TransformComponent>();
-			transform.size = {0.5f, 0.5f};
+			transform.size = {1.0f, 1.0f};
 			
 			// sprite control
 			spriteBG = new CSE::Texture("./CSE/assets/CSE_logo.png", GetLayer()->GetWindow()->GetRenderer(), {0, 0, 0});

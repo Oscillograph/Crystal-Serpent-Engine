@@ -138,7 +138,7 @@ namespace CSE
 				m_Viewport->SetScene(m_Scene);
 			}
 		} else {
-			m_Viewport = new Viewport(m_Scene->GetActiveCamera(), {40, 0, GetWindow()->GetPrefs().width / 2, GetWindow()->GetPrefs().height / 2});
+			m_Viewport = new Viewport(m_Scene->GetActiveCamera(), {80, 60, GetWindow()->GetPrefs().width / 2, GetWindow()->GetPrefs().height / 2});
 			m_Viewport->SetScene(m_Scene);
 		}
 		
@@ -224,16 +224,20 @@ namespace CSE
 			Renderer::SetActiveScene(m_Viewport->GetScene());
 			Renderer::SetActiveCamera(m_Viewport->GetCamera());
 			
-			glm::vec2 windowSize = 
+			glm::vec4 viewportPlace = 
 			{ 
+				m_Viewport->GetPlace().x,
+				m_Viewport->GetPlace().y,
 				m_Viewport->GetPlace().z, 
 				m_Viewport->GetPlace().w 
 			};
 			
-			glm::vec2 windowPlaceNormalized = 
+			glm::vec4 viewportPlaceNormalized = 
 			{ 
-				(float)m_Viewport->GetPlace().x / GetWindow()->GetPrefs().width, 
-				(float)m_Viewport->GetPlace().y / GetWindow()->GetPrefs().height
+				(float)(m_Viewport->GetPlace().x) / GetWindow()->GetPrefs().width,
+				(float)(m_Viewport->GetPlace().y) / GetWindow()->GetPrefs().height,
+				(float)(m_Viewport->GetPlace().z) / GetWindow()->GetPrefs().width, 
+				(float)(m_Viewport->GetPlace().w) / GetWindow()->GetPrefs().height 
 			};
 			
 			for (auto entity : GetScene()->GetRegistry().view<SpriteComponent>())
@@ -258,14 +262,6 @@ namespace CSE
 					
 					SDL_FRect place; // where to draw
 					SDL_Rect frame; // what to draw from a spritesheet
-					
-					/*
-					glm::vec2 windowSize = 
-					{ 
-						GetWindow()->GetPrefs().width, 
-						GetWindow()->GetPrefs().height 
-					};
-					*/
 					
 					// if a sprite is animated, choose the correct frame
 					if (e.HasComponent<AnimationComponent>())
@@ -292,10 +288,10 @@ namespace CSE
 					
 					place = 
 					{
-						windowSize.x * (windowPlaceNormalized.x + transform.positionNormalized.x), 
-						windowSize.y * (windowPlaceNormalized.y + transform.positionNormalized.y),
-						windowSize.x * transform.sizeNormalized.x,
-						windowSize.y * transform.sizeNormalized.y,
+						GetWindow()->GetPrefs().width * (viewportPlaceNormalized.x + transform.positionNormalized.x), 
+						GetWindow()->GetPrefs().height * (viewportPlaceNormalized.y + transform.positionNormalized.y),
+						viewportPlace.z * transform.sizeNormalized.x,
+						viewportPlace.w * transform.sizeNormalized.y,
 					};
 					
 					// CSE_CORE_LOG("Entity ", e.GetComponent<CSE::NameComponent>().value);
@@ -338,11 +334,18 @@ namespace CSE
 									}
 									break;
 								default:
-									Renderer::DrawRect({transform.positionNormalized.x, transform.positionNormalized.y}, {transform.size.x, transform.size.y}, {255, 255, 255, 255});
+									Renderer::DrawRect(
+										{transform.positionNormalized.x, transform.positionNormalized.y}, 
+										{transform.size.x, transform.size.y}, 
+										{255, 255, 255, 255}
+										);
 								}
 							}
 						} else {
-							Renderer::DrawRect({windowPlaceNormalized.x + transform.positionNormalized.x, windowPlaceNormalized.y + transform.positionNormalized.y}, {transform.size.x, transform.size.y});
+							Renderer::DrawRect(
+								{viewportPlaceNormalized.x + transform.positionNormalized.x, viewportPlaceNormalized.y + transform.positionNormalized.y}, 
+								{transform.size.x, transform.size.y}
+								);
 						}
 					}
 				}
@@ -350,13 +353,9 @@ namespace CSE
 			
 			if (Application::IsRenderWireframes())
 			{
-				glm::vec2 center = {
-					windowPlaceNormalized.x + (float)windowSize.x * 0.5 / GetWindow()->GetPrefs().width,
-					windowPlaceNormalized.y + (float)windowSize.y * 0.5 / GetWindow()->GetPrefs().height
-				};
 				Renderer::DrawRect(
-					{windowPlaceNormalized.x + center.x, windowPlaceNormalized.y + center.y}, 
-					{(float)windowSize.x / GetWindow()->GetPrefs().width, (float)windowSize.y / GetWindow()->GetPrefs().height},
+					{viewportPlaceNormalized.x + viewportPlaceNormalized.z/2, viewportPlaceNormalized.y + viewportPlaceNormalized.w/2}, 
+					{viewportPlaceNormalized.z, viewportPlaceNormalized.w},
 					{255, 128, 128, 255}
 					);
 			}
