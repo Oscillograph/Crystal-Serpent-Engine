@@ -41,13 +41,14 @@ namespace CSE
 		// create a body
 		b2BodyDef bodyDefinition;
 		bodyDefinition.type = (physics.bodyType == PhysicsDefines::BodyType::Static) ? b2_staticBody : b2_dynamicBody;
+		bodyDefinition.position.Set(physics.position.x, physics.position.y);
 		
 		b2Body* body = m_Box2DWorld->CreateBody(&bodyDefinition);
 		CSE_CORE_LOG("Do we even register anyfin?");
 		// TODO: implement hitbox children processing
 		for (int i = 0; i < physics.hitBoxes.size(); i++)
 		{
-			CSE_CORE_LOG("Registering hitbox #", i);
+			CSE_CORE_LOG("Entity \"", A->GetComponent<NameComponent>().value, "\": Registering hitbox #", i);
 			switch (physics.hitBoxes[i].hitBoxType)
 			{
 				case PhysicsDefines::HitBoxType::Circle:
@@ -70,12 +71,14 @@ namespace CSE
 				case PhysicsDefines::HitBoxType::Rectangle: // TODO: Rectangular shapes
 					{
 						// create a fixture shape
+						b2Vec2 vertices[4];
+						vertices[0].Set(physics.position.x + physics.hitBoxes[i].points[3].x, physics.position.y + physics.hitBoxes[i].points[3].y);
+						vertices[1].Set(physics.position.x + physics.hitBoxes[i].points[2].x, physics.position.y + physics.hitBoxes[i].points[2].y);
+						vertices[2].Set(physics.position.x + physics.hitBoxes[i].points[1].x, physics.position.y + physics.hitBoxes[i].points[1].y);
+						vertices[3].Set(physics.position.x + physics.hitBoxes[i].points[0].x, physics.position.y + physics.hitBoxes[i].points[0].y);
+						
 						b2PolygonShape shape;
-						shape.m_count = 4;
-						shape.m_vertices[0].Set(physics.position.x + physics.hitBoxes[i].points[0].x, physics.position.y + physics.hitBoxes[i].points[0].y);
-						shape.m_vertices[1].Set(physics.position.x + physics.hitBoxes[i].points[1].x, physics.position.y + physics.hitBoxes[i].points[1].y);
-						shape.m_vertices[2].Set(physics.position.x + physics.hitBoxes[i].points[2].x, physics.position.y + physics.hitBoxes[i].points[2].y);
-						shape.m_vertices[3].Set(physics.position.x + physics.hitBoxes[i].points[3].x, physics.position.y + physics.hitBoxes[i].points[3].y);
+						shape.Set(vertices, 4);
 						
 						// add the fixture to the body
 						b2FixtureDef fixtureDefinition;
@@ -179,15 +182,35 @@ namespace CSE
 		// CSE_CORE_LOG("Box2D: Step");
 		// update components
 		int32 bodyCount = m_Box2DWorld->GetBodyCount();
-		b2Body* bodies = m_Box2DWorld->GetBodyList();
-		b2Body* currentBody = bodies;
+		// b2Body* bodies = m_Box2DWorld->GetBodyList();
 		// CSE_CORE_LOG("Box2D: First body selected");
 		Entity e;
-		while(currentBody != nullptr)
+		int counter = 0;
+		// CSE_CORE_LOG("Box2D: Total ", bodyCount, " bodies.");
+		for (auto body : m_Bodies)
+		{
+			e = {(entt::entity)body.second, scene};
+			b2Body* currentBody = body.first;
+			
+			// CSE_CORE_LOG("Box2D: Entity \"", e.GetComponent<NameComponent>().value, "\" constructed from initializers");
+			
+			PhysicsComponent &physics = e.GetComponent<PhysicsComponent>();
+			TransformComponent& transform = e.GetComponent<TransformComponent>();
+			
+			b2Vec2 bodyPosition = currentBody->GetPosition();
+			physics.position.x = bodyPosition.x;
+			physics.position.y = bodyPosition.y;
+			
+			b2Vec2 bodyVelocity = currentBody->GetLinearVelocity();
+			physics.velocity = { bodyVelocity.x, bodyVelocity.y };
+		}
+		/*
+		for (b2Body* currentBody = m_Box2DWorld->GetBodyList(); currentBody || (counter <= bodyCount); currentBody->GetNext())
 		{
 			// fetch the corresponding entity - we gonna store user data somehow
 			e = {(entt::entity)(m_Bodies[currentBody]), scene};
-			CSE_CORE_LOG("Box2D: Entity #", (uint32_t)(e.GetID()), " constructed from initializers");
+			// CSE_CORE_LOG("Box2D: Entity #", (uint32_t)(e.GetID()), " constructed from initializers");
+			CSE_CORE_LOG("Box2D: Entity \"", e.GetComponent<NameComponent>().value, "\" constructed from initializers");
 			
 			PhysicsComponent &physics = e.GetComponent<PhysicsComponent>();
 			// PositionComponent& position = e.GetComponent<PositionComponent>();
@@ -199,8 +222,9 @@ namespace CSE
 			
 			b2Vec2 bodyVelocity = currentBody->GetLinearVelocity();
 			physics.velocity = { bodyVelocity.x, bodyVelocity.y };
-			currentBody->GetNext();
+			counter++;
 		}
+		*/
 		// CSE_CORE_LOG("Box2D: All bodies processed");
 	}
 	

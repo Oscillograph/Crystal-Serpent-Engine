@@ -90,7 +90,7 @@ public:
 			// screen representation
 			CSE::TransformComponent& transform = background->AddComponent<CSE::TransformComponent>();
 			transform.position = {80, 60};
-			transform.size = {160, 120};
+			transform.size = {80, 60};
 			
 			// sprite control
 			spriteBG = new CSE::Texture("./CSE/assets/CSE_logo.png", GetLayer()->GetWindow()->GetRenderer(), {0, 0, 0});
@@ -119,7 +119,7 @@ public:
 			player1 = CreateEntity("Player 1");
 			
 			// physical position
-			CSE::PositionComponent& position = player1->AddComponent<CSE::PositionComponent>(0.75f, 0.9f);
+			CSE::PositionComponent& position = player1->AddComponent<CSE::PositionComponent>(10, 0);
 			position.direction = 1; // 1 means right, -1 means left
 			
 			// screen representation
@@ -203,6 +203,8 @@ public:
 			
 			// physics setup
 			CSE::PhysicsComponent& physicsComponent = player1->AddComponent<CSE::PhysicsComponent>();
+			physicsComponent.position = {10, 0, 0};
+			
 			CSE::PhysicsHitBox hitbox;
 			hitbox.hitBoxType = CSE::PhysicsDefines::HitBoxType::Circle;
 			hitbox.points = {{0.0f, 0.0f}};
@@ -223,7 +225,7 @@ public:
 			player2 = CreateEntity("Player 2");
 			
 			// physical position
-			CSE::PositionComponent& position = player2->AddComponent<CSE::PositionComponent>(0.25f, 0.9f);
+			CSE::PositionComponent& position = player2->AddComponent<CSE::PositionComponent>(-10, 0);
 			position.direction = 1; // 1 means right, -1 means left
 			
 			// screen representation
@@ -293,7 +295,7 @@ public:
 			floor = CreateEntity("Floor");
 			
 			// physical position
-			CSE::PositionComponent& position = floor->AddComponent<CSE::PositionComponent>(0.5f, 0.9f);
+			CSE::PositionComponent& position = floor->AddComponent<CSE::PositionComponent>(0, 0);
 			
 			// screen representation
 			CSE::TransformComponent& transform = floor->AddComponent<CSE::TransformComponent>();
@@ -319,11 +321,14 @@ public:
 			animationComponent.Start();
 			
 			// physics setup
+			
 			CSE::PhysicsComponent& physicsComponent = floor->AddComponent<CSE::PhysicsComponent>();
+			physicsComponent.position = {0, 0, 0};
+			
 			CSE::PhysicsHitBox hitbox; // match rectangle points coordinates to transform size
 			hitbox.hitBoxType = CSE::PhysicsDefines::HitBoxType::Rectangle;
-			hitbox.points = {{-0.005f, 0.25f}, {0.005f, 0.25f}, {0.005f, -0.25f}, {-0.005f, -0.25f}};
-			hitbox.radius = 1.0f;
+			hitbox.points = {{-0.1, 10}, {0.1, 10}, {0.1, 0}, {-0.1, 0}};
+			// hitbox.radius = 1.0f;
 			
 			physicsComponent.entity = *floor;
 			physicsComponent.hitBoxes.push_back(hitbox);
@@ -332,6 +337,7 @@ public:
 			physicsComponent.mass = 1.0f;
 			physicsComponent.bodyType = CSE::PhysicsDefines::BodyType::Dynamic;
 			GetPhysicsProcessor()->RegisterEntity(floor);
+			
 		}
 	}
 	
