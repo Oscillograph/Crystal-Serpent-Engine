@@ -187,6 +187,9 @@ namespace CSE
 		Entity e;
 		int counter = 0;
 		// CSE_CORE_LOG("Box2D: Total ", bodyCount, " bodies.");
+		
+		/*
+		// also works
 		for (auto body : m_Bodies)
 		{
 			e = {(entt::entity)body.second, scene};
@@ -204,16 +207,15 @@ namespace CSE
 			b2Vec2 bodyVelocity = currentBody->GetLinearVelocity();
 			physics.velocity = { bodyVelocity.x, bodyVelocity.y };
 		}
-		/*
-		for (b2Body* currentBody = m_Box2DWorld->GetBodyList(); currentBody || (counter <= bodyCount); currentBody->GetNext())
+		*/
+		
+		for (b2Body* currentBody = m_Box2DWorld->GetBodyList(); currentBody; currentBody = currentBody->GetNext())
 		{
 			// fetch the corresponding entity - we gonna store user data somehow
 			e = {(entt::entity)(m_Bodies[currentBody]), scene};
-			// CSE_CORE_LOG("Box2D: Entity #", (uint32_t)(e.GetID()), " constructed from initializers");
-			CSE_CORE_LOG("Box2D: Entity \"", e.GetComponent<NameComponent>().value, "\" constructed from initializers");
+			// CSE_CORE_LOG("Box2D: Entity \"", e.GetComponent<NameComponent>().value, "\" constructed from initializers");
 			
 			PhysicsComponent &physics = e.GetComponent<PhysicsComponent>();
-			// PositionComponent& position = e.GetComponent<PositionComponent>();
 			TransformComponent& transform = e.GetComponent<TransformComponent>();
 			
 			b2Vec2 bodyPosition = currentBody->GetPosition();
@@ -222,9 +224,8 @@ namespace CSE
 			
 			b2Vec2 bodyVelocity = currentBody->GetLinearVelocity();
 			physics.velocity = { bodyVelocity.x, bodyVelocity.y };
-			counter++;
 		}
-		*/
+
 		// CSE_CORE_LOG("Box2D: All bodies processed");
 	}
 	
