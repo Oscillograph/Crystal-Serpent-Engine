@@ -15,14 +15,20 @@ namespace CSE
 	{
 		m_SceneCamera = new Camera2D();
 		
+		m_PhysicsSystem = PhysicsSystem::CSE;
 		m_PhysicsProcessor = new PhysicsProcessor(PhysicsSystem::CSE);
+		
+		m_CurrentWorld = m_PhysicsProcessor->AccessWorld(0);
 	}
 	
 	Scene::Scene(const PhysicsSystem& physicsSystem)
 	{
 		m_SceneCamera = new Camera2D();
 		
+		m_PhysicsSystem = physicsSystem;
 		m_PhysicsProcessor = new PhysicsProcessor(physicsSystem);
+		
+		m_CurrentWorld = m_PhysicsProcessor->AccessWorld(0);
 	}
 	
 	Scene::~Scene()
@@ -40,19 +46,37 @@ namespace CSE
 	
 	void Scene::Init()
 	{
+		CSE_CORE_LOG("Scene: Init...");
+		CSE_CORE_LOG("- initialized? Answer: ", m_Initialized);
+		CSE_CORE_LOG("- user-defined OnInit");
 		OnInit();
+		
 		// ...
+		m_Initialized = true;
+		CSE_CORE_LOG("- initialized");
+		CSE_CORE_LOG("- initialized? Answer: ", m_Initialized);
+		
+		CSE_CORE_LOG("- user-defined OnInitialized");
 		OnInitialized();
 	}
 	
 	void Scene::OnInitialized()
 	{
-		m_Initialized = true;
 	}
 	
 	void Scene::Load()
 	{
 		// ...
+		CSE_CORE_LOG("Scene: Load...");
+		if (m_PhysicsProcessor == nullptr)
+		{
+			CSE_CORE_LOG("- initialize physics processor and access its world");
+			m_PhysicsProcessor = new PhysicsProcessor(m_PhysicsSystem);
+			m_CurrentWorld = m_PhysicsProcessor->AccessWorld(0);
+		}
+		CSE_CORE_LOG("- loaded");
+		
+		CSE_CORE_LOG("- user-defined OnLoaded");
 		OnLoaded();
 	}
 	
@@ -62,22 +86,42 @@ namespace CSE
 	
 	void Scene::Unload() // should be called before OnUnloaded
 	{
+		CSE_CORE_LOG("Scene: Unload...");
 		// ...
+		if (m_PhysicsProcessor != nullptr)
+		{
+			delete m_PhysicsProcessor;
+			m_PhysicsProcessor = nullptr;
+			CSE_CORE_LOG("- physics processor unloaded");
+		}
+		
+		if (m_CurrentWorld != nullptr)
+		{
+			// delete m_CurrentWorld;
+			m_CurrentWorld = nullptr;
+			CSE_CORE_LOG("- current world is set to nullptr");
+		}
+		
+		CSE_CORE_LOG("- unloaded");
+		
+		CSE_CORE_LOG("- user-defined OnUnloaded");
 		OnUnloaded();
 	}
 	
 	void Scene::OnUnloaded()
 	{
-		if (m_PhysicsProcessor != nullptr)
-		{
-			delete m_PhysicsProcessor;
-			m_PhysicsProcessor = nullptr;
-		}
-		if (m_CurrentWorld != nullptr)
-		{
-			delete m_CurrentWorld;
-			m_CurrentWorld = nullptr;
-		}
+	}
+	
+	void Scene::Update(TimeType sceneTime)
+	{
+		// . . .
+		
+		OnUpdate(sceneTime); // user-defined scene update function
+		
+		if (GetPhysicsProcessor() != nullptr)
+			UpdatePhysics(sceneTime); // engine-defined physics update mechanic
+		
+		// . . .
 	}
 	
 	void Scene::OnUpdate(TimeType sceneTime)
@@ -99,140 +143,6 @@ namespace CSE
 	void Scene::Resume()
 	{
 	}
-	
-	/*
-	void Scene::UpdateGraphics(TimeType sceneTime)
-	{
-		// TODO: Scene Update mechanism
-		// Animate(sceneTime);
-		// Draw();
-	}
-	
-	void Scene::Animate(TimeType sceneTime)
-	{
-		m_Registry.view<AnimationComponent>().each([=](auto entity, auto& animationComponent){
-			auto* frameset = animationComponent.frames[animationComponent.currentAnimation];
-			
-			if (!animationComponent.paused)
-			{
-				uint64_t timeTemp = sceneTime;
-				if ((timeTemp - animationComponent.timeBefore) >= frameset->timeBetweenFrames)
-				{
-					animationComponent.timeBefore = timeTemp;
-					animationComponent.currentFrame++;
-					if (animationComponent.currentFrame == animationComponent.framesTotal){
-						if (frameset->loop)
-						{
-							animationComponent.currentFrame = 0;
-						} else {
-							animationComponent.currentFrame--;
-							animationComponent.paused = true;
-						}
-					}
-				}
-			}
-		});
-	}
-	
-	void Scene::Draw()
-	{
-		Renderer::SetActiveScene(this);
-		
-		for (auto entity : m_Registry.view<SpriteComponent>())
-		{
-			Entity e = Entity(entity, this);
-			PositionComponent& position = e.GetComponent<PositionComponent>();
-			TransformComponent& transform = e.GetComponent<TransformComponent>();
-			SpriteComponent& spriteComponent = e.GetComponent<SpriteComponent>();
-			
-			SDL_FRect place; // where to draw
-			SDL_Rect frame; // what to draw from a spritesheet
-			
-			glm::vec2 windowSize = 
-			{ 
-				m_Layer->GetWindow()->GetPrefs().width, 
-				m_Layer->GetWindow()->GetPrefs().height 
-			};
-			
-			if (e.HasComponent<AnimationComponent>())
-			{
-				AnimationComponent& animationComponent = e.GetComponent<AnimationComponent>();
-				AnimationFrames* frameset = animationComponent.frames[animationComponent.currentAnimation];
-				
-				frame = 
-				{
-					frameset->begin.x + (frameset->width * animationComponent.currentFrame),
-					frameset->begin.y,
-					std::abs(frameset->width),
-					std::abs(frameset->height)
-				};
-			} else {
-				frame = 
-				{
-					0, 
-					0, 
-					spriteComponent.texture->GetWidth(), 
-					spriteComponent.texture->GetHeight() 
-				};
-			}
-			
-			place = 
-			{
-				windowSize.x * (position.x - transform.size.x/2), 
-				windowSize.y * (position.y - transform.size.y/2),
-				windowSize.x * transform.size.x,
-				windowSize.y * transform.size.y,
-			};
-
-			// CSE_CORE_LOG("Entity ", e.GetComponent<CSE::NameComponent>().value);
-			Renderer::DrawTiledTexture(
-				spriteComponent.texture->GetTexture(),
-				&place,
-				&frame,
-				spriteComponent.tilingFactor
-				);
-			if (Application::IsRenderWireframes())
-			{
-				if (e.HasComponent<PhysicsComponent>())
-				{
-					// draw hitboxes
-					PhysicsComponent& physicsComponent = e.GetComponent<PhysicsComponent>();
-					for (int i = 0; i < physicsComponent.hitBoxes.size(); i++)
-					{
-						switch (physicsComponent.hitBoxes[i].hitBoxType)
-						{
-						case PhysicsDefines::HitBoxType::Circle:
-							{
-								SDL_FPoint center = physicsComponent.hitBoxes[i].points[0];
-								Renderer::DrawRect(
-									{position.x + center.x, position.y + center.y}, 
-									{transform.size.x, transform.size.y},
-									{255, 128, 255, 255}
-									);
-							}
-							break;
-						case PhysicsDefines::HitBoxType::Rectangle:
-							{
-								Renderer::DrawRect(
-									{position.x + physicsComponent.hitBoxes[i].points[0].x, position.y + physicsComponent.hitBoxes[i].points[0].y},
-									{position.x + physicsComponent.hitBoxes[i].points[1].x, position.y + physicsComponent.hitBoxes[i].points[1].y},
-									{position.x + physicsComponent.hitBoxes[i].points[2].x, position.y + physicsComponent.hitBoxes[i].points[2].y},
-									{position.x + physicsComponent.hitBoxes[i].points[3].x, position.y + physicsComponent.hitBoxes[i].points[3].y},
-									{255, 128, 255, 255}
-									);
-							}
-							break;
-						default:
-							Renderer::DrawRect({position.x, position.y}, {transform.size.x, transform.size.y}, {255, 255, 255, 255});
-						}
-					}
-				} else {
-					Renderer::DrawRect({position.x, position.y}, {transform.size.x, transform.size.y});
-				}
-			}
-		}
-	}
-	*/
 	
 	void Scene::UpdatePhysics(TimeType sceneTime) // calls physics processor general routine
 	{

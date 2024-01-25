@@ -57,6 +57,7 @@ namespace CSE
 	
 	void PhysicsProcessor::DestroyWorld(World* world)
 	{
+		CSE_CORE_LOG("Physics Processor: world destruction routine...");
 		if (world != nullptr)
 		{
 			for (auto it = m_Worlds.begin(); it != m_Worlds.end(); it++)
@@ -189,24 +190,27 @@ namespace CSE
 	
 	void PhysicsProcessor::Init(const PhysicsSystem& physicsSystem)
 	{
+		CSE_CORE_LOG("Physics Processor: Init...");
 		m_API = CreatePhysicsProcessor(physicsSystem);
 		CreateWorld();
 	}
 	
 	void PhysicsProcessor::Shutdown()
 	{
+		CSE_CORE_LOG("Physics Processor: Shutdown...");
+		CSE_CORE_LOG("- delete worlds...");
 		for (uint32_t i = 0; i < m_Worlds.size(); i++)
 		{
 			if (m_Worlds[i] != nullptr)
 			{
 				// delete box2DWorld
-				
+				CSE_CORE_LOG("- deleting a world #", i);
 				// delete CSE physics world
 				delete m_Worlds[i];
 			}
 			m_Worlds[i] = nullptr;
 		}
-		
+		CSE_CORE_LOG("- delete physics API...");
 		if (m_API != nullptr)
 			delete m_API;
 		m_API = nullptr;

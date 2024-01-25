@@ -83,6 +83,7 @@ public:
 	
 	void OnInit()
 	{
+		CSE_LOG("- background logo");
 		if (background == nullptr)
 		{
 			background = CreateEntity("Background");
@@ -98,6 +99,7 @@ public:
 			spriteComponent.tilingFactor = {0.6f, 0.6f};
 		}
 		
+		CSE_LOG("- background SDL");
 		if (backgroundSDL == nullptr)
 		{
 			backgroundSDL = CreateEntity("Background");
@@ -113,6 +115,7 @@ public:
 			spriteComponent.tilingFactor = {0.4f, 0.4f};
 		}
 		
+		CSE_LOG("- player 1");
 		if (player1 == nullptr)
 		{
 			// a player1 entity on the screen
@@ -219,6 +222,7 @@ public:
 			GetPhysicsProcessor()->RegisterEntity(player1);
 		}
 		
+		CSE_LOG("- player 2");
 		if (player2 == nullptr)
 		{
 			// a player1 entity on the screen
@@ -289,6 +293,7 @@ public:
 			animationComponent.Start();
 		}
 		
+		CSE_LOG("- floor");
 		if (floor == nullptr)
 		{
 			// a player1 entity on the screen

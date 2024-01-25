@@ -108,38 +108,45 @@ namespace CSE
 	
 	bool Layer::Update(TimeType time)
 	{
-		OnUpdate(time);
-		
 		if (m_Scene != nullptr)
 		{
-			m_Scene->OnUpdate(time); // user-defined update scene function
-			if (m_Scene->GetPhysicsProcessor() != nullptr)
-				m_Scene->UpdatePhysics(time); // engine-defined physics update mechanic
+			m_Scene->Update(time); // user-defined update scene function
 		}
 		return true;
 	}
 	
 	bool Layer::LoadScene(Scene* scene)
 	{
+		CSE_CORE_LOG("Layer: Load scene...");
 		m_Scene = scene;
 		m_Scene->SetLayer(this);
 		if (!m_Scene->IsInitialized())
 		{
+			CSE_CORE_LOG("- initialize a scene");
 			m_Scene->Init();
 		}
+		CSE_CORE_LOG("- scene load method call");
 		m_Scene->Load();
 		
 		// CSE_CORE_LOG("Layer ", m_Name, " attached.");
+		CSE_CORE_LOG("- layer-level viewport setup");
 		if (m_Scene->GetPhysicsSystem() != PhysicsSystem::None)
 		{
 			if (m_Viewport == nullptr)
 			{
 				m_Viewport = new Viewport(m_Scene->GetActiveCamera(), {0, 0, GetWindow()->GetPrefs().width, GetWindow()->GetPrefs().height});
 				m_Viewport->SetScene(m_Scene);
+			} else {
+				m_Viewport->SetScene(m_Scene);
 			}
 		} else {
-			m_Viewport = new Viewport(m_Scene->GetActiveCamera(), {80, 60, GetWindow()->GetPrefs().width / 2, GetWindow()->GetPrefs().height / 2});
-			m_Viewport->SetScene(m_Scene);
+			if (m_Viewport == nullptr)
+			{
+				m_Viewport = new Viewport(m_Scene->GetActiveCamera(), {80, 60, GetWindow()->GetPrefs().width / 2, GetWindow()->GetPrefs().height / 2});
+				m_Viewport->SetScene(m_Scene);
+			} else {
+				m_Viewport->SetScene(m_Scene);
+			}
 		}
 		
 		return true;
@@ -147,10 +154,13 @@ namespace CSE
 	
 	bool Layer::UnloadScene(Scene* scene)
 	{
+		CSE_CORE_LOG("Layer: Unload a scene...");
 		scene->SetLayer(nullptr);
 		m_Scene = nullptr;
+		CSE_CORE_LOG("- scene unload method call");
 		scene->Unload();
 		
+		CSE_CORE_LOG("- delete a layer-level viewport");
 		if (m_Viewport != nullptr)
 			delete m_Viewport;
 		m_Viewport = nullptr;

@@ -232,5 +232,10 @@ namespace CSE
 	// general
 	void Box2DPhysics::Shutdown()
 	{
+		for (b2Body* body = m_Box2DWorld->GetBodyList(); body; body = body->GetNext())
+		{
+			m_Box2DWorld->DestroyBody(body);
+		}
+		DestroyWorld(0);
 	}
 }

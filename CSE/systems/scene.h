@@ -31,11 +31,12 @@ namespace CSE
 		
 		virtual void OnInit(); // user-defined, should be called after constructor
 		virtual void Init(); 
-		virtual void OnInitialized();
-		virtual void Load(); // user-defined
-		virtual void OnLoaded();
-		virtual void Unload(); // user-defined
-		virtual void OnUnloaded();
+		virtual void OnInitialized(); // user-defined, should be called after initialization
+		virtual void Load();
+		virtual void OnLoaded(); // user-defined
+		virtual void Unload(); 
+		virtual void OnUnloaded(); // user-defined
+		virtual void Update(TimeType sceneTime); // before the update happens
 		virtual void OnUpdate(TimeType sceneTime); // before the update happens
 		
 		// TODO: scene start/stop/pause/resume
@@ -81,6 +82,7 @@ namespace CSE
 		bool m_Paused = false;
 		bool m_Initialized = false;
 		entt::registry m_Registry;
+		PhysicsSystem m_PhysicsSystem;
 		PhysicsProcessor* m_PhysicsProcessor;
 		World* m_CurrentWorld = nullptr;
 	};
