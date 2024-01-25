@@ -142,7 +142,7 @@ namespace CSE
 		} else {
 			if (m_Viewport == nullptr)
 			{
-				m_Viewport = new Viewport(m_Scene->GetActiveCamera(), {80, 60, GetWindow()->GetPrefs().width / 2, GetWindow()->GetPrefs().height / 2});
+				m_Viewport = new Viewport(m_Scene->GetActiveCamera(), {0, 0, GetWindow()->GetPrefs().width, GetWindow()->GetPrefs().height});
 				m_Viewport->SetScene(m_Scene);
 			} else {
 				m_Viewport->SetScene(m_Scene);
@@ -250,6 +250,8 @@ namespace CSE
 				(float)(m_Viewport->GetPlace().w) / GetWindow()->GetPrefs().height 
 			};
 			
+			Renderer::SetActiveScreen(viewportPlace);
+			
 			for (auto entity : GetScene()->GetRegistry().view<SpriteComponent>())
 			{
 				bool mayDrawPhysicalEntity = false;
@@ -327,7 +329,7 @@ namespace CSE
 										SDL_FPoint center = physicsComponent.hitBoxes[i].points[0];
 										Renderer::DrawRect(
 											{transform.positionNormalized.x + center.x, transform.positionNormalized.y + center.y}, 
-											{transform.size.x, transform.size.y},
+											{transform.sizeNormalized.x, transform.sizeNormalized.y},
 											{255, 128, 255, 255}
 											);
 									}
@@ -345,8 +347,8 @@ namespace CSE
 									break;
 								default:
 									Renderer::DrawRect(
-										{transform.positionNormalized.x, transform.positionNormalized.y}, 
-										{transform.size.x, transform.size.y}, 
+										{viewportPlaceNormalized.x + transform.positionNormalized.x, viewportPlaceNormalized.y + transform.positionNormalized.y}, 
+										{transform.sizeNormalized.x, transform.sizeNormalized.y}, 
 										{255, 255, 255, 255}
 										);
 								}
@@ -354,7 +356,7 @@ namespace CSE
 						} else {
 							Renderer::DrawRect(
 								{viewportPlaceNormalized.x + transform.positionNormalized.x, viewportPlaceNormalized.y + transform.positionNormalized.y}, 
-								{transform.size.x, transform.size.y}
+								{transform.sizeNormalized.x, transform.sizeNormalized.y}
 								);
 						}
 					}
@@ -369,6 +371,8 @@ namespace CSE
 					{255, 128, 128, 255}
 					);
 			}
+			
+			Renderer::SetActiveScreenDefault();
 		}
 	}
 }

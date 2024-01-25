@@ -23,15 +23,17 @@ namespace CSE
 	{
 	public:
 		static void SetActiveRenderer(SDL_Renderer* renderer);
+		inline static SDL_Renderer* GetActiveRenderer() { return m_Renderer; }
 		static void SetActiveScene(Scene* scene);
+		inline static Scene* GetActiveScene() { return m_Scene; }
 		static void SetActiveCamera(Camera2D* camera);
+		inline static Camera2D* GetActiveCamera() { return m_ActiveCamera; };
+		static void SetActiveScreen(const glm::u8vec4& screen);
+		static void SetActiveScreenDefault();
+		inline static glm::u8vec4 GetActiveScreen() { return m_CurrentScreen; }
 		
 		static void SetBackgroundColor(const glm::u8vec4& color);
 		static void ClearScreen();
-		
-		inline static SDL_Renderer* GetActiveRenderer() { return m_Renderer; }
-		inline static Camera2D* GetActiveCamera() { return m_ActiveCamera; };
-		
 		
 		// low-level methods (draw pixels, primitives, operate with data)
 		static uint32_t GetPixel(SDL_Surface *surface, int x, int y);
@@ -52,7 +54,8 @@ namespace CSE
 		static SDL_Renderer* m_Renderer;
 		static Scene* m_Scene;
 		static Camera2D* m_ActiveCamera;
-		
+
+		static glm::u8vec4 m_CurrentScreen;
 		static glm::vec2 m_PixelSize;
 		static glm::uvec4 m_BackgroundColor;
 		

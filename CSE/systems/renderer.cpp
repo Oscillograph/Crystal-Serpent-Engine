@@ -8,6 +8,7 @@ namespace CSE
 	Scene* Renderer::m_Scene = nullptr;
 	Camera2D* Renderer::m_ActiveCamera = nullptr;
 	
+	glm::u8vec4 Renderer::m_CurrentScreen = glm::u8vec4(1.0f);
 	glm::vec2 Renderer::m_PixelSize = glm::vec2(1.0f);
 	glm::uvec4 Renderer::m_BackgroundColor = glm::uvec4(1.0f);
 	glm::vec2 Renderer::m_FrameSize = glm::vec2(1.0f);
@@ -35,6 +36,26 @@ namespace CSE
 		m_CameraPosition = camera->GetPosition();
 		m_CameraPosition.x = m_CameraPosition.x / m_Scene->GetLayer()->GetWindow()->GetPrefs().width;
 		m_CameraPosition.y = m_CameraPosition.y / m_Scene->GetLayer()->GetWindow()->GetPrefs().height;
+	}
+	
+	void Renderer::SetActiveScreen(const glm::u8vec4& screen)
+	{ 
+		m_CurrentScreen = {
+			screen.x,
+			screen.y,
+			screen.z,
+			screen.w
+		}; 
+	}
+	
+	void Renderer::SetActiveScreenDefault()
+	{ 
+		m_CurrentScreen = {
+			0,
+			0,
+			m_Scene->GetLayer()->GetWindow()->GetPrefs().width,
+			m_Scene->GetLayer()->GetWindow()->GetPrefs().height,
+		}; 
 	}
 	
 	void Renderer::SetBackgroundColor(const glm::u8vec4& color)
@@ -102,11 +123,7 @@ namespace CSE
 		SDL_Rect* place = new SDL_Rect;
 		SDL_Rect* source = new SDL_Rect;
 		
-		int windowWidth;
-		int windowHeight;
 		// TODO: find out why Application::Get()->GetWindows() is not allowed to be accessed from here
-		SDL_GetWindowSize(m_Scene->GetLayer()->GetWindow()->GetNativeWindow(), &windowWidth, &windowHeight);
-		
 		float scaleX = m_Scene->GetLayer()->GetWindow()->GetScale().x;
 		float scaleY = m_Scene->GetLayer()->GetWindow()->GetScale().y;
 		
@@ -123,8 +140,8 @@ namespace CSE
 		{
 			*place = 
 			{ 
-				(int)floorf(destRect->x * scaleX - m_CameraPosition.x * windowWidth), 
-				(int)floorf(destRect->y * scaleY - m_CameraPosition.y * windowHeight), 
+				(int)floorf((destRect->x - m_CameraPosition.x * m_CurrentScreen.z) * scaleX), 
+				(int)floorf((destRect->y - m_CameraPosition.y * m_CurrentScreen.w) * scaleY), 
 				(int)floorf(destRect->w * scaleX), 
 				(int)floorf(destRect->h * scaleY) 
 			};
@@ -132,16 +149,16 @@ namespace CSE
 			// not making it NULL is important for the next step - tiling
 			*place = 
 			{ 
-				(int)floorf(0 - m_CameraPosition.x * windowWidth), 
-				(int)floorf(0 - m_CameraPosition.y * windowHeight), 
-				windowWidth, 
-				windowHeight 
+				(int)floorf(0 - m_CameraPosition.x * m_CurrentScreen.z), 
+				(int)floorf(0 - m_CameraPosition.y * m_CurrentScreen.w), 
+				m_CurrentScreen.z, 
+				m_CurrentScreen.w 
 			};
 		}
 		
 		// draw only if it's on screen
 		if ((((*place).x + (*place).w) > 0) && (((*place).y + (*place).h) > 0) &&
-			((*place).x < windowWidth) && ((*place).y < windowHeight))
+			((*place).x < m_CurrentScreen.z) && ((*place).y < m_CurrentScreen.w))
 		{
 			// tiling texture across the place rectangle
 			// TODO: Adjust tiling to pixel size
@@ -207,8 +224,8 @@ namespace CSE
 						// CSE_LOG("scaleX: ", scaleX, "; scaleY: ", scaleY);
 						*newPlace = 
 						{
-							(int)floorf(scaleX * ((*destRect).x + x * (*source).w * tilingFactor.x) - m_CameraPosition.x * windowWidth), 
-							(int)floorf(scaleY * ((*destRect).y + y * (*source).h * tilingFactor.y) - m_CameraPosition.y * windowHeight), 
+							(int)floorf(scaleX * ((*destRect).x + x * (*source).w * tilingFactor.x) - m_CameraPosition.x * m_CurrentScreen.z), 
+							(int)floorf(scaleY * ((*destRect).y + y * (*source).h * tilingFactor.y) - m_CameraPosition.y * m_CurrentScreen.w), 
 							(int)floorf(scaleX * tileWidth * tilingFactor.x), 
 							(int)floorf(scaleY * tileHeight * tilingFactor.y) 
 						};
@@ -245,6 +262,8 @@ namespace CSE
 	
 	void Renderer::DrawRect(SDL_FPoint center, SDL_FPoint size, SDL_Color color)
 	{
+		// float scaleX = m_CurrentScreen.z * m_Scene->GetLayer()->GetWindow()->GetScale().x;
+		// float scaleY = m_CurrentScreen.w * m_Scene->GetLayer()->GetWindow()->GetScale().y;
 		float scaleX = m_Scene->GetLayer()->GetWindow()->GetPrefs().width * m_Scene->GetLayer()->GetWindow()->GetScale().x;
 		float scaleY = m_Scene->GetLayer()->GetWindow()->GetPrefs().height * m_Scene->GetLayer()->GetWindow()->GetScale().y;
 		
@@ -263,6 +282,8 @@ namespace CSE
 	
 	void Renderer::DrawRect(SDL_FPoint p1, SDL_FPoint p2, SDL_FPoint p3, SDL_FPoint p4, SDL_Color color)
 	{
+		// float scaleX = m_CurrentScreen.z * m_Scene->GetLayer()->GetWindow()->GetScale().x;
+		// float scaleY = m_CurrentScreen.w * m_Scene->GetLayer()->GetWindow()->GetScale().y;
 		float scaleX = m_Scene->GetLayer()->GetWindow()->GetPrefs().width * m_Scene->GetLayer()->GetWindow()->GetScale().x;
 		float scaleY = m_Scene->GetLayer()->GetWindow()->GetPrefs().height * m_Scene->GetLayer()->GetWindow()->GetScale().y;
 		
