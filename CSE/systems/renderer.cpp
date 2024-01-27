@@ -26,26 +26,21 @@ namespace CSE
 		
 		int newWidth, newHeight;
 		SDL_GetWindowSize(m_Scene->GetLayer()->GetWindow()->GetNativeWindow(), &newWidth, &newHeight);
-		m_PixelSize.x = newWidth / m_Scene->GetLayer()->GetWindow()->GetPrefs().width;
-		m_PixelSize.y = newHeight / m_Scene->GetLayer()->GetWindow()->GetPrefs().height;
+		m_PixelSize.x = (float)newWidth / m_Scene->GetLayer()->GetWindow()->GetPrefs().width;
+		m_PixelSize.y = (float)newHeight / m_Scene->GetLayer()->GetWindow()->GetPrefs().height;
 	}
 	
 	void Renderer::SetActiveCamera(Camera2D* camera)
 	{
 		m_ActiveCamera = camera;
-		m_CameraPosition = camera->GetPosition();
-		m_CameraPosition.x = m_CameraPosition.x / m_Scene->GetLayer()->GetWindow()->GetPrefs().width;
-		m_CameraPosition.y = m_CameraPosition.y / m_Scene->GetLayer()->GetWindow()->GetPrefs().height;
+		m_CameraPosition = camera->GetPositionNormalized();
+		// m_CameraPosition.x = m_CameraPosition.x / m_Scene->GetLayer()->GetWindow()->GetPrefs().width;
+		// m_CameraPosition.y = m_CameraPosition.y / m_Scene->GetLayer()->GetWindow()->GetPrefs().height;
 	}
 	
 	void Renderer::SetActiveScreen(const glm::u8vec4& screen)
 	{ 
-		m_CurrentScreen = {
-			screen.x,
-			screen.y,
-			screen.z,
-			screen.w
-		}; 
+		m_CurrentScreen = screen; 
 	}
 	
 	void Renderer::SetActiveScreenDefault()
@@ -69,7 +64,7 @@ namespace CSE
 		SDL_RenderClear(GetActiveRenderer());
 	}
 	
-	uint32_t Renderer::GetPixel(SDL_Surface *surface, int x, int y)
+	uint32_t Renderer::GetPixel(Texture* surface, int x, int y)
 	{
 		/*
 		  Got this function from here:
@@ -80,9 +75,9 @@ namespace CSE
 		  Uint32 data = getPixel(gSurface, 200, 200);
 		  SDL_GetRGB(data, gSurface->format, &rgb.r, &rgb.g, &rgb.b);
 		  - - - - - - - - - - - - - - - */
-		int bpp = surface->format->BytesPerPixel;
+		int bpp = surface->GetSurface()->format->BytesPerPixel;
 		/* Here p is the address to the pixel we want to retrieve */
-		uint8_t *p = (uint8_t *)surface->pixels + y * surface->pitch + x * bpp;
+		uint8_t *p = (uint8_t *)surface->GetSurface()->pixels + y * surface->GetSurface()->pitch + x * bpp;
 		
 		switch (bpp)
 		{
@@ -108,29 +103,36 @@ namespace CSE
 		}
 	}
 	
-	void Renderer::DrawTexture(SDL_Texture* texture, SDL_FRect* destRect, SDL_Rect* srcRect)
+	void Renderer::DrawTexture(Texture* texture, SDL_FRect* destRect, SDL_Rect* srcRect)
 	{
 		GeneralDrawTexture(texture, destRect, srcRect, glm::vec2(1.0f), glm::vec4(1.0f));
 	}
 	
-	void Renderer::DrawTiledTexture(SDL_Texture* texture, SDL_FRect* destRect, SDL_Rect* srcRect, const glm::vec2& tilingFactor)
+	void Renderer::DrawTiledTexture(Texture* texture, SDL_FRect* destRect, SDL_Rect* srcRect, const glm::vec2& tilingFactor)
 	{
 		GeneralDrawTexture(texture, destRect, srcRect, tilingFactor, glm::vec4(1.0f));
 	}
 	
-	void Renderer::GeneralDrawTexture(SDL_Texture* texture, SDL_FRect* destRect, SDL_Rect* srcRect, glm::vec2 tilingFactor, const glm::vec4& tintColor)
+	void Renderer::GeneralDrawTexture(Texture* texture, SDL_FRect* destRect, SDL_Rect* srcRect, glm::vec2 tilingFactor, const glm::vec4& tintColor)
 	{
 		SDL_Rect* place = new SDL_Rect;
 		SDL_Rect* source = new SDL_Rect;
 		
 		// TODO: find out why Application::Get()->GetWindows() is not allowed to be accessed from here
-		float scaleX = m_Scene->GetLayer()->GetWindow()->GetScale().x;
-		float scaleY = m_Scene->GetLayer()->GetWindow()->GetScale().y;
+		glm::vec2 windowScale = {
+			m_Scene->GetLayer()->GetWindow()->GetScale().x,
+			m_Scene->GetLayer()->GetWindow()->GetScale().y
+		};
 		
 		// correct the source rectangle
 		if (srcRect != NULL)
 		{
-			*source = { srcRect->x, srcRect->y, srcRect->w, srcRect->h };
+			*source = { 
+				srcRect->x, 
+				srcRect->y, 
+				srcRect->w, 
+				srcRect->h 
+			};
 		} else {
 			source = NULL;
 		}
@@ -140,17 +142,17 @@ namespace CSE
 		{
 			*place = 
 			{ 
-				(int)floorf((destRect->x - m_CameraPosition.x * m_CurrentScreen.z) * scaleX), 
-				(int)floorf((destRect->y - m_CameraPosition.y * m_CurrentScreen.w) * scaleY), 
-				(int)floorf(destRect->w * scaleX), 
-				(int)floorf(destRect->h * scaleY) 
+				(int)floorf(destRect->x * windowScale.x), 
+				(int)floorf(destRect->y * windowScale.y), 
+				(int)floorf(destRect->w * windowScale.x), 
+				(int)floorf(destRect->h * windowScale.y) 
 			};
 		} else {
 			// not making it NULL is important for the next step - tiling
 			*place = 
 			{ 
-				(int)floorf(0 - m_CameraPosition.x * m_CurrentScreen.z), 
-				(int)floorf(0 - m_CameraPosition.y * m_CurrentScreen.w), 
+				0, 
+				0, 
 				m_CurrentScreen.z, 
 				m_CurrentScreen.w 
 			};
@@ -167,15 +169,15 @@ namespace CSE
 				// now, get subPlaces and RenderCopy there
 				int xNum, yNum; // how many whole tiles there are?
 				int xMod, yMod; // how big is the partial tile left?
-				int tileWidth = (*source).w;
-				int tileHeight = (*source).h;
+				float tileWidth = (*source).w / (float)texture->GetWidth();
+				float tileHeight = (*source).h / (float)texture->GetHeight();
 				
 				// CSE_CORE_LOG("Region width: ", (*destRect).w, "; height: ", (*destRect).h);
 				// CSE_CORE_LOG("Tile width: ", tileWidth, "; height: ", tileHeight);
 				// CSE_CORE_LOG("Tiling factor: (", tilingFactor.x, "; ", tilingFactor.y, ")");
 				if (tilingFactor.x > 0.0f)
 				{
-					xNum = (int)floorf((*destRect).w / (floor)(tileWidth * tilingFactor.x)); 
+					xNum = (int)floorf((*destRect).w / (float)(tileWidth * tilingFactor.x)); 
 					xMod = (int)floorf((*destRect).w - (xNum * tileWidth * tilingFactor.x));
 					if (xMod > 0)
 						xNum++;
@@ -188,7 +190,7 @@ namespace CSE
 				
 				if (tilingFactor.y > 0.0f)
 				{
-					yNum = (int)floorf((*destRect).h / (floor)(tileHeight * tilingFactor.y)); // how many whole tiles there are?
+					yNum = (int)floorf((*destRect).h / (float)(tileHeight * tilingFactor.y)); // how many whole tiles there are?
 					yMod = (int)floorf((*destRect).h - (yNum * tileHeight * tilingFactor.y)); // how big is the partial tile left?
 					if (yMod > 0)
 						yNum++;
@@ -224,10 +226,12 @@ namespace CSE
 						// CSE_LOG("scaleX: ", scaleX, "; scaleY: ", scaleY);
 						*newPlace = 
 						{
-							(int)floorf(scaleX * ((*destRect).x + x * (*source).w * tilingFactor.x) - m_CameraPosition.x * m_CurrentScreen.z), 
-							(int)floorf(scaleY * ((*destRect).y + y * (*source).h * tilingFactor.y) - m_CameraPosition.y * m_CurrentScreen.w), 
-							(int)floorf(scaleX * tileWidth * tilingFactor.x), 
-							(int)floorf(scaleY * tileHeight * tilingFactor.y) 
+							// (int)floorf(scaleX * (*destRect).x + m_CurrentScreen.z * (x * (*source).w * tilingFactor.x)), 
+							// (int)floorf(scaleY * (*destRect).y + m_CurrentScreen.w * (y * (*source).h * tilingFactor.y)),
+							(int)floorf(windowScale.x * (*destRect).x + m_CurrentScreen.z * (x * tileWidth * tilingFactor.x)), 
+							(int)floorf(windowScale.y * (*destRect).y + m_CurrentScreen.w * (y * tileHeight * tilingFactor.y)),
+							(int)floorf(windowScale.x * tileWidth * tilingFactor.x), 
+							(int)floorf(windowScale.y * tileHeight * tilingFactor.y) 
 						};
 						// CSE_LOG("Tile width: ", tileWidth, "; height: ", tileHeight);
 						// CSE_LOG("New place (SDL_Rect): (", (*newPlace).x, "; ", (*newPlace).y, "; ", (*newPlace).w, "; ", (*newPlace).h, ")");
@@ -242,7 +246,7 @@ namespace CSE
 						
 						SDL_RenderCopy(
 							GetActiveRenderer(), 
-							texture, 
+							texture->GetTexture(), 
 							newSource, 
 							newPlace
 							);
@@ -252,7 +256,7 @@ namespace CSE
 				delete newPlace;
 				delete newSource;
 			} else {
-				SDL_RenderCopy(GetActiveRenderer(), texture, source, place);
+				SDL_RenderCopy(GetActiveRenderer(), texture->GetTexture(), source, place);
 			}
 		}
 		

@@ -19,6 +19,13 @@ namespace CSE
 		m_PhysicsProcessor = new PhysicsProcessor(PhysicsSystem::CSE);
 		
 		m_CurrentWorld = m_PhysicsProcessor->AccessWorld(0);
+		m_SceneCamera->SetWorldConstraints({m_CurrentWorld->properties.size.x, m_CurrentWorld->properties.size.y});
+		m_SceneCamera->Retarget({
+			0,
+			0,
+			m_CurrentWorld->properties.size.x/10,
+			m_CurrentWorld->properties.size.y/10
+		});
 	}
 	
 	Scene::Scene(const PhysicsSystem& physicsSystem)
@@ -29,6 +36,13 @@ namespace CSE
 		m_PhysicsProcessor = new PhysicsProcessor(physicsSystem);
 		
 		m_CurrentWorld = m_PhysicsProcessor->AccessWorld(0);
+		m_SceneCamera->SetWorldConstraints({m_CurrentWorld->properties.size.x, m_CurrentWorld->properties.size.y});
+		m_SceneCamera->Retarget({
+			0,
+			0,
+			m_CurrentWorld->properties.size.x/10,
+			m_CurrentWorld->properties.size.y/10
+		});
 	}
 	
 	Scene::~Scene()

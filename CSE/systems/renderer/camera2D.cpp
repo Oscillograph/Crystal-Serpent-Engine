@@ -82,10 +82,19 @@ namespace CSE
 		return false;
 	};
 	
-	glm::vec2& Camera2D::GetPosition()
+	glm::vec2 Camera2D::GetPosition()
 	{
 		return m_Position;
 	};
+	
+	glm::vec2 Camera2D::GetPositionNormalized()
+	{
+		glm::vec2 positionNormalized = m_Position;
+		positionNormalized.x = positionNormalized.x / m_TargetArea.z;
+		positionNormalized.y = positionNormalized.y / m_TargetArea.w;
+		
+		return positionNormalized;
+	}
 	
 	void Camera2D::Retarget(glm::vec4 newTargetArea)
 	{
@@ -103,17 +112,28 @@ namespace CSE
 		};
 	};
 	
-	glm::vec4& Camera2D::GetTargetArea()
+	glm::vec4 Camera2D::GetTargetArea()
 	{
 		return m_TargetArea;
 	};
+	
+	glm::vec4 Camera2D::GetTargetAreaNormalized()
+	{
+		glm::vec4 targetAreaNormalized = m_TargetArea;
+		targetAreaNormalized.x = targetAreaNormalized.x / m_WorldConstraints.x;
+		targetAreaNormalized.y = targetAreaNormalized.y / m_WorldConstraints.y;
+		targetAreaNormalized.z = targetAreaNormalized.z / m_WorldConstraints.x;
+		targetAreaNormalized.w = targetAreaNormalized.w / m_WorldConstraints.y;
+		
+		return targetAreaNormalized;
+	}
 	
 	void Camera2D::Zoom(glm::vec2 newZoom)
 	{
 		m_Zoom = newZoom;
 	};
 	
-	glm::vec2& Camera2D::GetZoom()
+	glm::vec2 Camera2D::GetZoom()
 	{
 		return m_Zoom;
 	};

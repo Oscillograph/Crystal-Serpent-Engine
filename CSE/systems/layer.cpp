@@ -142,7 +142,7 @@ namespace CSE
 		} else {
 			if (m_Viewport == nullptr)
 			{
-				m_Viewport = new Viewport(m_Scene->GetActiveCamera(), {0, 0, GetWindow()->GetPrefs().width, GetWindow()->GetPrefs().height});
+				m_Viewport = new Viewport(m_Scene->GetActiveCamera(), {80, 60, GetWindow()->GetPrefs().width / 2, GetWindow()->GetPrefs().height / 2});
 				m_Viewport->SetScene(m_Scene);
 			} else {
 				m_Viewport->SetScene(m_Scene);
@@ -234,6 +234,8 @@ namespace CSE
 			Renderer::SetActiveScene(m_Viewport->GetScene());
 			Renderer::SetActiveCamera(m_Viewport->GetCamera());
 			
+			glm::vec2 cameraPositionNormalized = m_Viewport->GetCamera()->GetPositionNormalized();
+			
 			glm::vec4 viewportPlace = 
 			{ 
 				m_Viewport->GetPlace().x,
@@ -300,15 +302,15 @@ namespace CSE
 					
 					place = 
 					{
-						GetWindow()->GetPrefs().width * (viewportPlaceNormalized.x + transform.positionNormalized.x), 
-						GetWindow()->GetPrefs().height * (viewportPlaceNormalized.y + transform.positionNormalized.y),
+						GetWindow()->GetPrefs().width * viewportPlaceNormalized.x + viewportPlace.z * (transform.positionNormalized.x - cameraPositionNormalized.x), 
+						GetWindow()->GetPrefs().height * viewportPlaceNormalized.y + viewportPlace.w * (transform.positionNormalized.y - cameraPositionNormalized.y),
 						viewportPlace.z * transform.sizeNormalized.x,
 						viewportPlace.w * transform.sizeNormalized.y,
 					};
 					
 					// CSE_CORE_LOG("Entity ", e.GetComponent<CSE::NameComponent>().value);
 					Renderer::DrawTiledTexture(
-						spriteComponent.texture->GetTexture(),
+						spriteComponent.texture,
 						&place,
 						&frame,
 						spriteComponent.tilingFactor

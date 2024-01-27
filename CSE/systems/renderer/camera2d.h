@@ -14,6 +14,8 @@ namespace CSE
 		// Camera2D(glm::vec4 targetXYZW, float aspectRatio, float size);
 		~Camera2D();
 		
+		inline void SetWorldConstraints(glm::vec2 constraints) { m_WorldConstraints = constraints; }
+		inline glm::vec2 GetWorldConstraints() { return m_WorldConstraints; }
 		// float& GetAspectRatio();
 		// float& GetSize();
 		
@@ -22,13 +24,15 @@ namespace CSE
 		
 		bool MoveTo(glm::vec2 newPosition);
 		bool MoveBy(glm::vec2 newPosition);
-		glm::vec2& GetPosition();
+		glm::vec2 GetPosition();
+		glm::vec2 GetPositionNormalized();
 		
 		void Retarget(glm::vec4 newTargetArea);
-		glm::vec4& GetTargetArea();
+		glm::vec4 GetTargetArea();
+		glm::vec4 GetTargetAreaNormalized();
 		
 		void Zoom(glm::vec2 newZoom);
-		glm::vec2& GetZoom();
+		glm::vec2 GetZoom();
 		
 		// rotate clockwise by angle in radians
 		bool Rotate(float rotation);
@@ -38,6 +42,7 @@ namespace CSE
 		bool Sees(PhysicsComponent* physicsComponent);
 		
 	private:
+		glm::vec2 m_WorldConstraints = {0.0f, 0.0f}; // max absolute size of the world 
 		glm::vec4 m_TargetArea = {0.0f, 0.0f, 0.0f, 0.0f}; // physical coordinates
 		glm::vec4 m_TargetAreaBorder = {0.0f, 0.0f, 0.0f, 0.0f}; // physical coordinates
 		glm::vec2 m_Position = {0.0f, 0.0f}; // the middle of m_TargetArea

@@ -92,6 +92,7 @@ public:
 			CSE::TransformComponent& transform = background->AddComponent<CSE::TransformComponent>();
 			transform.position = {80, 60};
 			transform.size = {80, 60};
+			transform.NormalizeToWindow(GetLayer()->GetWindow());
 			
 			// sprite control
 			spriteBG = new CSE::Texture("./CSE/assets/CSE_logo.png", GetLayer()->GetWindow()->GetRenderer(), {0, 0, 0});
@@ -108,6 +109,7 @@ public:
 			CSE::TransformComponent& transform = backgroundSDL->AddComponent<CSE::TransformComponent>();
 			transform.position = {240, 60};
 			transform.size = {160, 120};
+			transform.NormalizeToWindow(GetLayer()->GetWindow());
 			
 			// sprite control
 			spriteSDL = new CSE::Texture("./CSE/assets/SDL_logo.png", GetLayer()->GetWindow()->GetRenderer(), {0, 0, 0});
@@ -129,6 +131,7 @@ public:
 			CSE::TransformComponent& transform = player1->AddComponent<CSE::TransformComponent>();
 			transform.position = {240, 216};
 			transform.size = {32, 36};
+			transform.NormalizeToWindow(GetLayer()->GetWindow());
 			
 			// state machine setup
 			CSE::StateMachineComponent& stateMachine = player1->AddComponent<CSE::StateMachineComponent>();
@@ -236,6 +239,7 @@ public:
 			CSE::TransformComponent& transform = player2->AddComponent<CSE::TransformComponent>();
 			transform.position = {80, 216};
 			transform.size = {32, 36};
+			transform.NormalizeToWindow(GetLayer()->GetWindow());
 			
 			// state machine setup
 			CSE::StateMachineComponent& stateMachine = player2->AddComponent<CSE::StateMachineComponent>();
@@ -306,6 +310,7 @@ public:
 			CSE::TransformComponent& transform = floor->AddComponent<CSE::TransformComponent>();
 			transform.position = {160, 216};
 			transform.size = {3.2, 120};
+			transform.NormalizeToWindow(GetLayer()->GetWindow());
 			
 			// state machine setup
 			CSE::StateMachineComponent& stateMachine = floor->AddComponent<CSE::StateMachineComponent>();
@@ -426,20 +431,20 @@ public:
 					
 					if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Down]))
 					{
-						position.y += 0.002f;
-						GetActiveCamera()->MoveBy({0.0f, 0.002f});
+						position.y += 0.2f;
+						GetActiveCamera()->MoveBy({0.0f, 0.2f});
 					}
 					
 					if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Left]))
 					{
-						position.x -= 0.002f;
-						GetActiveCamera()->MoveBy({-0.002f, 0.0f});
+						position.x -= 0.2f;
+						GetActiveCamera()->MoveBy({-0.2f, 0.0f});
 					}
 					
 					if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Right]))
 					{
-						position.x += 0.002f;
-						GetActiveCamera()->MoveBy({0.002f, 0.0f});
+						position.x += 0.2f;
+						GetActiveCamera()->MoveBy({0.2f, 0.0f});
 					}
 					
 					CSE_LOG(player.GetComponent<CSE::NameComponent>().value, " coordinates: (", position.x, "; ", position.y, ")");
@@ -455,8 +460,8 @@ public:
 				{
 					if (position.y > 0.75f)
 					{
-						position.y -= 0.002f;
-						GetActiveCamera()->MoveBy({0.0f, -0.002f});
+						position.y -= 0.2f;
+						GetActiveCamera()->MoveBy({0.0f, -0.2f});
 					} else {
 						stateMachine.SetState(CSE::EntityStates::FLY);
 					}
@@ -466,8 +471,8 @@ public:
 				
 				if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Left]))
 				{
-					position.x -= 0.002f;
-					GetActiveCamera()->MoveBy({-0.002f, 0.0f});
+					position.x -= 0.2f;
+					GetActiveCamera()->MoveBy({-0.2f, 0.0f});
 					
 					// change animation if needed
 					if (CSE::EntityStates::JUMP2 != animation.Get())
@@ -479,8 +484,8 @@ public:
 				
 				if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Right]))
 				{
-					position.x += 0.002f;
-					GetActiveCamera()->MoveBy({0.002f, 0.0f});
+					position.x += 0.2f;
+					GetActiveCamera()->MoveBy({0.2f, 0.0f});
 					
 					// change animation if needed 
 					if (CSE::EntityStates::JUMP1 != animation.Get())
@@ -507,8 +512,8 @@ public:
 			{
 				if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Left]))
 				{
-					position.x -= 0.002f;
-					GetActiveCamera()->MoveBy({-0.002f, 0.0f});
+					position.x -= 0.2f;
+					GetActiveCamera()->MoveBy({-0.2f, 0.0f});
 					
 					// change animation if needed
 					if (CSE::EntityStates::JUMP2 != animation.Get())
@@ -520,8 +525,8 @@ public:
 				
 				if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Right]))
 				{
-					position.x += 0.002f;
-					GetActiveCamera()->MoveBy({0.002f, 0.0f});
+					position.x += 0.2f;
+					GetActiveCamera()->MoveBy({0.2f, 0.0f});
 					
 					// change animation if needed
 					if (CSE::EntityStates::JUMP1 != animation.Get())
@@ -533,8 +538,8 @@ public:
 				
 				if (position.y < 0.9f)
 				{
-					position.y += 0.002f;
-					GetActiveCamera()->MoveBy({0.0f, 0.002f});
+					position.y += 0.2f;
+					GetActiveCamera()->MoveBy({0.0f, 0.2f});
 				} else {
 					stateMachine.SetState(CSE::EntityStates::STAND);
 				}
