@@ -244,11 +244,14 @@ namespace CSE
 							tileHeight 
 						};
 						
-						SDL_RenderCopy(
+						SDL_RenderCopyEx(
 							GetActiveRenderer(), 
 							texture->GetTexture(), 
 							newSource, 
-							newPlace
+							newPlace,
+							0,
+							NULL,
+							SDL_RendererFlip::SDL_FLIP_NONE
 							);
 					}
 				}
@@ -256,7 +259,15 @@ namespace CSE
 				delete newPlace;
 				delete newSource;
 			} else {
-				SDL_RenderCopy(GetActiveRenderer(), texture->GetTexture(), source, place);
+				SDL_RenderCopyEx(
+					GetActiveRenderer(), 
+					texture->GetTexture(), 
+					source, 
+					place,
+					0,
+					NULL,
+					SDL_RendererFlip::SDL_FLIP_NONE
+					);
 			}
 		}
 		
