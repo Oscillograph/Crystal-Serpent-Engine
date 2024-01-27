@@ -273,8 +273,8 @@ namespace CSE
 		
 		SDL_Rect rect = 
 		{
-			(int)roundf(scaleX * (center.x - m_CameraPosition.x - size.x/2)), 
-			(int)roundf(scaleY * (center.y - m_CameraPosition.y - size.y/2)), 
+			(int)roundf(scaleX * (center.x - size.x/2)), 
+			(int)roundf(scaleY * (center.y - size.y/2)), 
 			(int)roundf(scaleX * size.x), 
 			(int)roundf(scaleY * size.y)
 		};
@@ -293,24 +293,24 @@ namespace CSE
 		
 		SDL_Point points[5] = {
 			{
-				(int)roundf(scaleX * (p1.x - m_CameraPosition.x)),
-				(int)roundf(scaleY * (p1.y - m_CameraPosition.y)),
+				(int)roundf(scaleX * (p1.x)),
+				(int)roundf(scaleY * (p1.y)),
 			}, 
 			{
-				(int)roundf(scaleX * (p2.x - m_CameraPosition.x)),
-				(int)roundf(scaleY * (p2.y - m_CameraPosition.y)),
+				(int)roundf(scaleX * (p2.x)),
+				(int)roundf(scaleY * (p2.y)),
 			},  
 			{
-				(int)roundf(scaleX * (p3.x - m_CameraPosition.x)),
-				(int)roundf(scaleY * (p3.y - m_CameraPosition.y)),
+				(int)roundf(scaleX * (p3.x)),
+				(int)roundf(scaleY * (p3.y)),
 			}, 
 			{
-				(int)roundf(scaleX * (p4.x - m_CameraPosition.x)),
-				(int)roundf(scaleY * (p4.y - m_CameraPosition.y)),
+				(int)roundf(scaleX * (p4.x)),
+				(int)roundf(scaleY * (p4.y)),
 			},
 			{
-				(int)roundf(scaleX * (p1.x - m_CameraPosition.x)),
-				(int)roundf(scaleY * (p1.y - m_CameraPosition.y)),
+				(int)roundf(scaleX * (p1.x)),
+				(int)roundf(scaleY * (p1.y)),
 			}
 		};
 		
