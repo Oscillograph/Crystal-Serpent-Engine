@@ -91,7 +91,7 @@ public:
 			// screen representation
 			CSE::TransformComponent& transform = background->AddComponent<CSE::TransformComponent>();
 			transform.position = {80, 60};
-			transform.size = {80, 60};
+			transform.size = {160, 120};
 			transform.NormalizeToWindow(GetLayer()->GetWindow());
 			
 			// sprite control

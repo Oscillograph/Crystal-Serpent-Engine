@@ -124,6 +124,11 @@ namespace CSE
 			m_Scene->GetLayer()->GetWindow()->GetScale().y
 		};
 		
+		glm::vec2 windowSize = {
+			m_Scene->GetLayer()->GetWindow()->GetPrefs().width,
+			m_Scene->GetLayer()->GetWindow()->GetPrefs().height,
+		};
+		
 		// correct the source rectangle
 		if (srcRect != NULL)
 		{
@@ -142,10 +147,10 @@ namespace CSE
 		{
 			*place = 
 			{ 
-				(int)floorf(destRect->x * windowScale.x), 
-				(int)floorf(destRect->y * windowScale.y), 
-				(int)floorf(destRect->w * windowScale.x), 
-				(int)floorf(destRect->h * windowScale.y) 
+				(int)floorf(windowScale.x * (m_CurrentScreen.x + m_CurrentScreen.z * destRect->x)), 
+				(int)floorf(windowScale.y * (m_CurrentScreen.y + m_CurrentScreen.w * destRect->y)), 
+				(int)floorf(windowScale.x * (m_CurrentScreen.x + m_CurrentScreen.z * destRect->w)), 
+				(int)floorf(windowScale.y * (m_CurrentScreen.y + m_CurrentScreen.w * destRect->h)) 
 			};
 		} else {
 			// not making it NULL is important for the next step - tiling
@@ -159,7 +164,7 @@ namespace CSE
 		}
 		
 		// draw only if it's on screen
-		if ((((*place).x + (*place).w) > 0) && (((*place).y + (*place).h) > 0) &&
+		if ((((*place).x + (*place).w) > m_CurrentScreen.x) && (((*place).y + (*place).h) > m_CurrentScreen.y) &&
 			((*place).x < m_CurrentScreen.z) && ((*place).y < m_CurrentScreen.w))
 		{
 			// tiling texture across the place rectangle
@@ -279,15 +284,22 @@ namespace CSE
 	{
 		// float scaleX = m_CurrentScreen.z * m_Scene->GetLayer()->GetWindow()->GetScale().x;
 		// float scaleY = m_CurrentScreen.w * m_Scene->GetLayer()->GetWindow()->GetScale().y;
-		float scaleX = m_Scene->GetLayer()->GetWindow()->GetPrefs().width * m_Scene->GetLayer()->GetWindow()->GetScale().x;
-		float scaleY = m_Scene->GetLayer()->GetWindow()->GetPrefs().height * m_Scene->GetLayer()->GetWindow()->GetScale().y;
+		glm::vec2 windowScale = {
+			m_Scene->GetLayer()->GetWindow()->GetScale().x,
+			m_Scene->GetLayer()->GetWindow()->GetScale().y
+		};
+		
+		glm::vec2 windowSize = {
+			m_Scene->GetLayer()->GetWindow()->GetPrefs().width,
+			m_Scene->GetLayer()->GetWindow()->GetPrefs().height
+		};
 		
 		SDL_Rect rect = 
 		{
-			(int)roundf(scaleX * (center.x - size.x/2)), 
-			(int)roundf(scaleY * (center.y - size.y/2)), 
-			(int)roundf(scaleX * size.x), 
-			(int)roundf(scaleY * size.y)
+			(int)roundf(windowScale.x * (m_CurrentScreen.x + m_CurrentScreen.z * (center.x - size.x/2))), 
+			(int)roundf(windowScale.y * (m_CurrentScreen.y + m_CurrentScreen.w * (center.y - size.y/2))), 
+			(int)roundf(windowScale.x * m_CurrentScreen.z * size.x), 
+			(int)roundf(windowScale.y * m_CurrentScreen.w * size.y)
 		};
 		
 		SDL_SetRenderDrawColor(GetActiveRenderer(), color.r, color.g, color.b, color.a);
@@ -299,29 +311,36 @@ namespace CSE
 	{
 		// float scaleX = m_CurrentScreen.z * m_Scene->GetLayer()->GetWindow()->GetScale().x;
 		// float scaleY = m_CurrentScreen.w * m_Scene->GetLayer()->GetWindow()->GetScale().y;
-		float scaleX = m_Scene->GetLayer()->GetWindow()->GetPrefs().width * m_Scene->GetLayer()->GetWindow()->GetScale().x;
-		float scaleY = m_Scene->GetLayer()->GetWindow()->GetPrefs().height * m_Scene->GetLayer()->GetWindow()->GetScale().y;
+		glm::vec2 windowScale = {
+			m_Scene->GetLayer()->GetWindow()->GetScale().x,
+			m_Scene->GetLayer()->GetWindow()->GetScale().y
+		};
+		
+		glm::vec2 windowSize = {
+			m_Scene->GetLayer()->GetWindow()->GetPrefs().width,
+			m_Scene->GetLayer()->GetWindow()->GetPrefs().height
+		};
 		
 		SDL_Point points[5] = {
 			{
-				(int)roundf(scaleX * (p1.x)),
-				(int)roundf(scaleY * (p1.y)),
+				(int)roundf(windowScale.x * (m_CurrentScreen.x + m_CurrentScreen.z * p1.x)),
+				(int)roundf(windowScale.y * (m_CurrentScreen.y + m_CurrentScreen.w * p1.y)),
 			}, 
 			{
-				(int)roundf(scaleX * (p2.x)),
-				(int)roundf(scaleY * (p2.y)),
+				(int)roundf(windowScale.x * (m_CurrentScreen.x + m_CurrentScreen.z * p2.x)),
+				(int)roundf(windowScale.y * (m_CurrentScreen.y + m_CurrentScreen.w * p2.y)),
 			},  
 			{
-				(int)roundf(scaleX * (p3.x)),
-				(int)roundf(scaleY * (p3.y)),
+				(int)roundf(windowScale.x * (m_CurrentScreen.x + m_CurrentScreen.z * p3.x)),
+				(int)roundf(windowScale.y * (m_CurrentScreen.y + m_CurrentScreen.w * p3.y)),
 			}, 
 			{
-				(int)roundf(scaleX * (p4.x)),
-				(int)roundf(scaleY * (p4.y)),
+				(int)roundf(windowScale.x * (m_CurrentScreen.x + m_CurrentScreen.z * p4.x)),
+				(int)roundf(windowScale.y * (m_CurrentScreen.y + m_CurrentScreen.w * p4.y)),
 			},
 			{
-				(int)roundf(scaleX * (p1.x)),
-				(int)roundf(scaleY * (p1.y)),
+				(int)roundf(windowScale.x * (m_CurrentScreen.x + m_CurrentScreen.z * p1.x)),
+				(int)roundf(windowScale.y * (m_CurrentScreen.y + m_CurrentScreen.w * p1.y)),
 			}
 		};
 		

@@ -302,10 +302,10 @@ namespace CSE
 					
 					place = 
 					{
-						GetWindow()->GetPrefs().width * viewportPlaceNormalized.x + viewportPlace.z * (transform.positionNormalized.x - cameraPositionNormalized.x), 
-						GetWindow()->GetPrefs().height * viewportPlaceNormalized.y + viewportPlace.w * (transform.positionNormalized.y - cameraPositionNormalized.y),
-						viewportPlace.z * transform.sizeNormalized.x,
-						viewportPlace.w * transform.sizeNormalized.y,
+						(transform.positionNormalized.x - cameraPositionNormalized.x), 
+						(transform.positionNormalized.y - cameraPositionNormalized.y),
+						transform.sizeNormalized.x,
+						transform.sizeNormalized.y,
 					};
 					
 					// CSE_CORE_LOG("Entity ", e.GetComponent<CSE::NameComponent>().value);
@@ -330,7 +330,7 @@ namespace CSE
 									{
 										SDL_FPoint center = physicsComponent.hitBoxes[i].points[0];
 										Renderer::DrawRect(
-											{transform.positionNormalized.x - cameraPositionNormalized.x + center.x, transform.positionNormalized.y - cameraPositionNormalized.y + center.y}, 
+											{transform.positionNormalized.x - cameraPositionNormalized.x + center.x + transform.sizeNormalized.x/2, transform.positionNormalized.y - cameraPositionNormalized.y + center.y + transform.sizeNormalized.y/2}, 
 											{transform.sizeNormalized.x, transform.sizeNormalized.y},
 											{255, 128, 255, 255}
 											);
@@ -349,7 +349,7 @@ namespace CSE
 									break;
 								default:
 									Renderer::DrawRect(
-										{viewportPlaceNormalized.x - cameraPositionNormalized.x + transform.positionNormalized.x, viewportPlaceNormalized.y - cameraPositionNormalized.y + transform.positionNormalized.y}, 
+										{transform.positionNormalized.x - cameraPositionNormalized.x + transform.sizeNormalized.x/2, transform.positionNormalized.y - cameraPositionNormalized.y + transform.sizeNormalized.y/2}, 
 										{transform.sizeNormalized.x, transform.sizeNormalized.y}, 
 										{255, 255, 255, 255}
 										);
@@ -357,7 +357,7 @@ namespace CSE
 							}
 						} else {
 							Renderer::DrawRect(
-								{viewportPlaceNormalized.x - cameraPositionNormalized.x + transform.positionNormalized.x, viewportPlaceNormalized.y - cameraPositionNormalized.y + transform.positionNormalized.y}, 
+								{transform.positionNormalized.x - cameraPositionNormalized.x + transform.sizeNormalized.x/2, transform.positionNormalized.y - cameraPositionNormalized.y + transform.sizeNormalized.y/2}, 
 								{transform.sizeNormalized.x, transform.sizeNormalized.y}
 								);
 						}
@@ -368,7 +368,7 @@ namespace CSE
 			if (Application::IsRenderWireframes())
 			{
 				Renderer::DrawRect(
-					{viewportPlaceNormalized.x - cameraPositionNormalized.x + viewportPlaceNormalized.z/2, viewportPlaceNormalized.y - cameraPositionNormalized.y + viewportPlaceNormalized.w/2}, 
+					{viewportPlaceNormalized.x + viewportPlaceNormalized.z/2, viewportPlaceNormalized.y + viewportPlaceNormalized.w/2}, 
 					{viewportPlaceNormalized.z, viewportPlaceNormalized.w},
 					{255, 128, 128, 255}
 					);
