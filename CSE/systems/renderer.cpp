@@ -303,8 +303,8 @@ namespace CSE
 		
 		SDL_FRect rect = 
 		{
-			windowScale.x * (m_CurrentScreen.x + m_CurrentScreen.z * (center.x + size.x/2)), 
-			windowScale.y * (m_CurrentScreen.y + m_CurrentScreen.w * (center.y + size.y/2)), 
+			windowScale.x * (m_CurrentScreen.x + m_CurrentScreen.z * (center.x - size.x/2)), 
+			windowScale.y * (m_CurrentScreen.y + m_CurrentScreen.w * (center.y - size.y/2)), 
 			windowScale.x * m_CurrentScreen.z * size.x, 
 			windowScale.y * m_CurrentScreen.w * size.y
 		};

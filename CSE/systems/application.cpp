@@ -210,26 +210,29 @@ namespace CSE
 					
 					for (Window* window : m_WindowStack)
 					{
-						window->ShowFPSInTitle(fpsCount);
-						
-						if (window->GetRenderer() != Renderer::GetActiveRenderer())
+						if (window->IsFocused())
 						{
-							Renderer::SetActiveRenderer(window->GetRenderer());
-						}
-						Renderer::NewFrame();
-						
-						// display every layer
-						for (Ref<Layer> layer : window->GetLayers())
-						{
-							if (layer->IsEnabled())
+							window->ShowFPSInTitle(fpsCount);
+							
+							if (window->GetRenderer() != Renderer::GetActiveRenderer())
 							{
-								if (layer->HasScene())
+								Renderer::SetActiveRenderer(window->GetRenderer());
+							}
+							Renderer::NewFrame();
+							
+							// display every layer
+							for (Ref<Layer> layer : window->GetLayers())
+							{
+								if (layer->IsEnabled())
 								{
-									layer->Display();
+									if (layer->HasScene())
+									{
+										layer->Display();
+									}
 								}
 							}
+							Renderer::ShowFrame();
 						}
-						Renderer::ShowFrame();
 					}
 				}
 				// TODO: 10. File I/O system
