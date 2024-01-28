@@ -28,9 +28,9 @@ namespace CSE
 		inline static Scene* GetActiveScene() { return m_Scene; }
 		static void SetActiveCamera(Camera2D* camera);
 		inline static Camera2D* GetActiveCamera() { return m_ActiveCamera; };
-		static void SetActiveScreen(const glm::u8vec4& screen);
+		static void SetActiveScreen(const glm::uvec4& screen);
 		static void SetActiveScreenDefault();
-		inline static glm::u8vec4 GetActiveScreen() { return m_CurrentScreen; }
+		inline static glm::uvec4 GetActiveScreen() { return m_CurrentScreen; }
 		
 		static void SetBackgroundColor(const glm::u8vec4& color);
 		static void ClearScreen();
@@ -55,7 +55,7 @@ namespace CSE
 		static Scene* m_Scene;
 		static Camera2D* m_ActiveCamera;
 
-		static glm::u8vec4 m_CurrentScreen;
+		static glm::uvec4 m_CurrentScreen;
 		static glm::vec2 m_PixelSize;
 		static glm::uvec4 m_BackgroundColor;
 		

@@ -8,7 +8,7 @@ namespace CSE
 	Scene* Renderer::m_Scene = nullptr;
 	Camera2D* Renderer::m_ActiveCamera = nullptr;
 	
-	glm::u8vec4 Renderer::m_CurrentScreen = glm::u8vec4(1.0f);
+	glm::uvec4 Renderer::m_CurrentScreen = glm::u8vec4(1.0f);
 	glm::vec2 Renderer::m_PixelSize = glm::vec2(1.0f);
 	glm::uvec4 Renderer::m_BackgroundColor = glm::uvec4(1.0f);
 	glm::vec2 Renderer::m_FrameSize = glm::vec2(1.0f);
@@ -38,18 +38,23 @@ namespace CSE
 		// m_CameraPosition.y = m_CameraPosition.y / m_Scene->GetLayer()->GetWindow()->GetPrefs().height;
 	}
 	
-	void Renderer::SetActiveScreen(const glm::u8vec4& screen)
+	void Renderer::SetActiveScreen(const glm::uvec4& screen)
 	{ 
 		m_CurrentScreen = screen; 
 	}
 	
 	void Renderer::SetActiveScreenDefault()
 	{ 
+		glm::vec2 windowScale = {
+			m_Scene->GetLayer()->GetWindow()->GetScale().x,
+			m_Scene->GetLayer()->GetWindow()->GetScale().y
+		};
+		
 		m_CurrentScreen = {
 			0,
 			0,
-			m_Scene->GetLayer()->GetWindow()->GetPrefs().width,
-			m_Scene->GetLayer()->GetWindow()->GetPrefs().height,
+			windowScale.x * m_Scene->GetLayer()->GetWindow()->GetPrefs().width,
+			windowScale.y * m_Scene->GetLayer()->GetWindow()->GetPrefs().height,
 		}; 
 	}
 	
@@ -149,8 +154,8 @@ namespace CSE
 			{ 
 				(int)floorf(windowScale.x * (m_CurrentScreen.x + m_CurrentScreen.z * destRect->x)), 
 				(int)floorf(windowScale.y * (m_CurrentScreen.y + m_CurrentScreen.w * destRect->y)), 
-				(int)floorf(windowScale.x * (m_CurrentScreen.x + m_CurrentScreen.z * destRect->w)), 
-				(int)floorf(windowScale.y * (m_CurrentScreen.y + m_CurrentScreen.w * destRect->h)) 
+				(int)floorf(windowScale.x * m_CurrentScreen.z * destRect->w), 
+				(int)floorf(windowScale.y * m_CurrentScreen.w * destRect->h) 
 			};
 		} else {
 			// not making it NULL is important for the next step - tiling
@@ -163,19 +168,21 @@ namespace CSE
 			};
 		}
 		
-		// draw only if it's on screen
-		if ((((*place).x + (*place).w) > m_CurrentScreen.x) && (((*place).y + (*place).h) > m_CurrentScreen.y) &&
-			((*place).x < m_CurrentScreen.z) && ((*place).y < m_CurrentScreen.w))
+		// TODO: draw only if it's on screen
+		// if ((((*place).x + (*place).w) > m_CurrentScreen.x) && (((*place).y + (*place).h) > m_CurrentScreen.y) &&
+		//	((*place).x < m_CurrentScreen.z) && ((*place).y < m_CurrentScreen.w))
+		if (true)
 		{
 			// tiling texture across the place rectangle
 			// TODO: Adjust tiling to pixel size
-			if ((tilingFactor.x != 0.0f) || (tilingFactor.y != 0.0f))
+			// if ((tilingFactor.x != 0.0f) || (tilingFactor.y != 0.0f))
+			if (false)
 			{
 				// now, get subPlaces and RenderCopy there
 				int xNum, yNum; // how many whole tiles there are?
 				int xMod, yMod; // how big is the partial tile left?
-				float tileWidth = (*source).w / (float)texture->GetWidth();
-				float tileHeight = (*source).h / (float)texture->GetHeight();
+				float tileWidth = (*source).w / m_CurrentScreen.z; // (float)texture->GetWidth();
+				float tileHeight = (*source).h / m_CurrentScreen.w; // (float)texture->GetHeight();
 				
 				// CSE_CORE_LOG("Region width: ", (*destRect).w, "; height: ", (*destRect).h);
 				// CSE_CORE_LOG("Tile width: ", tileWidth, "; height: ", tileHeight);
@@ -294,16 +301,16 @@ namespace CSE
 			m_Scene->GetLayer()->GetWindow()->GetPrefs().height
 		};
 		
-		SDL_Rect rect = 
+		SDL_FRect rect = 
 		{
-			(int)roundf(windowScale.x * (m_CurrentScreen.x + m_CurrentScreen.z * (center.x - size.x/2))), 
-			(int)roundf(windowScale.y * (m_CurrentScreen.y + m_CurrentScreen.w * (center.y - size.y/2))), 
-			(int)roundf(windowScale.x * m_CurrentScreen.z * size.x), 
-			(int)roundf(windowScale.y * m_CurrentScreen.w * size.y)
+			windowScale.x * (m_CurrentScreen.x + m_CurrentScreen.z * (center.x + size.x/2)), 
+			windowScale.y * (m_CurrentScreen.y + m_CurrentScreen.w * (center.y + size.y/2)), 
+			windowScale.x * m_CurrentScreen.z * size.x, 
+			windowScale.y * m_CurrentScreen.w * size.y
 		};
 		
 		SDL_SetRenderDrawColor(GetActiveRenderer(), color.r, color.g, color.b, color.a);
-		SDL_RenderDrawRect(GetActiveRenderer(), &rect);
+		SDL_RenderDrawRectF(GetActiveRenderer(), &rect);
 		SetBackgroundColor(m_BackgroundColor);
 	}
 	

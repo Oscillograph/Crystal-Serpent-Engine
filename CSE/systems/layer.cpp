@@ -142,7 +142,9 @@ namespace CSE
 		} else {
 			if (m_Viewport == nullptr)
 			{
-				m_Viewport = new Viewport(m_Scene->GetActiveCamera(), {80, 60, GetWindow()->GetPrefs().width / 2, GetWindow()->GetPrefs().height / 2});
+				m_Viewport = new Viewport(m_Scene->GetActiveCamera(), {GetWindow()->GetPrefs().width / 4, GetWindow()->GetPrefs().height / 4, GetWindow()->GetPrefs().width / 2, GetWindow()->GetPrefs().height / 2});
+				// m_Viewport = new Viewport(m_Scene->GetActiveCamera(), {0, 0, GetWindow()->GetPrefs().width, GetWindow()->GetPrefs().height});
+				// m_Viewport = new Viewport(m_Scene->GetActiveCamera(), {80, 60, 160, 120});
 				m_Viewport->SetScene(m_Scene);
 			} else {
 				m_Viewport->SetScene(m_Scene);
@@ -332,7 +334,7 @@ namespace CSE
 										Renderer::DrawRect(
 											{transform.positionNormalized.x - cameraPositionNormalized.x + center.x + transform.sizeNormalized.x/2, transform.positionNormalized.y - cameraPositionNormalized.y + center.y + transform.sizeNormalized.y/2}, 
 											{transform.sizeNormalized.x, transform.sizeNormalized.y},
-											{255, 128, 255, 255}
+											{128, 255, 255, 255}
 											);
 									}
 									break;
@@ -348,6 +350,7 @@ namespace CSE
 									}
 									break;
 								default:
+									// unknown hitbox
 									Renderer::DrawRect(
 										{transform.positionNormalized.x - cameraPositionNormalized.x + transform.sizeNormalized.x/2, transform.positionNormalized.y - cameraPositionNormalized.y + transform.sizeNormalized.y/2}, 
 										{transform.sizeNormalized.x, transform.sizeNormalized.y}, 
@@ -356,25 +359,29 @@ namespace CSE
 								}
 							}
 						} else {
+							// not a hitbox
 							Renderer::DrawRect(
 								{transform.positionNormalized.x - cameraPositionNormalized.x + transform.sizeNormalized.x/2, transform.positionNormalized.y - cameraPositionNormalized.y + transform.sizeNormalized.y/2}, 
-								{transform.sizeNormalized.x, transform.sizeNormalized.y}
+								{transform.sizeNormalized.x, transform.sizeNormalized.y},
+								{128, 128, 128, 255}
 								);
 						}
 					}
 				}
 			}
 			
+			// Renderer::SetActiveScreen({0, 0, 320, 240});
+			Renderer::SetActiveScreenDefault();
+			
 			if (Application::IsRenderWireframes())
 			{
+				// viewport
 				Renderer::DrawRect(
 					{viewportPlaceNormalized.x + viewportPlaceNormalized.z/2, viewportPlaceNormalized.y + viewportPlaceNormalized.w/2}, 
 					{viewportPlaceNormalized.z, viewportPlaceNormalized.w},
 					{255, 128, 128, 255}
 					);
 			}
-			
-			Renderer::SetActiveScreenDefault();
 		}
 	}
 }
