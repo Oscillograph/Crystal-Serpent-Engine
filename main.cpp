@@ -30,7 +30,10 @@ public:
 			CSE::TransformComponent& transform = logo->AddComponent<CSE::TransformComponent>();
 			transform.position = {0, 0};
 			transform.size = {320, 240};
-			transform.NormalizeToWindow(GetLayer()->GetWindow());
+			transform.Normalize({
+				GetLayer()->GetWindow()->GetPrefs().width,
+				GetLayer()->GetWindow()->GetPrefs().height,
+			});
 			
 			// sprite control
 			sprite = new CSE::Texture("./CSE/assets/CSE_logo.png", GetLayer()->GetWindow()->GetRenderer());
@@ -92,7 +95,10 @@ public:
 			CSE::TransformComponent& transform = background->AddComponent<CSE::TransformComponent>();
 			transform.position = {80, 60};
 			transform.size = {160, 120};
-			transform.NormalizeToWindow(GetLayer()->GetWindow());
+			transform.Normalize({
+				GetLayer()->GetWindow()->GetPrefs().width,
+				GetLayer()->GetWindow()->GetPrefs().height,
+			});
 			
 			// sprite control
 			spriteBG = new CSE::Texture("./CSE/assets/CSE_logo.png", GetLayer()->GetWindow()->GetRenderer(), {0, 0, 0});
@@ -109,7 +115,10 @@ public:
 			CSE::TransformComponent& transform = backgroundSDL->AddComponent<CSE::TransformComponent>();
 			transform.position = {240, 60};
 			transform.size = {160, 120};
-			transform.NormalizeToWindow(GetLayer()->GetWindow());
+			transform.Normalize({
+				GetLayer()->GetWindow()->GetPrefs().width,
+				GetLayer()->GetWindow()->GetPrefs().height,
+			});
 			
 			// sprite control
 			spriteSDL = new CSE::Texture("./CSE/assets/SDL_logo.png", GetLayer()->GetWindow()->GetRenderer(), {0, 0, 0});
@@ -131,7 +140,10 @@ public:
 			CSE::TransformComponent& transform = player1->AddComponent<CSE::TransformComponent>();
 			transform.position = {240, 216};
 			transform.size = {32, 36};
-			transform.NormalizeToWindow(GetLayer()->GetWindow());
+			transform.Normalize({
+				GetLayer()->GetWindow()->GetPrefs().width,
+				GetLayer()->GetWindow()->GetPrefs().height,
+			});
 			
 			// state machine setup
 			CSE::StateMachineComponent& stateMachine = player1->AddComponent<CSE::StateMachineComponent>();
@@ -239,7 +251,10 @@ public:
 			CSE::TransformComponent& transform = player2->AddComponent<CSE::TransformComponent>();
 			transform.position = {80, 216};
 			transform.size = {32, 36};
-			transform.NormalizeToWindow(GetLayer()->GetWindow());
+			transform.Normalize({
+				GetLayer()->GetWindow()->GetPrefs().width,
+				GetLayer()->GetWindow()->GetPrefs().height,
+			});
 			
 			// state machine setup
 			CSE::StateMachineComponent& stateMachine = player2->AddComponent<CSE::StateMachineComponent>();
@@ -310,7 +325,10 @@ public:
 			CSE::TransformComponent& transform = floor->AddComponent<CSE::TransformComponent>();
 			transform.position = {160, 216};
 			transform.size = {3.2, 120};
-			transform.NormalizeToWindow(GetLayer()->GetWindow());
+			transform.Normalize({
+				GetLayer()->GetWindow()->GetPrefs().width,
+				GetLayer()->GetWindow()->GetPrefs().height,
+			});
 			
 			// state machine setup
 			CSE::StateMachineComponent& stateMachine = floor->AddComponent<CSE::StateMachineComponent>();

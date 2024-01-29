@@ -41,21 +41,23 @@ namespace CSE
 	}
 	*/
 	
-	void TransformComponent::NormalizeToWindow(Window* window)
+	void TransformComponent::Normalize(glm::vec2 limit)
 	{
-		positionNormalized.x = position.x / (float)(window->GetPrefs().width);
-		positionNormalized.y = position.y / (float)(window->GetPrefs().height);
+		normalizationTo = limit;
 		
-		sizeNormalized.x = size.x / (float)(window->GetPrefs().width);
-		sizeNormalized.y = size.y / (float)(window->GetPrefs().height);
+		positionNormalized.x = position.x / (float)limit.x;
+		positionNormalized.y = position.y / (float)limit.y;
+		
+		sizeNormalized.x = size.x / (float)limit.x;
+		sizeNormalized.y = size.y / (float)limit.y;
 	}
 	
-	glm::vec2 TransformComponent::GetPositionNormalizedToWindow(Window* window)
+	glm::vec2 TransformComponent::GetPositionNormalized(Window* window)
 	{
 		return positionNormalized;
 	}
 	
-	glm::vec2 TransformComponent::GetSizeNormalizedToWindow(Window* window)
+	glm::vec2 TransformComponent::GetSizeNormalized(Window* window)
 	{
 		return sizeNormalized;
 	}

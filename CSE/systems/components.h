@@ -49,6 +49,7 @@ namespace CSE
 		
 		glm::vec2 positionNormalized = {0.0f, 0.0f};
 		glm::vec2 sizeNormalized = {1.0f, 1.0f};
+		glm::vec2 normalizationTo = {1.0f, 1.0f};
 		
 		float rotation = 0.0f; // counter-clockwise, radians
 		
@@ -57,9 +58,9 @@ namespace CSE
 		
 		// void Update(PhysicsComponent& physics, Camera2D* camera);
 		
-		void NormalizeToWindow(Window* window);
-		glm::vec2 GetPositionNormalizedToWindow(Window* window);
-		glm::vec2 GetSizeNormalizedToWindow(Window* window);
+		void Normalize(glm::vec2 limit);
+		glm::vec2 GetPositionNormalized(Window* window);
+		glm::vec2 GetSizeNormalized(Window* window);
 	};
 	
 	struct UUIDComponent 

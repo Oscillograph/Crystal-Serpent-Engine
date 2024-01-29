@@ -142,9 +142,9 @@ namespace CSE
 		} else {
 			if (m_Viewport == nullptr)
 			{
-				m_Viewport = new Viewport(m_Scene->GetActiveCamera(), {GetWindow()->GetPrefs().width / 4, GetWindow()->GetPrefs().height / 4, GetWindow()->GetPrefs().width / 2, GetWindow()->GetPrefs().height / 2});
+				// m_Viewport = new Viewport(m_Scene->GetActiveCamera(), {GetWindow()->GetPrefs().width / 4, GetWindow()->GetPrefs().height / 4, GetWindow()->GetPrefs().width / 2, GetWindow()->GetPrefs().height / 2});
 				// m_Viewport = new Viewport(m_Scene->GetActiveCamera(), {0, 0, GetWindow()->GetPrefs().width, GetWindow()->GetPrefs().height});
-				// m_Viewport = new Viewport(m_Scene->GetActiveCamera(), {80, 60, 160, 120});
+				m_Viewport = new Viewport(m_Scene->GetActiveCamera(), {80, 60, 160, 120});
 				m_Viewport->SetScene(m_Scene);
 			} else {
 				m_Viewport->SetScene(m_Scene);
@@ -254,6 +254,12 @@ namespace CSE
 				(float)(m_Viewport->GetPlace().w) / GetWindow()->GetPrefs().height 
 			};
 			
+			// renormalize to window size, so that transforms look right
+			cameraPositionNormalized = {
+				cameraPositionNormalized.x * viewportPlace.z / GetWindow()->GetPrefs().width,
+				cameraPositionNormalized.y * viewportPlace.w / GetWindow()->GetPrefs().height,
+			};
+			
 			Renderer::SetActiveScreen(viewportPlace);
 			
 			for (auto entity : GetScene()->GetRegistry().view<SpriteComponent>())
@@ -275,6 +281,27 @@ namespace CSE
 				{
 					TransformComponent& transform = e.GetComponent<TransformComponent>();
 					SpriteComponent& spriteComponent = e.GetComponent<SpriteComponent>();
+					
+					/*
+					if ((transform.normalizationTo.x == GetWindow()->GetPrefs().width) &&
+						(transform.normalizationTo.y == GetWindow()->GetPrefs().height))
+					{
+						transform.Normalize({
+							viewportPlace.z, 
+							viewportPlace.w
+						});
+						
+						transform.position = {
+							viewportPlace.z * (transform.positionNormalized.x - cameraPositionNormalized.x),
+							viewportPlace.w * (transform.positionNormalized.y - cameraPositionNormalized.y),
+						};
+						
+						transform.Normalize({
+							GetWindow()->GetPrefs().width, 
+							GetWindow()->GetPrefs().height
+						});
+					}
+					*/
 					
 					SDL_FRect place; // where to draw
 					SDL_Rect frame; // what to draw from a spritesheet
