@@ -12,6 +12,7 @@
 // architecture abstractions
 #include <CSE/systems/layer.h>
 #include <CSE/systems/scene.h>
+#include <CSE/systems/viewport.h>
 
 #include <CSE/systems/entity.h>
 #include <CSE/systems/components.h>

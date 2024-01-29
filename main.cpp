@@ -5,7 +5,7 @@ class SceneLogo : public CSE::Scene
 {
 public:
 	SceneLogo()
-		: CSE::Scene()
+		: CSE::Scene(CSE::PhysicsSystem::CSE)
 	{
 	};
 	
@@ -605,6 +605,10 @@ public:
 	{
 		// TODO: Automated Scene collection to make loading/unloading routine easier 
 		sceneLogo = new SceneLogo();
+		
+		// viewport = new CSE::Viewport(nullptr, {80, 60, 160, 120});
+		// SetViewport(viewport);
+		
 		LoadScene(sceneLogo);
 		CSE_LOG("Scene \"sceneLogo\" has been created and loaded.");
 

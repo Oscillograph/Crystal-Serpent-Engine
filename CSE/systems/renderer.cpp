@@ -150,6 +150,7 @@ namespace CSE
 		// correct the destination rectangle
 		if (destRect != NULL)
 		{
+			// CSE_CORE_LOG("Viewport (x; y): ", m_CurrentScreen.x, "; ", m_CurrentScreen.y);
 			*place = 
 			{ 
 				(int)floorf(windowScale.x * (m_CurrentScreen.x + m_CurrentScreen.z * destRect->x)), 
@@ -163,8 +164,8 @@ namespace CSE
 			{ 
 				0, 
 				0, 
-				m_CurrentScreen.z, 
-				m_CurrentScreen.w 
+				(int)floorf(windowScale.x * m_CurrentScreen.z), 
+				(int)floorf(windowScale.x * m_CurrentScreen.w) 
 			};
 		}
 		

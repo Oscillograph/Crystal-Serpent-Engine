@@ -130,7 +130,7 @@ namespace CSE
 		
 		// CSE_CORE_LOG("Layer ", m_Name, " attached.");
 		CSE_CORE_LOG("- layer-level viewport setup");
-		if (m_Scene->GetPhysicsSystem() != PhysicsSystem::None)
+		if (m_Scene->GetPhysicsSystem() == PhysicsSystem::None)
 		{
 			if (m_Viewport == nullptr)
 			{
@@ -255,10 +255,16 @@ namespace CSE
 			};
 			
 			// renormalize to window size, so that transforms look right
-			cameraPositionNormalized = {
-				cameraPositionNormalized.x * viewportPlace.z / GetWindow()->GetPrefs().width,
-				cameraPositionNormalized.y * viewportPlace.w / GetWindow()->GetPrefs().height,
-			};
+			if (GetScene()->GetPhysicsSystem() == PhysicsSystem::None)
+			{
+				cameraPositionNormalized = {0.0f, 0.0f};
+			} else {
+				cameraPositionNormalized = {
+					cameraPositionNormalized.x * viewportPlace.z / GetWindow()->GetPrefs().width,
+					cameraPositionNormalized.y * viewportPlace.w / GetWindow()->GetPrefs().height,
+				};
+			}
+			
 			
 			Renderer::SetActiveScreen(viewportPlace);
 			
@@ -359,7 +365,10 @@ namespace CSE
 									{
 										SDL_FPoint center = physicsComponent.hitBoxes[i].points[0];
 										Renderer::DrawRect(
-											{transform.positionNormalized.x - cameraPositionNormalized.x + center.x + transform.sizeNormalized.x/2, transform.positionNormalized.y - cameraPositionNormalized.y + center.y + transform.sizeNormalized.y/2}, 
+											{
+												transform.positionNormalized.x - cameraPositionNormalized.x + center.x + transform.sizeNormalized.x/2, 
+												transform.positionNormalized.y - cameraPositionNormalized.y + center.y + transform.sizeNormalized.y/2
+											}, 
 											{transform.sizeNormalized.x, transform.sizeNormalized.y},
 											{128, 255, 255, 255}
 											);
@@ -379,7 +388,10 @@ namespace CSE
 								default:
 									// unknown hitbox
 									Renderer::DrawRect(
-										{transform.positionNormalized.x - cameraPositionNormalized.x + transform.sizeNormalized.x/2, transform.positionNormalized.y - cameraPositionNormalized.y + transform.sizeNormalized.y/2}, 
+										{
+											transform.positionNormalized.x - cameraPositionNormalized.x + transform.sizeNormalized.x/2, 
+											transform.positionNormalized.y - cameraPositionNormalized.y + transform.sizeNormalized.y/2
+										}, 
 										{transform.sizeNormalized.x, transform.sizeNormalized.y}, 
 										{255, 255, 255, 255}
 										);
@@ -388,7 +400,10 @@ namespace CSE
 						} else {
 							// not a hitbox
 							Renderer::DrawRect(
-								{transform.positionNormalized.x - cameraPositionNormalized.x + transform.sizeNormalized.x/2, transform.positionNormalized.y - cameraPositionNormalized.y + transform.sizeNormalized.y/2}, 
+								{
+									transform.positionNormalized.x - cameraPositionNormalized.x + transform.sizeNormalized.x/2, 
+									transform.positionNormalized.y - cameraPositionNormalized.y + transform.sizeNormalized.y/2
+								}, 
 								{transform.sizeNormalized.x, transform.sizeNormalized.y},
 								{128, 128, 128, 255}
 								);

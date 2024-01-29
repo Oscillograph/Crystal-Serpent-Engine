@@ -89,9 +89,10 @@ namespace CSE
 	
 	glm::vec2 Camera2D::GetPositionNormalized()
 	{
-		glm::vec2 positionNormalized = m_Position;
-		positionNormalized.x = positionNormalized.x / m_TargetArea.z;
-		positionNormalized.y = positionNormalized.y / m_TargetArea.w;
+		glm::vec2 positionNormalized = {
+			m_Position.x / m_TargetArea.z,
+			m_Position.y / m_TargetArea.w
+		};
 		
 		return positionNormalized;
 	}
@@ -107,8 +108,8 @@ namespace CSE
 		m_TargetAreaBorder.w += 10;
 		
 		m_Position = {
-			(float)(2*newTargetArea.x + newTargetArea.z)/2,
-			(float)(2*newTargetArea.y + newTargetArea.w)/2
+			(float)(newTargetArea.x + newTargetArea.z / 2),
+			(float)(newTargetArea.y + newTargetArea.w / 2)
 		};
 	};
 	

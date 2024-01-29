@@ -63,7 +63,7 @@ namespace CSE
 		// no need - void Animate(TimeType sceneTime); // updates AnimationComponent
 		// no need - void Draw(); // draw anything with SpriteComponent
 		void UpdatePhysics(TimeType sceneTime); // calls physics processor general routine
-		inline PhysicsSystem GetPhysicsSystem() { return m_PhysicsProcessor->GetSystem(); }
+		inline PhysicsSystem GetPhysicsSystem() { return m_PhysicsSystem; }
 		
 		Entity* CreateEntity(const std::string& name = "");
 		Entity* CreateEntityWithUUID(const std::string& name = "", uint64_t uuid = 0);
