@@ -89,10 +89,15 @@ namespace CSE
 	
 	glm::vec2 Camera2D::GetPositionNormalized()
 	{
-		glm::vec2 positionNormalized = {
-			m_Position.x / m_TargetAreaBorder.z,
-			m_Position.y / m_TargetAreaBorder.w
-		};
+		glm::vec2 positionNormalized = {0.0f, 0.0f};
+		
+		if ((m_TargetArea.z > 0.0f) && (m_TargetArea.w > 0.0f))
+		{
+			positionNormalized = {
+				m_Position.x / m_TargetArea.z,
+				m_Position.y / m_TargetArea.w
+			};
+		}
 		
 		return positionNormalized;
 	}
@@ -120,12 +125,15 @@ namespace CSE
 	
 	glm::vec4 Camera2D::GetTargetAreaNormalized()
 	{
-		glm::vec4 targetAreaNormalized = m_TargetArea;
+		glm::vec4 targetAreaNormalized = {0.0f, 0.0f, 0.0f, 0.0f};
+		
 		if ((m_WorldConstraints.x > 0.0f) && (m_WorldConstraints.y > 0.0f))
-		targetAreaNormalized.x = targetAreaNormalized.x / m_WorldConstraints.x;
-		targetAreaNormalized.y = targetAreaNormalized.y / m_WorldConstraints.y;
-		targetAreaNormalized.z = targetAreaNormalized.z / m_WorldConstraints.x;
-		targetAreaNormalized.w = targetAreaNormalized.w / m_WorldConstraints.y;
+		{
+			targetAreaNormalized.x = m_TargetArea.x / m_WorldConstraints.x;
+			targetAreaNormalized.y = m_TargetArea.y / m_WorldConstraints.y;
+			targetAreaNormalized.z = m_TargetArea.z / m_WorldConstraints.x;
+			targetAreaNormalized.w = m_TargetArea.w / m_WorldConstraints.y;
+		}
 		
 		return targetAreaNormalized;
 	}
