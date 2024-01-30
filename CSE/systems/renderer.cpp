@@ -170,9 +170,10 @@ namespace CSE
 		}
 		
 		// TODO: draw only if it's on screen
-		// if ((((*place).x + (*place).w) > m_CurrentScreen.x) && (((*place).y + (*place).h) > m_CurrentScreen.y) &&
-		//	((*place).x < m_CurrentScreen.z) && ((*place).y < m_CurrentScreen.w))
-		if (true)
+		if ((((*place).x + (*place).w) > (windowScale.x * m_CurrentScreen.x)) && 
+			(((*place).y + (*place).h) > (windowScale.y * m_CurrentScreen.y)) &&
+			((*place).x < (windowScale.x * (m_CurrentScreen.x + m_CurrentScreen.z))) && 
+			((*place).y < (windowScale.x * (m_CurrentScreen.y + m_CurrentScreen.w))))
 		{
 			// tiling texture across the place rectangle
 			// TODO: Adjust tiling to pixel size
