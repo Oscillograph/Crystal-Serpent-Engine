@@ -2,8 +2,15 @@
 
 #include <CSE/systems/physics/box2dphysics.h>
 
+#include <CSE/systems/window.h>
+#include <CSE/systems/layer.h>
+#include <CSE/systems/scene.h>
+#include <CSE/systems/viewport.h>
+#include <CSE/systems/renderer/camera2d.h>
+
 #include <CSE/vendor/box2d/b2_world.h>
 #include <CSE/vendor/entt/entt.hpp>
+
 
 namespace CSE
 {
@@ -20,6 +27,7 @@ namespace CSE
 	
 	void Box2DPhysics::CreateWorld(const WorldProperties& props)
 	{
+		m_WorldProperties = props;
 		b2Vec2 box2DGravity = { props.gravity.x, props.gravity.y };
 		m_Box2DWorld = new b2World(box2DGravity);
 		// CSE_CORE_LOG("Is the world even created?");
@@ -224,6 +232,18 @@ namespace CSE
 			
 			b2Vec2 bodyVelocity = currentBody->GetLinearVelocity();
 			physics.velocity = { bodyVelocity.x, bodyVelocity.y };
+			
+			glm::vec4 viewportPlace = scene->GetLayer()->GetViewport()->GetPlace();
+			glm::vec4 cameraArea = scene->GetActiveCamera()->GetTargetArea();
+			transform.position = {
+				viewportPlace.z * ((physics.position.x / m_WorldProperties.size.x) + 0.5),
+				viewportPlace.w * ((physics.position.y / m_WorldProperties.size.y) + 0.5),
+			};
+			transform.Normalize({
+				scene->GetLayer()->GetWindow()->GetPrefs().width,
+				scene->GetLayer()->GetWindow()->GetPrefs().height
+			});
+			
 		}
 
 		// CSE_CORE_LOG("Box2D: All bodies processed");

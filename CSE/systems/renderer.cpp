@@ -120,7 +120,7 @@ namespace CSE
 	
 	void Renderer::GeneralDrawTexture(Texture* texture, SDL_FRect* destRect, SDL_Rect* srcRect, glm::vec2 tilingFactor, const glm::vec4& tintColor)
 	{
-		SDL_Rect* place = new SDL_Rect;
+		SDL_FRect* place = new SDL_FRect;
 		SDL_Rect* source = new SDL_Rect;
 		
 		// TODO: find out why Application::Get()->GetWindows() is not allowed to be accessed from here
@@ -164,101 +164,107 @@ namespace CSE
 			{ 
 				0, 
 				0, 
-				(int)floorf(windowScale.x * m_CurrentScreen.z), 
-				(int)floorf(windowScale.x * m_CurrentScreen.w) 
+				windowScale.x * m_CurrentScreen.z, 
+				windowScale.x * m_CurrentScreen.w 
 			};
 		}
 		
 		// TODO: draw only if it's on screen
-		if ((((*place).x + (*place).w) > (windowScale.x * m_CurrentScreen.x)) && 
+		if ((((*place).x + (*place).w) > (windowScale.x * m_CurrentScreen.x)) &&
 			(((*place).y + (*place).h) > (windowScale.y * m_CurrentScreen.y)) &&
-			((*place).x < (windowScale.x * (m_CurrentScreen.x + m_CurrentScreen.z))) && 
-			((*place).y < (windowScale.x * (m_CurrentScreen.y + m_CurrentScreen.w))))
+			((*place).x < (windowScale.x * (m_CurrentScreen.x + m_CurrentScreen.z))) &&
+			((*place).y < (windowScale.y * (m_CurrentScreen.y + m_CurrentScreen.w))))
 		{
 			// tiling texture across the place rectangle
 			// TODO: Adjust tiling to pixel size
-			// if ((tilingFactor.x != 0.0f) || (tilingFactor.y != 0.0f))
-			if (false)
+			if ((tilingFactor.x > 0.0f) || (tilingFactor.y > 0.0f))
 			{
 				// now, get subPlaces and RenderCopy there
 				int xNum, yNum; // how many whole tiles there are?
 				int xMod, yMod; // how big is the partial tile left?
-				float tileWidth = (*source).w / m_CurrentScreen.z; // (float)texture->GetWidth();
-				float tileHeight = (*source).h / m_CurrentScreen.w; // (float)texture->GetHeight();
+				glm::uvec2 wholeTileSize = {(*source).w, (*source).h};
+				glm::uvec2 currentTileSize = wholeTileSize;
 				
-				// CSE_CORE_LOG("Region width: ", (*destRect).w, "; height: ", (*destRect).h);
-				// CSE_CORE_LOG("Tile width: ", tileWidth, "; height: ", tileHeight);
-				// CSE_CORE_LOG("Tiling factor: (", tilingFactor.x, "; ", tilingFactor.y, ")");
-				if (tilingFactor.x > 0.0f)
+				if (tilingFactor.x > 0.0f) // first of all, we need to know how many times to multiply the image
 				{
-					xNum = (int)floorf((*destRect).w / (float)(tileWidth * tilingFactor.x)); 
-					xMod = (int)floorf((*destRect).w - (xNum * tileWidth * tilingFactor.x));
+					// how many whole tiles there are?
+					xNum = (int)floorf((windowSize.x * (*destRect).w) / (float)(wholeTileSize.x * tilingFactor.x));
+					// and we need to know how big the remainder is
+					xMod = (int)floorf(m_CurrentScreen.z * ((*destRect).w - (xNum * wholeTileSize.x * tilingFactor.x) / (float)windowSize.x)); 
 					if (xMod > 0)
 						xNum++;
-					// CSE_CORE_LOG("xNum: ", xNum, "; xMod: ", xMod, "");
 				} else { // not only prevent division by zero, but also allow no-tiling at all
 					xNum = 1;
 					xMod = 0;
-					tilingFactor.x = (*destRect).w / tileWidth; // prevent multiplying by zero
+					tilingFactor.x = (windowSize.x / m_CurrentScreen.z) * (*destRect).w / wholeTileSize.x; // prevent multiplying by zero
 				}
 				
-				if (tilingFactor.y > 0.0f)
+				if (tilingFactor.y > 0.0f) // first of all, we need to know how many times to multiply the image
 				{
-					yNum = (int)floorf((*destRect).h / (float)(tileHeight * tilingFactor.y)); // how many whole tiles there are?
-					yMod = (int)floorf((*destRect).h - (yNum * tileHeight * tilingFactor.y)); // how big is the partial tile left?
+					// how many whole tiles there are?
+					yNum = (int)floorf(m_CurrentScreen.w * (*destRect).h / (float)(wholeTileSize.y * tilingFactor.y * m_CurrentScreen.w / windowSize.y)); 
+					// and we need to know how big the remainder is
+					yMod = (int)floorf(m_CurrentScreen.w * (*destRect).h - (yNum * wholeTileSize.y * tilingFactor.y) * m_CurrentScreen.w / windowSize.y); 
 					if (yMod > 0)
 						yNum++;
-					// CSE_CORE_LOG("yNum: ", yNum, "; yMod: ", yMod, "");
 				} else { // not only prevent division by zero, but also allow no-tiling at all
 					yNum = 1;
 					yMod = 0;
-					tilingFactor.y = (*destRect).h / tileHeight; // prevent multiplying by zero
+					tilingFactor.y = (windowSize.y / m_CurrentScreen.w) * (*destRect).h / wholeTileSize.y; // prevent multiplying by zero
 				}
 				
-				SDL_Rect* newPlace = new SDL_Rect;
+				// CSE_LOG("xNum: ", xNum, "; yNum: ", yNum, "; xMod: ", xMod, "; yMod: ", yMod);
+				
+				SDL_FRect* newPlace = new SDL_FRect;
 				SDL_Rect* newSource = new SDL_Rect;
 				*newSource = *source;
+				
+				glm::uvec4 currentTilePlace = {0, 0, 0, 0};
 				
 				for (int x = 0; x < xNum; x++)
 				{
 					if ((x == (xNum - 1)) && (xMod > 0))
 					{
-						tileWidth = xMod / tilingFactor.x;
+						currentTileSize.x = wholeTileSize.x - xMod;
 					} else {
-						tileWidth = (*source).w;
+						currentTileSize.x = wholeTileSize.x;
 					}
 					
 					for (int y = 0; y < yNum; y++)
 					{
 						if ((y == (yNum - 1)) && (yMod > 0))
 						{
-							tileHeight = yMod / tilingFactor.y;
+							currentTileSize.y = wholeTileSize.y - yMod;
 						} else {
-							tileHeight = (*source).h;
+							currentTileSize.y = wholeTileSize.y;
 						}
-						
-						// CSE_LOG("scaleX: ", scaleX, "; scaleY: ", scaleY);
-						*newPlace = 
-						{
-							// (int)floorf(scaleX * (*destRect).x + m_CurrentScreen.z * (x * (*source).w * tilingFactor.x)), 
-							// (int)floorf(scaleY * (*destRect).y + m_CurrentScreen.w * (y * (*source).h * tilingFactor.y)),
-							(int)floorf(windowScale.x * (*destRect).x + m_CurrentScreen.z * (x * tileWidth * tilingFactor.x)), 
-							(int)floorf(windowScale.y * (*destRect).y + m_CurrentScreen.w * (y * tileHeight * tilingFactor.y)),
-							(int)floorf(windowScale.x * tileWidth * tilingFactor.x), 
-							(int)floorf(windowScale.y * tileHeight * tilingFactor.y) 
-						};
-						// CSE_LOG("Tile width: ", tileWidth, "; height: ", tileHeight);
-						// CSE_LOG("New place (SDL_Rect): (", (*newPlace).x, "; ", (*newPlace).y, "; ", (*newPlace).w, "; ", (*newPlace).h, ")");
 						
 						*newSource = 
 						{ 
 							(*source).x, 
 							(*source).y, 
-							tileWidth, 
-							tileHeight 
+							currentTileSize.x, 
+							currentTileSize.y 
 						};
 						
-						SDL_RenderCopyEx(
+						currentTilePlace.x = m_CurrentScreen.x + m_CurrentScreen.z * ((*destRect).x + (x * wholeTileSize.x * tilingFactor.x) / (float)windowSize.x);
+						currentTilePlace.y = m_CurrentScreen.y + m_CurrentScreen.w * ((*destRect).y + (y * wholeTileSize.y * tilingFactor.y) / (float)windowSize.y);
+						currentTilePlace.z = currentTileSize.x * tilingFactor.x * m_CurrentScreen.z / (float)windowSize.x;
+						currentTilePlace.w = currentTileSize.y * tilingFactor.y * m_CurrentScreen.w / (float)windowSize.y;
+						
+						*newPlace = 
+						{
+							windowScale.x * currentTilePlace.x, 
+							windowScale.y * currentTilePlace.y,
+							windowScale.x * currentTilePlace.z, 
+							windowScale.y * currentTilePlace.w 
+						};
+						
+						// CSE_LOG("Whole tile size: ( ", wholeTileSize.x, "; ", wholeTileSize.y, ") >> x = ", x, "; y = ", y);
+						// CSE_LOG("Current tile size: ", currentTileSize.x, "; height: ", currentTileSize.y);
+						// CSE_LOG("New place (SDL_Rect): (", (*newPlace).x, "; ", (*newPlace).y, "; ", (*newPlace).w, "; ", (*newPlace).h, ")");
+						
+						SDL_RenderCopyExF(
 							GetActiveRenderer(), 
 							texture->GetTexture(), 
 							newSource, 
@@ -273,7 +279,7 @@ namespace CSE
 				delete newPlace;
 				delete newSource;
 			} else {
-				SDL_RenderCopyEx(
+				SDL_RenderCopyExF(
 					GetActiveRenderer(), 
 					texture->GetTexture(), 
 					source, 

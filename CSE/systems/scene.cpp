@@ -151,6 +151,7 @@ namespace CSE
 					m_CurrentWorld->properties.size.y/10
 				});
 			}
+			PhysicsOn();
 		} else {
 			m_PhysicsSystem = PhysicsSystem::None;
 			m_PhysicsProcessor = new PhysicsProcessor(PhysicsSystem::None);
@@ -167,6 +168,7 @@ namespace CSE
 					0,
 				});
 			}
+			PhysicsOff();
 		}
 	}
 	
@@ -188,12 +190,13 @@ namespace CSE
 		if (m_PhysicsProcessor != nullptr)
 			delete m_PhysicsProcessor;
 		m_PhysicsProcessor = nullptr;
+		PhysicsOff();
 		CSE_CORE_LOG("- physics processor unloaded");
 	}
 	
 	void Scene::UpdatePhysics(TimeType sceneTime) // calls physics processor general routine
 	{
-		if (m_PhysicsProcessor != nullptr)
+		if ((m_PhysicsProcessor != nullptr) && m_PhysicsOn)
 		{
 			m_PhysicsProcessor->GeneralRoutine(this, sceneTime);
 			// CSE_CORE_LOG("Physics processor general routine called and processed");

@@ -42,6 +42,7 @@ namespace CSE
 		float m_TimeStep = CSE_FPS60;
 		int32 m_VelocityIterations = 6;
 		int32 m_PositionIterations = 2;
+		WorldProperties m_WorldProperties;
 		// std::unordered_map<b2Body*, uint32_t> m_Bodies = {}; // all the bodies to be registered and unregistered
 		std::unordered_map<b2Body*, uint32_t> m_Bodies = {}; // all the bodies to be registered and unregistered
 		std::unordered_map<uint32_t, b2Body*> m_Entities = {}; // all the bodies to be registered and unregistered

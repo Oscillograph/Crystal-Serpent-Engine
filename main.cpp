@@ -221,7 +221,7 @@ public:
 			
 			// physics setup
 			CSE::PhysicsComponent& physicsComponent = player1->AddComponent<CSE::PhysicsComponent>();
-			physicsComponent.position = {10, 0, 0};
+			physicsComponent.position = {30, 0, 0};
 			
 			CSE::PhysicsHitBox hitbox;
 			hitbox.hitBoxType = CSE::PhysicsDefines::HitBoxType::Circle;
@@ -310,6 +310,23 @@ public:
 				);
 			animationComponent.Set(CSE::EntityStates::STAND1);
 			animationComponent.Start();
+			
+			// physics setup
+			CSE::PhysicsComponent& physicsComponent = player2->AddComponent<CSE::PhysicsComponent>();
+			physicsComponent.position = {-30, 0, 0};
+			
+			CSE::PhysicsHitBox hitbox;
+			hitbox.hitBoxType = CSE::PhysicsDefines::HitBoxType::Circle;
+			hitbox.points = {{0.0f, 0.0f}};
+			hitbox.radius = 1.0f;
+			
+			physicsComponent.entity = *player2;
+			physicsComponent.hitBoxes.push_back(hitbox);
+			physicsComponent.velocity = {0.0f, 0.0f};
+			physicsComponent.acceleration = {0.0f, 0.0f};
+			physicsComponent.mass = 1.0f;
+			physicsComponent.bodyType = CSE::PhysicsDefines::BodyType::Static;
+			GetPhysicsProcessor()->RegisterEntity(player2);
 		}
 		
 		CSE_LOG("- floor");
@@ -323,8 +340,8 @@ public:
 			
 			// screen representation
 			CSE::TransformComponent& transform = floor->AddComponent<CSE::TransformComponent>();
-			transform.position = {160, 216};
-			transform.size = {3.2, 120};
+			transform.position = {160, 156};
+			transform.size = {12, 60};
 			transform.Normalize({
 				GetLayer()->GetWindow()->GetPrefs().width,
 				GetLayer()->GetWindow()->GetPrefs().height,
@@ -337,7 +354,7 @@ public:
 			
 			// sprite control
 			CSE::SpriteComponent& spriteComponent = floor->AddComponent<CSE::SpriteComponent>(sprite);
-			spriteComponent.tilingFactor = {0.0f, 2.0f};
+			spriteComponent.tilingFactor = {0.0f, 4.0f};
 			
 			// animation addon to sprite control
 			CSE::AnimationComponent& animationComponent = floor->AddComponent<CSE::AnimationComponent>();
@@ -355,7 +372,7 @@ public:
 			
 			CSE::PhysicsHitBox hitbox; // match rectangle points coordinates to transform size
 			hitbox.hitBoxType = CSE::PhysicsDefines::HitBoxType::Rectangle;
-			hitbox.points = {{-0.1, 10}, {0.1, 10}, {0.1, 0}, {-0.1, 0}};
+			hitbox.points = {{-0.02, 2}, {0.02, 2}, {0.02, 0}, {-0.02, 0}};
 			// hitbox.radius = 1.0f;
 			
 			physicsComponent.entity = *floor;
@@ -363,10 +380,13 @@ public:
 			physicsComponent.velocity = {0.0f, 0.0f};
 			physicsComponent.acceleration = {0.0f, 0.0f};
 			physicsComponent.mass = 1.0f;
-			physicsComponent.bodyType = CSE::PhysicsDefines::BodyType::Dynamic;
+			physicsComponent.bodyType = CSE::PhysicsDefines::BodyType::Static;
 			GetPhysicsProcessor()->RegisterEntity(floor);
 			
 		}
+		
+		// turn physics off temporarily
+		// PhysicsOff();
 	}
 	
 	void OnUpdate(CSE::TimeType timeFrame)

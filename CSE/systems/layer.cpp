@@ -330,7 +330,7 @@ namespace CSE
 						};
 					}
 					
-					CSE_CORE_LOG("Camera Position Normalized: ", cameraPositionNormalized.x, "; ", cameraPositionNormalized.y);
+					// CSE_CORE_LOG("Camera Position Normalized: ", cameraPositionNormalized.x, "; ", cameraPositionNormalized.y);
 					place = 
 					{
 						(transform.positionNormalized.x - cameraPositionNormalized.x), 
@@ -377,7 +377,7 @@ namespace CSE
 											{transform.positionNormalized.x - cameraPositionNormalized.x + physicsComponent.hitBoxes[i].points[1].x, transform.positionNormalized.y - cameraPositionNormalized.y + physicsComponent.hitBoxes[i].points[1].y},
 											{transform.positionNormalized.x - cameraPositionNormalized.x + physicsComponent.hitBoxes[i].points[2].x, transform.positionNormalized.y - cameraPositionNormalized.y + physicsComponent.hitBoxes[i].points[2].y},
 											{transform.positionNormalized.x - cameraPositionNormalized.x + physicsComponent.hitBoxes[i].points[3].x, transform.positionNormalized.y - cameraPositionNormalized.y + physicsComponent.hitBoxes[i].points[3].y},
-											{255, 128, 255, 255}
+											{255, 255, 128, 255}
 											);
 									}
 									break;
