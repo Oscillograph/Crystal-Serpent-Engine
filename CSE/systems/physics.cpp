@@ -29,30 +29,39 @@ namespace CSE
 	
 	World* PhysicsProcessor::CreateWorld()
 	{
-		// default world properties
-		WorldProperties props = WorldProperties();
+		if (m_API != nullptr)
+		{
+			// default world properties
+			WorldProperties props = WorldProperties();
+			
+			// create a new world
+			World* world = new World(props);
+			m_Worlds.push_back(world);
+			
+			m_API->CreateWorld(props);
+			
+			return world;
+		}
 		
-		// create a new world
-		World* world = new World(props);
-		m_Worlds.push_back(world);
-		
-		m_API->CreateWorld(props);
-		
-		return world;
+		return nullptr;
 	}
 	
 	World* PhysicsProcessor::CreateWorld(const WorldProperties& props)
 	{
-		// create a new world
-		World* world = new World(props);
-		m_Worlds.push_back(world);
+		if (m_API != nullptr)
+		{
+			// create a new world
+			World* world = new World(props);
+			m_Worlds.push_back(world);
+			
+			// b2Vec2 box2DGravity = {props.gravity.x, props.gravity.y};
+			// m_Box2DWorld(box2DGravity);
+			
+			m_API->CreateWorld(props);
+			return world;
+		}
 		
-		// b2Vec2 box2DGravity = {props.gravity.x, props.gravity.y};
-		// m_Box2DWorld(box2DGravity);
-		
-		m_API->CreateWorld(props);
-		
-		return world;
+		return nullptr;
 	}
 	
 	void PhysicsProcessor::DestroyWorld(World* world)
@@ -81,12 +90,14 @@ namespace CSE
 	
 	void PhysicsProcessor::RegisterEntity(Entity* A) // make the entity seen by the physics processor
 	{
-		m_API->RegisterEntity(A);
+		if (m_API != nullptr)
+			m_API->RegisterEntity(A);
 	}
 	
 	void PhysicsProcessor::UnregisterEntity(Entity* A) // make it invisible again
 	{
-		m_API->UnregisterEntity(A);
+		if (m_API != nullptr)
+			m_API->UnregisterEntity(A);
 	}
 	
 	void PhysicsProcessor::CollisionSelection(Entity* A, Entity* B)
@@ -103,53 +114,56 @@ namespace CSE
 	
 	void PhysicsProcessor::GeneralRoutine(Scene* scene, TimeType sceneTime)
 	{
-		entt::registry& entityRegistry = scene->GetRegistry();
-		auto physicsCollection = entityRegistry.view<PhysicsComponent>();
-		
-		// read canban board
-		Entity* entity;
-		if (Canban::GetTask(CanbanEvents::Physics_ChangeType, entity))
+		if (m_API != nullptr)
 		{
-			// The reason to transfer type change to physics implementation is that
-			// each implementation has its own way of dealing with world processing,
-			// and the general engine abstraction can't know it beforehand.
-			m_API->ChangeType(entity); 
-		}
-		// CSE_CORE_LOG("Canban processed");
-		m_API->GeneralRoutine(scene, sceneTime);
-		
-		/*
-		// check for groups of objects that could possibly collide
-		for (auto e : physicsCollection)
-		{
-			Entity entity(e, scene);
-			PhysicsComponent& physicsComponent = entity.GetComponent<PhysicsComponent>();
+			entt::registry& entityRegistry = scene->GetRegistry();
+			auto physicsCollection = entityRegistry.view<PhysicsComponent>();
 			
-			// TODO: develop a satisfying collision and pre-collision check algorithm
-			
-			// is there a possible collision?
-			if (physicsComponent.bodyType != PhysicsDefines::BodyType::Banned)
+			// read canban board
+			Entity* entity;
+			if (Canban::GetTask(CanbanEvents::Physics_ChangeType, entity))
 			{
-				// if it is possible, then make sure if it happened
+				// The reason to transfer type change to physics implementation is that
+				// each implementation has its own way of dealing with world processing,
+				// and the general engine abstraction can't know it beforehand.
+				m_API->ChangeType(entity); 
 			}
+			// CSE_CORE_LOG("Canban processed");
+			m_API->GeneralRoutine(scene, sceneTime);
 			
-			
-			// others react on this one
-			// if ((physicsComponent.bodyType == PhysicsDefines::BodyType::Static)
-			//	|| (physicsComponent.bodyType == PhysicsDefines::BodyType::Dynamic))
-			// {
-			//	
-			// }
-			
-			
-			// this one reacts to others
-			if ((physicsComponent.bodyType == PhysicsDefines::BodyType::Astral)
-				|| (physicsComponent.bodyType == PhysicsDefines::BodyType::Dynamic))
+			/*
+			// check for groups of objects that could possibly collide
+			for (auto e : physicsCollection)
 			{
+				Entity entity(e, scene);
+				PhysicsComponent& physicsComponent = entity.GetComponent<PhysicsComponent>();
 				
+				// TODO: develop a satisfying collision and pre-collision check algorithm
+				
+				// is there a possible collision?
+				if (physicsComponent.bodyType != PhysicsDefines::BodyType::Banned)
+				{
+					// if it is possible, then make sure if it happened
+				}
+				
+				
+				// others react on this one
+				// if ((physicsComponent.bodyType == PhysicsDefines::BodyType::Static)
+				//	|| (physicsComponent.bodyType == PhysicsDefines::BodyType::Dynamic))
+				// {
+				//	
+				// }
+				
+				
+				// this one reacts to others
+				if ((physicsComponent.bodyType == PhysicsDefines::BodyType::Astral)
+					|| (physicsComponent.bodyType == PhysicsDefines::BodyType::Dynamic))
+				{
+					
+				}
 			}
+			*/
 		}
-		*/
 	}
 	
 	void PhysicsProcessor::Move(Entity* A)

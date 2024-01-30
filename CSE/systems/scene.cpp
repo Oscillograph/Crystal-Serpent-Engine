@@ -15,34 +15,14 @@ namespace CSE
 	{
 		m_SceneCamera = new Camera2D();
 		
-		m_PhysicsSystem = PhysicsSystem::CSE;
-		m_PhysicsProcessor = new PhysicsProcessor(PhysicsSystem::CSE);
-		
-		m_CurrentWorld = m_PhysicsProcessor->AccessWorld(0);
-		m_SceneCamera->SetWorldConstraints({m_CurrentWorld->properties.size.x, m_CurrentWorld->properties.size.y});
-		m_SceneCamera->Retarget({
-			0,
-			0,
-			m_CurrentWorld->properties.size.x/10,
-			m_CurrentWorld->properties.size.y/10
-		});
+		PhysicsInit(PhysicsSystem::None);
 	}
 	
 	Scene::Scene(const PhysicsSystem& physicsSystem)
 	{
 		m_SceneCamera = new Camera2D();
 		
-		m_PhysicsSystem = physicsSystem;
-		m_PhysicsProcessor = new PhysicsProcessor(physicsSystem);
-		
-		m_CurrentWorld = m_PhysicsProcessor->AccessWorld(0);
-		m_SceneCamera->SetWorldConstraints({m_CurrentWorld->properties.size.x, m_CurrentWorld->properties.size.y});
-		m_SceneCamera->Retarget({
-			0,
-			0,
-			m_CurrentWorld->properties.size.x/10,
-			m_CurrentWorld->properties.size.y/10
-		});
+		PhysicsInit(physicsSystem);
 	}
 	
 	Scene::~Scene()
@@ -85,8 +65,7 @@ namespace CSE
 		if (m_PhysicsProcessor == nullptr)
 		{
 			CSE_CORE_LOG("- initialize physics processor and access its world");
-			m_PhysicsProcessor = new PhysicsProcessor(m_PhysicsSystem);
-			m_CurrentWorld = m_PhysicsProcessor->AccessWorld(0);
+			PhysicsInit(m_PhysicsSystem, false);
 		}
 		CSE_CORE_LOG("- loaded");
 		
@@ -102,12 +81,7 @@ namespace CSE
 	{
 		CSE_CORE_LOG("Scene: Unload...");
 		// ...
-		if (m_PhysicsProcessor != nullptr)
-		{
-			delete m_PhysicsProcessor;
-			m_PhysicsProcessor = nullptr;
-			CSE_CORE_LOG("- physics processor unloaded");
-		}
+		PhysicsShutdown();
 		
 		if (m_CurrentWorld != nullptr)
 		{
@@ -156,6 +130,65 @@ namespace CSE
 	
 	void Scene::Resume()
 	{
+	}
+	
+	void Scene::PhysicsInit(const PhysicsSystem& physicsSystem, bool reconfigureCamera)
+	{
+		CSE_CORE_LOG("Scene: Initialize physics system of type ", (int)physicsSystem);
+		if (physicsSystem != PhysicsSystem::None)
+		{
+			m_PhysicsSystem = physicsSystem;
+			m_PhysicsProcessor = new PhysicsProcessor(physicsSystem);
+			
+			m_CurrentWorld = m_PhysicsProcessor->AccessWorld(0);
+			if (reconfigureCamera)
+			{
+				m_SceneCamera->SetWorldConstraints({m_CurrentWorld->properties.size.x, m_CurrentWorld->properties.size.y});
+				m_SceneCamera->Retarget({
+					0,
+					0,
+					m_CurrentWorld->properties.size.x/10,
+					m_CurrentWorld->properties.size.y/10
+				});
+			}
+		} else {
+			m_PhysicsSystem = PhysicsSystem::None;
+			m_PhysicsProcessor = new PhysicsProcessor(PhysicsSystem::None);
+			
+			m_CurrentWorld = nullptr;
+			
+			if (reconfigureCamera)
+			{
+				m_SceneCamera->SetWorldConstraints({0.0f, 0.0f});
+				m_SceneCamera->Retarget({
+					0,
+					0,
+					0,
+					0,
+				});
+			}
+		}
+	}
+	
+	void Scene::PhysicsOn()
+	{
+		CSE_CORE_LOG("Scene: physics turn OFF");
+		m_PhysicsOn = true;
+	}
+	
+	void Scene::PhysicsOff()
+	{
+		CSE_CORE_LOG("Scene: physics turn ON");
+		m_PhysicsOn = false;
+	}
+	
+	void Scene::PhysicsShutdown()
+	{
+		CSE_CORE_LOG("Scene: shutdown physics");
+		if (m_PhysicsProcessor != nullptr)
+			delete m_PhysicsProcessor;
+		m_PhysicsProcessor = nullptr;
+		CSE_CORE_LOG("- physics processor unloaded");
 	}
 	
 	void Scene::UpdatePhysics(TimeType sceneTime) // calls physics processor general routine

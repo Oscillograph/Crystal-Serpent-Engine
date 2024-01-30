@@ -53,8 +53,8 @@ namespace CSE
 		m_CurrentScreen = {
 			0,
 			0,
-			windowScale.x * m_Scene->GetLayer()->GetWindow()->GetPrefs().width,
-			windowScale.y * m_Scene->GetLayer()->GetWindow()->GetPrefs().height,
+			m_Scene->GetLayer()->GetWindow()->GetPrefs().width,
+			m_Scene->GetLayer()->GetWindow()->GetPrefs().height,
 		}; 
 	}
 	

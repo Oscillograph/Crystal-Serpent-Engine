@@ -255,15 +255,10 @@ namespace CSE
 			};
 			
 			// renormalize to window size, so that transforms look right
-			if (GetScene()->GetPhysicsSystem() == PhysicsSystem::None)
-			{
-				cameraPositionNormalized = {0.0f, 0.0f};
-			} else {
-				cameraPositionNormalized = {
-					cameraPositionNormalized.x * viewportPlace.z / GetWindow()->GetPrefs().width,
-					cameraPositionNormalized.y * viewportPlace.w / GetWindow()->GetPrefs().height,
-				};
-			}
+			cameraPositionNormalized = {
+				cameraPositionNormalized.x * viewportPlace.z / GetWindow()->GetPrefs().width,
+				cameraPositionNormalized.y * viewportPlace.w / GetWindow()->GetPrefs().height,
+			};
 			
 			
 			Renderer::SetActiveScreen(viewportPlace);
@@ -335,6 +330,7 @@ namespace CSE
 						};
 					}
 					
+					CSE_CORE_LOG("Camera Position Normalized: ", cameraPositionNormalized.x, "; ", cameraPositionNormalized.y);
 					place = 
 					{
 						(transform.positionNormalized.x - cameraPositionNormalized.x), 

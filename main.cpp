@@ -5,7 +5,7 @@ class SceneLogo : public CSE::Scene
 {
 public:
 	SceneLogo()
-		: CSE::Scene(CSE::PhysicsSystem::CSE)
+		: CSE::Scene(CSE::PhysicsSystem::None)
 	{
 	};
 	

@@ -59,9 +59,11 @@ namespace CSE
 		
 		// Picks every entity it has and updates their components depending on the system involved.
 		// void Input();
-		// no need - virtual void UpdateGraphics(TimeType sceneTime);
-		// no need - void Animate(TimeType sceneTime); // updates AnimationComponent
-		// no need - void Draw(); // draw anything with SpriteComponent
+
+		void PhysicsInit(const PhysicsSystem& physicsSystem = PhysicsSystem::None, bool reconfigureCamera = true);
+		void PhysicsOn();
+		void PhysicsOff();
+		void PhysicsShutdown();
 		void UpdatePhysics(TimeType sceneTime); // calls physics processor general routine
 		inline PhysicsSystem GetPhysicsSystem() { return m_PhysicsSystem; }
 		
@@ -81,6 +83,7 @@ namespace CSE
 		bool m_Running = false;
 		bool m_Paused = false;
 		bool m_Initialized = false;
+		bool m_PhysicsOn = false;
 		entt::registry m_Registry;
 		PhysicsSystem m_PhysicsSystem;
 		PhysicsProcessor* m_PhysicsProcessor;
