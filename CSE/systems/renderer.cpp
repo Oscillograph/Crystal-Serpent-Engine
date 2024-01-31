@@ -40,7 +40,21 @@ namespace CSE
 	
 	void Renderer::SetActiveScreen(const glm::uvec4& screen)
 	{ 
-		m_CurrentScreen = screen; 
+		m_CurrentScreen = screen;
+		
+		glm::vec2 windowScale = {
+			m_Scene->GetLayer()->GetWindow()->GetScale().x,
+			m_Scene->GetLayer()->GetWindow()->GetScale().y
+		};
+		
+		SDL_Rect viewport;
+		viewport = {
+			windowScale.x * m_CurrentScreen.x,
+			windowScale.y * m_CurrentScreen.y,
+			windowScale.x * m_CurrentScreen.z,
+			windowScale.y * m_CurrentScreen.w
+		};
+		SDL_RenderSetViewport(GetActiveRenderer(), &viewport);
 	}
 	
 	void Renderer::SetActiveScreenDefault()
@@ -55,7 +69,16 @@ namespace CSE
 			0,
 			m_Scene->GetLayer()->GetWindow()->GetPrefs().width,
 			m_Scene->GetLayer()->GetWindow()->GetPrefs().height,
-		}; 
+		};
+		
+		SDL_Rect viewport;
+		viewport = {
+			windowScale.x * m_CurrentScreen.x,
+			windowScale.y * m_CurrentScreen.y,
+			windowScale.x * m_CurrentScreen.z,
+			windowScale.y * m_CurrentScreen.w
+		};
+		SDL_RenderSetViewport(GetActiveRenderer(), &viewport);
 	}
 	
 	void Renderer::SetBackgroundColor(const glm::u8vec4& color)
@@ -225,7 +248,7 @@ namespace CSE
 				{
 					if ((x == (xNum - 1)) && (xMod > 0))
 					{
-						currentTileSize.x = wholeTileSize.x - xMod;
+						currentTileSize.x = wholeTileSize.x - (int)floorf(xMod / tilingFactor.x);
 					} else {
 						currentTileSize.x = wholeTileSize.x;
 					}
@@ -234,7 +257,7 @@ namespace CSE
 					{
 						if ((y == (yNum - 1)) && (yMod > 0))
 						{
-							currentTileSize.y = wholeTileSize.y - yMod;
+							currentTileSize.y = wholeTileSize.y - (int)floorf(yMod / tilingFactor.y);
 						} else {
 							currentTileSize.y = wholeTileSize.y;
 						}

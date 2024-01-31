@@ -333,8 +333,8 @@ namespace CSE
 					// CSE_CORE_LOG("Camera Position Normalized: ", cameraPositionNormalized.x, "; ", cameraPositionNormalized.y);
 					place = 
 					{
-						(transform.positionNormalized.x - cameraPositionNormalized.x), 
-						(transform.positionNormalized.y - cameraPositionNormalized.y),
+						transform.positionNormalized.x - cameraPositionNormalized.x, 
+						transform.positionNormalized.y - cameraPositionNormalized.y,
 						transform.sizeNormalized.x,
 						transform.sizeNormalized.y,
 					};

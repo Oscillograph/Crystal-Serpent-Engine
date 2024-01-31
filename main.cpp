@@ -93,7 +93,7 @@ public:
 			
 			// screen representation
 			CSE::TransformComponent& transform = background->AddComponent<CSE::TransformComponent>();
-			transform.position = {80, 60};
+			transform.position = {80, 60}; // basically, the centre point
 			transform.size = {160, 120};
 			transform.Normalize({
 				GetLayer()->GetWindow()->GetPrefs().width,
@@ -113,7 +113,7 @@ public:
 			
 			// screen representation
 			CSE::TransformComponent& transform = backgroundSDL->AddComponent<CSE::TransformComponent>();
-			transform.position = {240, 60};
+			transform.position = {240, 60}; // basically, the centre point
 			transform.size = {160, 120};
 			transform.Normalize({
 				GetLayer()->GetWindow()->GetPrefs().width,
@@ -221,7 +221,7 @@ public:
 			
 			// physics setup
 			CSE::PhysicsComponent& physicsComponent = player1->AddComponent<CSE::PhysicsComponent>();
-			physicsComponent.position = {30, 0, 0};
+			physicsComponent.position = {50, 0, 0};
 			
 			CSE::PhysicsHitBox hitbox;
 			hitbox.hitBoxType = CSE::PhysicsDefines::HitBoxType::Circle;
@@ -313,7 +313,7 @@ public:
 			
 			// physics setup
 			CSE::PhysicsComponent& physicsComponent = player2->AddComponent<CSE::PhysicsComponent>();
-			physicsComponent.position = {-30, 0, 0};
+			physicsComponent.position = {-10, 0, 0};
 			
 			CSE::PhysicsHitBox hitbox;
 			hitbox.hitBoxType = CSE::PhysicsDefines::HitBoxType::Circle;
@@ -386,7 +386,7 @@ public:
 		}
 		
 		// turn physics off temporarily
-		// PhysicsOff();
+		PhysicsOff();
 	}
 	
 	void OnUpdate(CSE::TimeType timeFrame)
