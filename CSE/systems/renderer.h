@@ -55,7 +55,7 @@ namespace CSE
 		static Scene* m_Scene;
 		static Camera2D* m_ActiveCamera;
 
-		static glm::uvec4 m_CurrentScreen;
+		static glm::uvec4 m_CurrentScreen; // contains rect properties of a current viewport
 		static glm::vec2 m_PixelSize;
 		static glm::uvec4 m_BackgroundColor;
 		

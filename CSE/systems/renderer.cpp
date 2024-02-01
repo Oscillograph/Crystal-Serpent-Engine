@@ -221,9 +221,9 @@ namespace CSE
 				if (tilingFactor.x > 0.0f) // first of all, we need to know how many times to multiply the image
 				{
 					// how many whole tiles there are?
-					xNum = (int)floorf((m_CurrentScreen.z * (*destRect).w) / (float)(wholeTileSize.x * tilingFactor.x));
+					xNum = (int)floorf((float)regionSize.x / (wholeTileSize.x * tilingFactor.x));
 					// and we need to know how big the remainder is
-					xMod = (int)floorf(m_CurrentScreen.z * ((*destRect).w - (xNum * wholeTileSize.x * tilingFactor.x) / (float)windowSize.x)); 
+					xMod = (int)floorf(regionSize.x - (xNum * wholeTileSize.x * tilingFactor.x)); 
 					if (xMod > 0)
 						xNum++;
 				} else { // not only prevent division by zero, but also allow no-tiling at all
@@ -235,9 +235,9 @@ namespace CSE
 				if (tilingFactor.y > 0.0f) // first of all, we need to know how many times to multiply the image
 				{
 					// how many whole tiles there are?
-					yNum = (int)floorf(m_CurrentScreen.w * (*destRect).h / (float)(wholeTileSize.y * tilingFactor.y * m_CurrentScreen.w / windowSize.y)); 
+					yNum = (int)floorf((float)regionSize.y / (wholeTileSize.y * tilingFactor.y)); 
 					// and we need to know how big the remainder is
-					yMod = (int)floorf(m_CurrentScreen.w * (*destRect).h - (yNum * wholeTileSize.y * tilingFactor.y) * m_CurrentScreen.w / windowSize.y); 
+					yMod = (int)floorf(regionSize.y - (yNum * wholeTileSize.y * tilingFactor.y)); 
 					if (yMod > 0)
 						yNum++;
 				} else { // not only prevent division by zero, but also allow no-tiling at all
@@ -258,7 +258,7 @@ namespace CSE
 				{
 					if ((x == (xNum - 1)) && (xMod > 0))
 					{
-						currentTileSize.x = wholeTileSize.x - (int)floorf(xMod / tilingFactor.x);
+						currentTileSize.x = wholeTileSize.x - xMod;
 					} else {
 						currentTileSize.x = wholeTileSize.x;
 					}
@@ -267,7 +267,7 @@ namespace CSE
 					{
 						if ((y == (yNum - 1)) && (yMod > 0))
 						{
-							currentTileSize.y = wholeTileSize.y - (int)floorf(yMod / tilingFactor.y);
+							currentTileSize.y = wholeTileSize.y - yMod;
 						} else {
 							currentTileSize.y = wholeTileSize.y;
 						}
@@ -280,10 +280,10 @@ namespace CSE
 							currentTileSize.y 
 						};
 						
-						currentTilePlace.x = m_CurrentScreen.z * ((*destRect).x + (x * wholeTileSize.x * tilingFactor.x) / (float)windowSize.x);
-						currentTilePlace.y = m_CurrentScreen.w * ((*destRect).y + (y * wholeTileSize.y * tilingFactor.y) / (float)windowSize.y);
-						currentTilePlace.z = currentTileSize.x * tilingFactor.x * m_CurrentScreen.z / (float)windowSize.x;
-						currentTilePlace.w = currentTileSize.y * tilingFactor.y * m_CurrentScreen.w / (float)windowSize.y;
+						currentTilePlace.x = (windowSize.x * (*destRect).x + (x * wholeTileSize.x * tilingFactor.x)) * m_CurrentScreen.z / windowSize.x;
+						currentTilePlace.y = (windowSize.y * (*destRect).y + (y * wholeTileSize.y * tilingFactor.y)) * m_CurrentScreen.z / windowSize.x;
+						currentTilePlace.z = currentTileSize.x * tilingFactor.x * m_CurrentScreen.z / windowSize.x;
+						currentTilePlace.w = currentTileSize.y * tilingFactor.y * m_CurrentScreen.w / windowSize.y;
 						
 						*newPlace = 
 						{
