@@ -256,8 +256,8 @@ namespace CSE
 			
 			// renormalize to window size, so that transforms look right
 			cameraPositionNormalized = {
-				cameraPositionNormalized.x * viewportPlace.z / GetWindow()->GetPrefs().width,
-				cameraPositionNormalized.y * viewportPlace.w / GetWindow()->GetPrefs().height,
+				cameraPositionNormalized.x,// * viewportPlace.z / GetWindow()->GetPrefs().width,
+				cameraPositionNormalized.y,// * viewportPlace.w / GetWindow()->GetPrefs().height,
 			};
 			
 			
@@ -282,27 +282,6 @@ namespace CSE
 				{
 					TransformComponent& transform = e.GetComponent<TransformComponent>();
 					SpriteComponent& spriteComponent = e.GetComponent<SpriteComponent>();
-					
-					/*
-					if ((transform.normalizationTo.x == GetWindow()->GetPrefs().width) &&
-						(transform.normalizationTo.y == GetWindow()->GetPrefs().height))
-					{
-						transform.Normalize({
-							viewportPlace.z, 
-							viewportPlace.w
-						});
-						
-						transform.position = {
-							viewportPlace.z * (transform.positionNormalized.x - cameraPositionNormalized.x),
-							viewportPlace.w * (transform.positionNormalized.y - cameraPositionNormalized.y),
-						};
-						
-						transform.Normalize({
-							GetWindow()->GetPrefs().width, 
-							GetWindow()->GetPrefs().height
-						});
-					}
-					*/
 					
 					SDL_FRect place; // where to draw
 					SDL_Rect frame; // what to draw from a spritesheet

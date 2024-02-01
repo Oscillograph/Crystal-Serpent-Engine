@@ -7,23 +7,6 @@ namespace CSE
 	{
 	};
 	
-	/*
-	Camera2D::Camera2D(glm::vec4 targetXYZW, float aspectRatio, float size)
-		: m_TargetArea(targetXYZW), m_AspectRatio(aspectRatio), m_Size(size) 
-	{
-		m_TargetAreaBorder = m_TargetArea;
-		m_TargetAreaBorder.x -= 10;
-		m_TargetAreaBorder.y -= 10;
-		m_TargetAreaBorder.z += 10;
-		m_TargetAreaBorder.w += 10;
-		
-		m_Position = {
-			(float)(2*newTargetArea.x + newTargetArea.z)/2,
-			(float)(2*newTargetArea.y + newTargetArea.w)/2
-		};
-	};
-	*/
-	
 	Camera2D::~Camera2D() 
 	{
 	};
@@ -57,10 +40,10 @@ namespace CSE
 		if (m_TranslationAllowed)
 		{
 			Retarget({
-				newPosition.x - (float)m_TargetArea.w/2,
-				newPosition.y - (float)m_TargetArea.z/2,
-				m_TargetArea.w,
-				m_TargetArea.z
+				newPosition.x - (float)(m_TargetArea.z - m_TargetArea.x)/2,
+				newPosition.y - (float)(m_TargetArea.w - m_TargetArea.y)/2,
+				newPosition.x + (float)(m_TargetArea.z - m_TargetArea.x)/2,
+				newPosition.y + (float)(m_TargetArea.w - m_TargetArea.y)/2
 			});
 			return true;
 		}
@@ -74,8 +57,8 @@ namespace CSE
 			Retarget({
 				m_TargetArea.x + newPosition.x,
 				m_TargetArea.y + newPosition.y,
-				m_TargetArea.w,
-				m_TargetArea.z
+				m_TargetArea.z + newPosition.x,
+				m_TargetArea.w + newPosition.y
 			});
 			return true;
 		}
@@ -90,12 +73,15 @@ namespace CSE
 	glm::vec2 Camera2D::GetPositionNormalized()
 	{
 		glm::vec2 positionNormalized = {0.0f, 0.0f};
-		
-		if ((m_TargetArea.z > 0.0f) && (m_TargetArea.w > 0.0f))
+		glm::vec2 areaSize = {
+			(m_TargetArea.z - m_TargetArea.x),
+			(m_TargetArea.w - m_TargetArea.y)
+		};
+		if ((areaSize.x > 0.0f) && (areaSize.y > 0.0f))
 		{
 			positionNormalized = {
-				m_Position.x / m_TargetArea.z,
-				m_Position.y / m_TargetArea.w
+				m_Position.x / areaSize.x,
+				m_Position.y / areaSize.y
 			};
 		}
 		
@@ -113,8 +99,8 @@ namespace CSE
 		m_TargetAreaBorder.w += 10; // always positive and bigger than zero
 		
 		m_Position = {
-			(float)(newTargetArea.x + newTargetArea.z / 2),
-			(float)(newTargetArea.y + newTargetArea.w / 2)
+			(float)(m_TargetArea.x + m_TargetArea.z)/2,
+			(float)(m_TargetArea.y + m_TargetArea.w)/2
 		};
 	};
 	
@@ -166,13 +152,17 @@ namespace CSE
 	
 	bool Camera2D::Sees(PhysicsComponent* physicsComponent)
 	{
+		// TODO: make sure the check is smooth
+		
 		if ((physicsComponent->position.x >= m_TargetAreaBorder.x) &&
 			(physicsComponent->position.y >= m_TargetAreaBorder.y) &&
-			(physicsComponent->position.x <= (m_TargetAreaBorder.x + m_TargetAreaBorder.z)) &&
-			(physicsComponent->position.y <= (m_TargetAreaBorder.y + m_TargetAreaBorder.w)))
+			(physicsComponent->position.x <= m_TargetAreaBorder.z) &&
+			(physicsComponent->position.y <= m_TargetAreaBorder.w))
 		{
 			return true;
 		}
 		return false;
+		
+		// return true;
 	};
 }

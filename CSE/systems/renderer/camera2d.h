@@ -11,13 +11,10 @@ namespace CSE
 	{
 	public:
 		Camera2D();
-		// Camera2D(glm::vec4 targetXYZW, float aspectRatio, float size);
 		~Camera2D();
 		
 		inline void SetWorldConstraints(glm::vec2 constraints) { m_WorldConstraints = constraints; }
 		inline glm::vec2 GetWorldConstraints() { return m_WorldConstraints; }
-		// float& GetAspectRatio();
-		// float& GetSize();
 		
 		void Lock();
 		void UnLock();
@@ -25,11 +22,11 @@ namespace CSE
 		bool MoveTo(glm::vec2 newPosition);
 		bool MoveBy(glm::vec2 newPosition);
 		glm::vec2 GetPosition();
-		glm::vec2 GetPositionNormalized();
+		glm::vec2 GetPositionNormalized(); // normalized to the target area size
 		
 		void Retarget(glm::vec4 newTargetArea);
 		glm::vec4 GetTargetArea();
-		glm::vec4 GetTargetAreaNormalized();
+		glm::vec4 GetTargetAreaNormalized(); // normalized to the world size
 		
 		void Zoom(glm::vec2 newZoom);
 		glm::vec2 GetZoom();
@@ -43,16 +40,11 @@ namespace CSE
 		
 	private:
 		glm::vec2 m_WorldConstraints = {0.0f, 0.0f}; // max absolute size of the world 
-		glm::vec4 m_TargetArea = {0.0f, 0.0f, 0.0f, 0.0f}; // physical coordinates
-		glm::vec4 m_TargetAreaBorder = {0.0f, 0.0f, 0.0f, 0.0f}; // physical coordinates
+		glm::vec4 m_TargetArea = {0.0f, 0.0f, 0.0f, 0.0f}; // physical coordinates of upper left and bottom right rect points
+		glm::vec4 m_TargetAreaBorder = {0.0f, 0.0f, 0.0f, 0.0f}; // physical coordinates of upper left and bottom right rect points
 		glm::vec2 m_Position = {0.0f, 0.0f}; // the middle of m_TargetArea
 		glm::vec2 m_Zoom = {0.0f, 0.0f}; // zoom in both directions without changing target area
 		float m_Rotation = 0.0f; // in radians
-		
-		// TODO: Upgrade to 3D somehow
-		// glm::vec2 m_Target = {0.0f, 0.0f};
-		// float m_AspectRatio = 0.0f;
-		// float m_Size = 0.0f;
 		
 		// TODO: Control size of a frame through camera interface 
 		// glm::vec2 m_FrameSize = {100.0f, 100.0f}; // in meters

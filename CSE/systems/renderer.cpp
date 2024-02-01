@@ -176,8 +176,8 @@ namespace CSE
 			// CSE_CORE_LOG("Viewport (x; y): ", m_CurrentScreen.x, "; ", m_CurrentScreen.y);
 			*place = 
 			{ 
-				(int)floorf(windowScale.x * (m_CurrentScreen.x + m_CurrentScreen.z * destRect->x)), 
-				(int)floorf(windowScale.y * (m_CurrentScreen.y + m_CurrentScreen.w * destRect->y)), 
+				(int)floorf(windowScale.x * m_CurrentScreen.z * destRect->x), 
+				(int)floorf(windowScale.y * m_CurrentScreen.w * destRect->y), 
 				(int)floorf(windowScale.x * m_CurrentScreen.z * destRect->w), 
 				(int)floorf(windowScale.y * m_CurrentScreen.w * destRect->h) 
 			};
@@ -193,10 +193,11 @@ namespace CSE
 		}
 		
 		// TODO: draw only if it's on screen
-		if ((((*place).x + (*place).w) > (windowScale.x * m_CurrentScreen.x)) &&
-			(((*place).y + (*place).h) > (windowScale.y * m_CurrentScreen.y)) &&
-			((*place).x < (windowScale.x * (m_CurrentScreen.x + m_CurrentScreen.z))) &&
-			((*place).y < (windowScale.y * (m_CurrentScreen.y + m_CurrentScreen.w))))
+		// if(true)
+		if ((((*place).x + (*place).w) > (0)) &&
+			(((*place).y + (*place).h) > (0)) &&
+			((*place).x < (windowScale.x * windowSize.x)) &&
+			((*place).y < (windowScale.y * windowSize.y)))
 		{
 			// tiling texture across the place rectangle
 			// TODO: Adjust tiling to pixel size
@@ -204,14 +205,23 @@ namespace CSE
 			{
 				// now, get subPlaces and RenderCopy there
 				int xNum, yNum; // how many whole tiles there are?
+				xNum = 1;
+				yNum = 1;
 				int xMod, yMod; // how big is the partial tile left?
+				xMod = 0;
+				yMod = 0;
 				glm::uvec2 wholeTileSize = {(*source).w, (*source).h};
 				glm::uvec2 currentTileSize = wholeTileSize;
+				
+				glm::vec2 regionSize = {
+					windowSize.x * (*destRect).w, 
+					windowSize.y * (*destRect).h
+				};
 				
 				if (tilingFactor.x > 0.0f) // first of all, we need to know how many times to multiply the image
 				{
 					// how many whole tiles there are?
-					xNum = (int)floorf((windowSize.x * (*destRect).w) / (float)(wholeTileSize.x * tilingFactor.x));
+					xNum = (int)floorf((m_CurrentScreen.z * (*destRect).w) / (float)(wholeTileSize.x * tilingFactor.x));
 					// and we need to know how big the remainder is
 					xMod = (int)floorf(m_CurrentScreen.z * ((*destRect).w - (xNum * wholeTileSize.x * tilingFactor.x) / (float)windowSize.x)); 
 					if (xMod > 0)
@@ -270,8 +280,8 @@ namespace CSE
 							currentTileSize.y 
 						};
 						
-						currentTilePlace.x = m_CurrentScreen.x + m_CurrentScreen.z * ((*destRect).x + (x * wholeTileSize.x * tilingFactor.x) / (float)windowSize.x);
-						currentTilePlace.y = m_CurrentScreen.y + m_CurrentScreen.w * ((*destRect).y + (y * wholeTileSize.y * tilingFactor.y) / (float)windowSize.y);
+						currentTilePlace.x = m_CurrentScreen.z * ((*destRect).x + (x * wholeTileSize.x * tilingFactor.x) / (float)windowSize.x);
+						currentTilePlace.y = m_CurrentScreen.w * ((*destRect).y + (y * wholeTileSize.y * tilingFactor.y) / (float)windowSize.y);
 						currentTilePlace.z = currentTileSize.x * tilingFactor.x * m_CurrentScreen.z / (float)windowSize.x;
 						currentTilePlace.w = currentTileSize.y * tilingFactor.y * m_CurrentScreen.w / (float)windowSize.y;
 						
@@ -334,8 +344,8 @@ namespace CSE
 		
 		SDL_FRect rect = 
 		{
-			windowScale.x * (m_CurrentScreen.x + m_CurrentScreen.z * (center.x - size.x/2)), 
-			windowScale.y * (m_CurrentScreen.y + m_CurrentScreen.w * (center.y - size.y/2)), 
+			windowScale.x * (m_CurrentScreen.z * (center.x - size.x/2)), 
+			windowScale.y * (m_CurrentScreen.w * (center.y - size.y/2)), 
 			windowScale.x * m_CurrentScreen.z * size.x, 
 			windowScale.y * m_CurrentScreen.w * size.y
 		};
@@ -361,24 +371,24 @@ namespace CSE
 		
 		SDL_Point points[5] = {
 			{
-				(int)roundf(windowScale.x * (m_CurrentScreen.x + m_CurrentScreen.z * p1.x)),
-				(int)roundf(windowScale.y * (m_CurrentScreen.y + m_CurrentScreen.w * p1.y)),
+				(int)roundf(windowScale.x * (m_CurrentScreen.z * p1.x)),
+				(int)roundf(windowScale.y * (m_CurrentScreen.w * p1.y)),
 			}, 
 			{
-				(int)roundf(windowScale.x * (m_CurrentScreen.x + m_CurrentScreen.z * p2.x)),
-				(int)roundf(windowScale.y * (m_CurrentScreen.y + m_CurrentScreen.w * p2.y)),
+				(int)roundf(windowScale.x * (m_CurrentScreen.z * p2.x)),
+				(int)roundf(windowScale.y * (m_CurrentScreen.w * p2.y)),
 			},  
 			{
-				(int)roundf(windowScale.x * (m_CurrentScreen.x + m_CurrentScreen.z * p3.x)),
-				(int)roundf(windowScale.y * (m_CurrentScreen.y + m_CurrentScreen.w * p3.y)),
+				(int)roundf(windowScale.x * (m_CurrentScreen.z * p3.x)),
+				(int)roundf(windowScale.y * (m_CurrentScreen.w * p3.y)),
 			}, 
 			{
-				(int)roundf(windowScale.x * (m_CurrentScreen.x + m_CurrentScreen.z * p4.x)),
-				(int)roundf(windowScale.y * (m_CurrentScreen.y + m_CurrentScreen.w * p4.y)),
+				(int)roundf(windowScale.x * (m_CurrentScreen.z * p4.x)),
+				(int)roundf(windowScale.y * (m_CurrentScreen.w * p4.y)),
 			},
 			{
-				(int)roundf(windowScale.x * (m_CurrentScreen.x + m_CurrentScreen.z * p1.x)),
-				(int)roundf(windowScale.y * (m_CurrentScreen.y + m_CurrentScreen.w * p1.y)),
+				(int)roundf(windowScale.x * (m_CurrentScreen.z * p1.x)),
+				(int)roundf(windowScale.y * (m_CurrentScreen.w * p1.y)),
 			}
 		};
 		

@@ -145,8 +145,8 @@ namespace CSE
 			{
 				m_SceneCamera->SetWorldConstraints({m_CurrentWorld->properties.size.x, m_CurrentWorld->properties.size.y});
 				m_SceneCamera->Retarget({
-					0,
-					0,
+					-m_CurrentWorld->properties.size.x/10,
+					-m_CurrentWorld->properties.size.y/10,
 					m_CurrentWorld->properties.size.x/10,
 					m_CurrentWorld->properties.size.y/10
 				});
