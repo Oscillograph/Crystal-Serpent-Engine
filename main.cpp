@@ -28,7 +28,7 @@ public:
 			
 			// screen position
 			CSE::TransformComponent& transform = logo->AddComponent<CSE::TransformComponent>();
-			transform.position = {0, 0};
+			transform.position = {160, 120};
 			transform.size = {320, 240};
 			transform.Normalize({
 				GetLayer()->GetWindow()->GetPrefs().width,

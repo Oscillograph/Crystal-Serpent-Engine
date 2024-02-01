@@ -312,8 +312,8 @@ namespace CSE
 					// CSE_CORE_LOG("Camera Position Normalized: ", cameraPositionNormalized.x, "; ", cameraPositionNormalized.y);
 					place = 
 					{
-						transform.positionNormalized.x - cameraPositionNormalized.x, 
-						transform.positionNormalized.y - cameraPositionNormalized.y,
+						transform.positionNormalized.x - cameraPositionNormalized.x - transform.sizeNormalized.x/2, 
+						transform.positionNormalized.y - cameraPositionNormalized.y - transform.sizeNormalized.y/2,
 						transform.sizeNormalized.x,
 						transform.sizeNormalized.y,
 					};
@@ -341,8 +341,8 @@ namespace CSE
 										SDL_FPoint center = physicsComponent.hitBoxes[i].points[0];
 										Renderer::DrawRect(
 											{
-												transform.positionNormalized.x - cameraPositionNormalized.x + center.x + transform.sizeNormalized.x/2, 
-												transform.positionNormalized.y - cameraPositionNormalized.y + center.y + transform.sizeNormalized.y/2
+												transform.positionNormalized.x - cameraPositionNormalized.x + center.x, 
+												transform.positionNormalized.y - cameraPositionNormalized.y + center.y
 											}, 
 											{transform.sizeNormalized.x, transform.sizeNormalized.y},
 											{128, 255, 255, 255}
@@ -364,8 +364,8 @@ namespace CSE
 									// unknown hitbox
 									Renderer::DrawRect(
 										{
-											transform.positionNormalized.x - cameraPositionNormalized.x + transform.sizeNormalized.x/2, 
-											transform.positionNormalized.y - cameraPositionNormalized.y + transform.sizeNormalized.y/2
+											transform.positionNormalized.x - cameraPositionNormalized.x, 
+											transform.positionNormalized.y - cameraPositionNormalized.y
 										}, 
 										{transform.sizeNormalized.x, transform.sizeNormalized.y}, 
 										{255, 255, 255, 255}
@@ -376,8 +376,8 @@ namespace CSE
 							// not a hitbox
 							Renderer::DrawRect(
 								{
-									transform.positionNormalized.x - cameraPositionNormalized.x + transform.sizeNormalized.x/2, 
-									transform.positionNormalized.y - cameraPositionNormalized.y + transform.sizeNormalized.y/2
+									transform.positionNormalized.x - cameraPositionNormalized.x, 
+									transform.positionNormalized.y - cameraPositionNormalized.y
 								}, 
 								{transform.sizeNormalized.x, transform.sizeNormalized.y},
 								{128, 128, 128, 255}
