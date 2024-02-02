@@ -233,6 +233,7 @@ namespace CSE
 		
 		// characteristics
 		float mass = 0.0f; // kg
+		float friction = 0.5f; 
 		glm::vec3 position {0.0f, 0.0f, 0.0f}; // meters in XYZ space coordinates
 		
 		int world = 0;

@@ -7,6 +7,7 @@
 #include <CSE/systems/scene.h>
 #include <CSE/systems/viewport.h>
 #include <CSE/systems/renderer/camera2d.h>
+#include <CSE/systems/entity.h>
 
 #include <CSE/vendor/box2d/b2_world.h>
 #include <CSE/vendor/entt/entt.hpp>
@@ -49,7 +50,13 @@ namespace CSE
 		// create a body
 		b2BodyDef bodyDefinition;
 		bodyDefinition.type = (physics.bodyType == PhysicsDefines::BodyType::Static) ? b2_staticBody : b2_dynamicBody;
-		bodyDefinition.position.Set(physics.position.x, physics.position.y);
+		bodyDefinition.position.Set(
+			physics.position.x + m_WorldProperties.size.x/2, 
+			physics.position.y + m_WorldProperties.size.y/2
+			);
+		bodyDefinition.linearVelocity.Set(0, 0);
+		//bodyDefinition.allowSleep = false;
+		//bodyDefinition.awake = true;
 		
 		b2Body* body = m_Box2DWorld->CreateBody(&bodyDefinition);
 		CSE_CORE_LOG("Do we even register anyfin?");
@@ -63,14 +70,17 @@ namespace CSE
 					{
 						// create a fixture shape
 						b2CircleShape shape;
-						shape.m_p = { physics.position.x + physics.hitBoxes[i].points[0].x, physics.position.y + physics.hitBoxes[i].points[0].y };
+						shape.m_p = { 
+							bodyDefinition.position.x + physics.hitBoxes[i].points[0].x, 
+							bodyDefinition.position.y + physics.hitBoxes[i].points[0].y 
+						};
 						shape.m_radius = physics.hitBoxes[i].radius;
 						
 						// add the fixture to the body
 						b2FixtureDef fixtureDefinition;
 						fixtureDefinition.shape = &shape;
 						fixtureDefinition.density = 1.0f;
-						fixtureDefinition.friction = 0.3f;
+						fixtureDefinition.friction = physics.friction;
 						
 						body->CreateFixture(&fixtureDefinition);
 					}
@@ -80,10 +90,10 @@ namespace CSE
 					{
 						// create a fixture shape
 						b2Vec2 vertices[4];
-						vertices[0].Set(physics.position.x + physics.hitBoxes[i].points[3].x, physics.position.y + physics.hitBoxes[i].points[3].y);
-						vertices[1].Set(physics.position.x + physics.hitBoxes[i].points[2].x, physics.position.y + physics.hitBoxes[i].points[2].y);
-						vertices[2].Set(physics.position.x + physics.hitBoxes[i].points[1].x, physics.position.y + physics.hitBoxes[i].points[1].y);
-						vertices[3].Set(physics.position.x + physics.hitBoxes[i].points[0].x, physics.position.y + physics.hitBoxes[i].points[0].y);
+						vertices[0].Set(bodyDefinition.position.x + physics.hitBoxes[i].points[3].x, bodyDefinition.position.y + physics.hitBoxes[i].points[3].y);
+						vertices[1].Set(bodyDefinition.position.x + physics.hitBoxes[i].points[2].x, bodyDefinition.position.y + physics.hitBoxes[i].points[2].y);
+						vertices[2].Set(bodyDefinition.position.x + physics.hitBoxes[i].points[1].x, bodyDefinition.position.y + physics.hitBoxes[i].points[1].y);
+						vertices[3].Set(bodyDefinition.position.x + physics.hitBoxes[i].points[0].x, bodyDefinition.position.y + physics.hitBoxes[i].points[0].y);
 						
 						b2PolygonShape shape;
 						shape.Set(vertices, 4);
@@ -92,7 +102,7 @@ namespace CSE
 						b2FixtureDef fixtureDefinition;
 						fixtureDefinition.shape = &shape;
 						fixtureDefinition.density = 1.0f;
-						fixtureDefinition.friction = 0.3f;
+						fixtureDefinition.friction = physics.friction;
 						
 						body->CreateFixture(&fixtureDefinition);
 					}
@@ -185,64 +195,67 @@ namespace CSE
 	// processors
 	void Box2DPhysics::GeneralRoutine(Scene* scene, TimeType sceneTime) 
 	{
-		// update world
-		m_Box2DWorld->Step(m_TimeStep, m_VelocityIterations, m_PositionIterations);
-		// CSE_CORE_LOG("Box2D: Step");
-		// update components
-		int32 bodyCount = m_Box2DWorld->GetBodyCount();
-		// b2Body* bodies = m_Box2DWorld->GetBodyList();
-		// CSE_CORE_LOG("Box2D: First body selected");
+		// collect data from engine
+		// CSE_CORE_LOG("Box2D: General routine - collect data from components");
 		Entity e;
-		int counter = 0;
-		// CSE_CORE_LOG("Box2D: Total ", bodyCount, " bodies.");
-		
-		/*
-		// also works
-		for (auto body : m_Bodies)
+		b2Vec2 velocityNew;
+		b2Vec2 velocityOld;
+		for (b2Body* currentBody = m_Box2DWorld->GetBodyList(); currentBody; currentBody = currentBody->GetNext())
 		{
-			e = {(entt::entity)body.second, scene};
-			b2Body* currentBody = body.first;
-			
-			// CSE_CORE_LOG("Box2D: Entity \"", e.GetComponent<NameComponent>().value, "\" constructed from initializers");
+			e = {(entt::entity)(m_Bodies[currentBody]), scene};
+			// CSE_CORE_LOG("Box2D: Entity \"", e.GetComponent<NameComponent>().value, "\"");
 			
 			PhysicsComponent &physics = e.GetComponent<PhysicsComponent>();
-			TransformComponent& transform = e.GetComponent<TransformComponent>();
+			velocityNew.x = physics.velocity.x;
+			velocityNew.y = physics.velocity.y;
 			
-			b2Vec2 bodyPosition = currentBody->GetPosition();
-			physics.position.x = bodyPosition.x;
-			physics.position.y = bodyPosition.y;
-			
-			b2Vec2 bodyVelocity = currentBody->GetLinearVelocity();
-			physics.velocity = { bodyVelocity.x, bodyVelocity.y };
+			// CSE_CORE_LOG("Box2D: collected velocity: (", velocityNew.x, "; ", velocityNew.y, ")");
+			velocityOld = currentBody->GetLinearVelocity();
+			if ((velocityOld.x != velocityNew.x) && (velocityOld.y != velocityNew.y))
+				currentBody->SetLinearVelocity(velocityNew);
 		}
-		*/
 		
+		// update world
+		m_Box2DWorld->Step(m_TimeStep, m_VelocityIterations, m_PositionIterations);
+		// CSE_CORE_LOG("Box2D: General routine - Step");
+		
+		// update components
+		CSE_CORE_LOG("Box2D: General routine - update components data");
+		glm::vec4 cameraArea = scene->GetActiveCamera()->GetTargetArea();
+		CSE_CORE_LOG("Box2D: camera at: (", cameraArea.x, "; ", cameraArea.y, "; ", cameraArea.z, "; ", cameraArea.w, ")");
 		for (b2Body* currentBody = m_Box2DWorld->GetBodyList(); currentBody; currentBody = currentBody->GetNext())
 		{
 			// fetch the corresponding entity - we gonna store user data somehow
 			e = {(entt::entity)(m_Bodies[currentBody]), scene};
-			// CSE_CORE_LOG("Box2D: Entity \"", e.GetComponent<NameComponent>().value, "\" constructed from initializers");
+			CSE_CORE_LOG("Box2D: Entity \"", e.GetComponent<NameComponent>().value, "\"");
 			
 			PhysicsComponent &physics = e.GetComponent<PhysicsComponent>();
 			TransformComponent& transform = e.GetComponent<TransformComponent>();
 			
 			b2Vec2 bodyPosition = currentBody->GetPosition();
-			physics.position.x = bodyPosition.x;
-			physics.position.y = bodyPosition.y;
+			physics.position.x = bodyPosition.x - m_WorldProperties.size.x/2;
+			physics.position.y = bodyPosition.y - m_WorldProperties.size.y/2;
+			CSE_CORE_LOG("Box2D: position: (", physics.position.x, "; ", physics.position.y, ")");
 			
 			b2Vec2 bodyVelocity = currentBody->GetLinearVelocity();
-			physics.velocity = { bodyVelocity.x, bodyVelocity.y };
+			physics.velocity.x = bodyVelocity.x;
+			physics.velocity.y = bodyVelocity.y;
+			// CSE_CORE_LOG("Box2D: velocity: (", physics.velocity.x, "; ", physics.velocity.y, ")");
 			
-			glm::vec4 viewportPlace = scene->GetLayer()->GetViewport()->GetPlace();
-			glm::vec4 cameraArea = scene->GetActiveCamera()->GetTargetArea();
-			transform.position = {
-				viewportPlace.z * ((physics.position.x / m_WorldProperties.size.x) + 0.5),
-				viewportPlace.w * ((physics.position.y / m_WorldProperties.size.y) + 0.5),
-			};
-			transform.Normalize({
+			glm::vec2 windowSize = {
 				scene->GetLayer()->GetWindow()->GetPrefs().width,
 				scene->GetLayer()->GetWindow()->GetPrefs().height
+			};
+			transform.position = {
+				windowSize.x * ((physics.position.x / (cameraArea.z - cameraArea.x))),
+				windowSize.y * ((physics.position.y / (cameraArea.w - cameraArea.y))),
+			};
+			transform.Normalize({
+				windowSize.x,
+				windowSize.y
 			});
+			CSE_CORE_LOG("Box2D: transform position: (", transform.position.x, "; ", transform.position.y, ")");
+			CSE_CORE_LOG("Box2D: transform position normalized: (", transform.positionNormalized.x, "; ", transform.positionNormalized.y, ")");
 			
 		}
 

@@ -76,6 +76,9 @@ public:
 		if (floor != nullptr)
 			delete floor;
 		floor = nullptr;
+		if (grid != nullptr)
+			delete grid;
+		grid = nullptr;
 		if (background != nullptr)
 			delete background;
 		background = nullptr;
@@ -221,7 +224,7 @@ public:
 			
 			// physics setup
 			CSE::PhysicsComponent& physicsComponent = player1->AddComponent<CSE::PhysicsComponent>();
-			physicsComponent.position = {50, 0, 0};
+			physicsComponent.position = {130, 100, 0};
 			
 			CSE::PhysicsHitBox hitbox;
 			hitbox.hitBoxType = CSE::PhysicsDefines::HitBoxType::Circle;
@@ -233,7 +236,7 @@ public:
 			physicsComponent.velocity = {0.0f, 0.0f};
 			physicsComponent.acceleration = {0.0f, 0.0f};
 			physicsComponent.mass = 1.0f;
-			physicsComponent.bodyType = CSE::PhysicsDefines::BodyType::Static;
+			physicsComponent.bodyType = CSE::PhysicsDefines::BodyType::Dynamic;
 			GetPhysicsProcessor()->RegisterEntity(player1);
 		}
 		
@@ -313,7 +316,7 @@ public:
 			
 			// physics setup
 			CSE::PhysicsComponent& physicsComponent = player2->AddComponent<CSE::PhysicsComponent>();
-			physicsComponent.position = {-10, 0, 0};
+			physicsComponent.position = {70, 100, 0};
 			
 			CSE::PhysicsHitBox hitbox;
 			hitbox.hitBoxType = CSE::PhysicsDefines::HitBoxType::Circle;
@@ -325,8 +328,63 @@ public:
 			physicsComponent.velocity = {0.0f, 0.0f};
 			physicsComponent.acceleration = {0.0f, 0.0f};
 			physicsComponent.mass = 1.0f;
-			physicsComponent.bodyType = CSE::PhysicsDefines::BodyType::Static;
+			physicsComponent.bodyType = CSE::PhysicsDefines::BodyType::Dynamic;
 			GetPhysicsProcessor()->RegisterEntity(player2);
+		}
+		
+		CSE_LOG("- grid");
+		if (grid == nullptr)
+		{
+			// a player1 entity on the screen
+			grid = CreateEntity("Grid");
+			
+			// physical position
+			CSE::PositionComponent& position = grid->AddComponent<CSE::PositionComponent>(0, 0);
+			
+			// screen representation
+			CSE::TransformComponent& transform = grid->AddComponent<CSE::TransformComponent>();
+			transform.position = {160, 156};
+			transform.size = {12, 60};
+			transform.Normalize({
+				GetLayer()->GetWindow()->GetPrefs().width,
+				GetLayer()->GetWindow()->GetPrefs().height,
+			});
+			
+			// state machine setup
+			CSE::StateMachineComponent& stateMachine = grid->AddComponent<CSE::StateMachineComponent>();
+			stateMachine.AddState(CSE::EntityStates::STAND);
+			stateMachine.SetState(CSE::EntityStates::STAND);
+			
+			// sprite control
+			CSE::SpriteComponent& spriteComponent = grid->AddComponent<CSE::SpriteComponent>(sprite);
+			spriteComponent.tilingFactor = {0.0f, 4.0f};
+			
+			// animation addon to sprite control
+			CSE::AnimationComponent& animationComponent = grid->AddComponent<CSE::AnimationComponent>();
+			animationComponent.Add(
+				CSE::EntityStates::STAND1, 
+				new CSE::AnimationFrames( {72, 26}, {76, 29}, 5, 4, 4.0f, true)
+				);
+			animationComponent.Set(CSE::EntityStates::STAND1);
+			animationComponent.Start();
+			
+			// physics setup
+			
+			CSE::PhysicsComponent& physicsComponent = grid->AddComponent<CSE::PhysicsComponent>();
+			physicsComponent.position = {100, 100, 0};
+			
+			CSE::PhysicsHitBox hitbox; // match rectangle points coordinates to transform size
+			hitbox.hitBoxType = CSE::PhysicsDefines::HitBoxType::Rectangle;
+			hitbox.points = {{-0.01, 2}, {0.01, 2}, {0.01, 0}, {-0.01, 0}};
+			// hitbox.radius = 1.0f;
+			
+			physicsComponent.entity = *grid;
+			physicsComponent.hitBoxes.push_back(hitbox);
+			physicsComponent.velocity = {0.0f, 0.0f};
+			physicsComponent.acceleration = {0.0f, 0.0f};
+			physicsComponent.mass = 1.0f;
+			physicsComponent.bodyType = CSE::PhysicsDefines::BodyType::Static;
+			GetPhysicsProcessor()->RegisterEntity(grid);
 		}
 		
 		CSE_LOG("- floor");
@@ -352,27 +410,13 @@ public:
 			stateMachine.AddState(CSE::EntityStates::STAND);
 			stateMachine.SetState(CSE::EntityStates::STAND);
 			
-			// sprite control
-			CSE::SpriteComponent& spriteComponent = floor->AddComponent<CSE::SpriteComponent>(sprite);
-			spriteComponent.tilingFactor = {0.0f, 4.0f};
-			
-			// animation addon to sprite control
-			CSE::AnimationComponent& animationComponent = floor->AddComponent<CSE::AnimationComponent>();
-			animationComponent.Add(
-				CSE::EntityStates::STAND1, 
-				new CSE::AnimationFrames( {72, 26}, {76, 29}, 5, 4, 4.0f, true)
-				);
-			animationComponent.Set(CSE::EntityStates::STAND1);
-			animationComponent.Start();
-			
 			// physics setup
-			
 			CSE::PhysicsComponent& physicsComponent = floor->AddComponent<CSE::PhysicsComponent>();
-			physicsComponent.position = {0, 0, 0};
+			physicsComponent.position = {100, 143, 0};
 			
 			CSE::PhysicsHitBox hitbox; // match rectangle points coordinates to transform size
 			hitbox.hitBoxType = CSE::PhysicsDefines::HitBoxType::Rectangle;
-			hitbox.points = {{-0.02, 2}, {0.02, 2}, {0.02, 0}, {-0.02, 0}};
+			hitbox.points = {{-100, 0}, {100, 0}, {100, -1}, {-100, -1}};
 			// hitbox.radius = 1.0f;
 			
 			physicsComponent.entity = *floor;
@@ -380,13 +424,13 @@ public:
 			physicsComponent.velocity = {0.0f, 0.0f};
 			physicsComponent.acceleration = {0.0f, 0.0f};
 			physicsComponent.mass = 1.0f;
+			physicsComponent.friction = 0.0f;
 			physicsComponent.bodyType = CSE::PhysicsDefines::BodyType::Static;
 			GetPhysicsProcessor()->RegisterEntity(floor);
-			
 		}
 		
 		// turn physics off temporarily
-		PhysicsOff();
+		// PhysicsOff();
 	}
 	
 	void OnUpdate(CSE::TimeType timeFrame)
@@ -400,6 +444,7 @@ public:
 			CSE::KeyBoardComponent& keyBoard = player.GetComponent<CSE::KeyBoardComponent>();
 			CSE::AnimationComponent& animation = player.GetComponent<CSE::AnimationComponent>();
 			CSE::PositionComponent& position = player.GetComponent<CSE::PositionComponent>();
+			CSE::PhysicsComponent& physics = player.GetComponent<CSE::PhysicsComponent>();
 			CSE::TransformComponent& transform = player.GetComponent<CSE::TransformComponent>();
 			CSE::StateMachineComponent& stateMachine = player.GetComponent<CSE::StateMachineComponent>();
 			
@@ -469,20 +514,22 @@ public:
 					
 					if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Down]))
 					{
-						position.y += 0.2f;
-						GetActiveCamera()->MoveBy({0.0f, 0.2f});
+						// physics.position.y += 0.2f;
+						//GetActiveCamera()->MoveBy({0.0f, 0.2f});
 					}
 					
 					if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Left]))
 					{
-						position.x -= 0.2f;
-						GetActiveCamera()->MoveBy({-0.2f, 0.0f});
+						// physics.position.x -= 0.2f;
+						physics.velocity.x = -5;
+						//GetActiveCamera()->MoveBy({-0.2f, 0.0f});
 					}
 					
 					if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Right]))
 					{
-						position.x += 0.2f;
-						GetActiveCamera()->MoveBy({0.2f, 0.0f});
+						// physics.position.x += 0.2f;
+						physics.velocity.x = 5;
+						//GetActiveCamera()->MoveBy({0.2f, 0.0f});
 					}
 					
 					CSE_LOG(player.GetComponent<CSE::NameComponent>().value, " coordinates: (", position.x, "; ", position.y, ")");
@@ -498,8 +545,9 @@ public:
 				{
 					if (position.y > 0.75f)
 					{
-						position.y -= 0.2f;
-						GetActiveCamera()->MoveBy({0.0f, -0.2f});
+						// physics.position.y -= 0.2f;
+						physics.velocity.y = 5;
+						//GetActiveCamera()->MoveBy({0.0f, -0.2f});
 					} else {
 						stateMachine.SetState(CSE::EntityStates::FLY);
 					}
@@ -509,8 +557,9 @@ public:
 				
 				if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Left]))
 				{
-					position.x -= 0.2f;
-					GetActiveCamera()->MoveBy({-0.2f, 0.0f});
+					// physics.position.x -= 0.2f;
+					physics.velocity.x = -5;
+					//GetActiveCamera()->MoveBy({-0.2f, 0.0f});
 					
 					// change animation if needed
 					if (CSE::EntityStates::JUMP2 != animation.Get())
@@ -522,8 +571,9 @@ public:
 				
 				if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Right]))
 				{
-					position.x += 0.2f;
-					GetActiveCamera()->MoveBy({0.2f, 0.0f});
+					// physics.position.x += 0.2f;
+					physics.velocity.x = 5;
+					//GetActiveCamera()->MoveBy({0.2f, 0.0f});
 					
 					// change animation if needed 
 					if (CSE::EntityStates::JUMP1 != animation.Get())
@@ -550,8 +600,9 @@ public:
 			{
 				if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Left]))
 				{
-					position.x -= 0.2f;
-					GetActiveCamera()->MoveBy({-0.2f, 0.0f});
+					// physics.position.x -= 0.2f;
+					physics.velocity.x = -5;
+					//GetActiveCamera()->MoveBy({-0.2f, 0.0f});
 					
 					// change animation if needed
 					if (CSE::EntityStates::JUMP2 != animation.Get())
@@ -563,8 +614,9 @@ public:
 				
 				if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Right]))
 				{
-					position.x += 0.2f;
-					GetActiveCamera()->MoveBy({0.2f, 0.0f});
+					// physics.position.x += 0.2f;
+					physics.velocity.x = 5;
+					//GetActiveCamera()->MoveBy({0.2f, 0.0f});
 					
 					// change animation if needed
 					if (CSE::EntityStates::JUMP1 != animation.Get())
@@ -576,8 +628,9 @@ public:
 				
 				if (position.y < 0.9f)
 				{
-					position.y += 0.2f;
-					GetActiveCamera()->MoveBy({0.0f, 0.2f});
+					physics.velocity.y = -5;
+					// physics.position.y += 0.2f;
+					//GetActiveCamera()->MoveBy({0.0f, 0.2f});
 				} else {
 					stateMachine.SetState(CSE::EntityStates::STAND);
 				}
@@ -593,6 +646,7 @@ private:
 	CSE::Entity* player1 = nullptr;
 	CSE::Entity* player2 = nullptr;
 	CSE::Entity* floor = nullptr;
+	CSE::Entity* grid = nullptr;
 	CSE::Entity* background = nullptr;
 	CSE::Entity* backgroundSDL = nullptr;
 };

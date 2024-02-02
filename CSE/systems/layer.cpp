@@ -281,50 +281,54 @@ namespace CSE
 				if (!(e.HasComponent<PhysicsComponent>() && !mayDrawPhysicalEntity))
 				{
 					TransformComponent& transform = e.GetComponent<TransformComponent>();
-					SpriteComponent& spriteComponent = e.GetComponent<SpriteComponent>();
 					
-					SDL_FRect place; // where to draw
-					SDL_Rect frame; // what to draw from a spritesheet
-					
-					// if a sprite is animated, choose the correct frame
-					if (e.HasComponent<AnimationComponent>())
+					if (e.HasComponent<SpriteComponent>())
 					{
-						AnimationComponent& animationComponent = e.GetComponent<AnimationComponent>();
-						AnimationFrames* frameset = animationComponent.frames[animationComponent.currentAnimation];
+						SpriteComponent& spriteComponent = e.GetComponent<SpriteComponent>();
 						
-						frame = 
+						SDL_FRect place; // where to draw
+						SDL_Rect frame; // what to draw from a spritesheet
+						
+						// if a sprite is animated, choose the correct frame
+						if (e.HasComponent<AnimationComponent>())
 						{
-							frameset->begin.x + (frameset->width * animationComponent.currentFrame),
-							frameset->begin.y,
-							std::abs(frameset->width),
-							std::abs(frameset->height)
-						};
-					} else {
-						frame = 
+							AnimationComponent& animationComponent = e.GetComponent<AnimationComponent>();
+							AnimationFrames* frameset = animationComponent.frames[animationComponent.currentAnimation];
+							
+							frame = 
+							{
+								frameset->begin.x + (frameset->width * animationComponent.currentFrame),
+								frameset->begin.y,
+								std::abs(frameset->width),
+								std::abs(frameset->height)
+							};
+						} else {
+							frame = 
+							{
+								0, 
+								0, 
+								(spriteComponent.clip.x <= spriteComponent.texture->GetWidth() ? spriteComponent.clip.x : spriteComponent.texture->GetWidth()), 
+								(spriteComponent.clip.y <= spriteComponent.texture->GetHeight() ? spriteComponent.clip.y : spriteComponent.texture->GetHeight())
+							};
+						}
+						
+						// CSE_CORE_LOG("Camera Position Normalized: ", cameraPositionNormalized.x, "; ", cameraPositionNormalized.y);
+						place = 
 						{
-							0, 
-							0, 
-							(spriteComponent.clip.x <= spriteComponent.texture->GetWidth() ? spriteComponent.clip.x : spriteComponent.texture->GetWidth()), 
-							(spriteComponent.clip.y <= spriteComponent.texture->GetHeight() ? spriteComponent.clip.y : spriteComponent.texture->GetHeight())
+							transform.positionNormalized.x - cameraPositionNormalized.x - transform.sizeNormalized.x/2, 
+							transform.positionNormalized.y - cameraPositionNormalized.y - transform.sizeNormalized.y/2,
+							transform.sizeNormalized.x,
+							transform.sizeNormalized.y,
 						};
+						
+						// CSE_CORE_LOG("Entity ", e.GetComponent<CSE::NameComponent>().value);
+						Renderer::DrawTiledTexture(
+							spriteComponent.texture,
+							&place,
+							&frame,
+							spriteComponent.tilingFactor
+							);
 					}
-					
-					// CSE_CORE_LOG("Camera Position Normalized: ", cameraPositionNormalized.x, "; ", cameraPositionNormalized.y);
-					place = 
-					{
-						transform.positionNormalized.x - cameraPositionNormalized.x - transform.sizeNormalized.x/2, 
-						transform.positionNormalized.y - cameraPositionNormalized.y - transform.sizeNormalized.y/2,
-						transform.sizeNormalized.x,
-						transform.sizeNormalized.y,
-					};
-					
-					// CSE_CORE_LOG("Entity ", e.GetComponent<CSE::NameComponent>().value);
-					Renderer::DrawTiledTexture(
-						spriteComponent.texture,
-						&place,
-						&frame,
-						spriteComponent.tilingFactor
-						);
 					
 					if (Application::IsRenderWireframes())
 					{
