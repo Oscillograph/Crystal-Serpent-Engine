@@ -43,6 +43,8 @@ namespace CSE
 		
 		// processors
 		virtual void GeneralRoutine(Scene* scene, TimeType sceneTime) = 0;
+		virtual void ApplyForce(Entity e, glm::vec2 vector, float amplitude) = 0;
+		virtual void ApplyImpulse(Entity e, glm::vec2 vector, float amplitude) = 0;
 		
 		// general
 		virtual void Shutdown() = 0;

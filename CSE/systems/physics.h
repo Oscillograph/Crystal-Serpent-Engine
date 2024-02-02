@@ -45,6 +45,8 @@ namespace CSE
 		
 		// processors
 		void GeneralRoutine(Scene* scene, TimeType sceneTime);
+		void ApplyForce(Entity e, glm::vec2 vector, float amplitude);
+		void ApplyImpulse(Entity e, glm::vec2 vector, float amplitude);
 		
 		// general
 		void Init(const PhysicsSystem& physicsSystem);

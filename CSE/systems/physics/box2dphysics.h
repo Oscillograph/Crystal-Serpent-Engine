@@ -33,6 +33,8 @@ namespace CSE
 		
 		// processors
 		virtual void GeneralRoutine(Scene* scene, TimeType sceneTime) override;
+		virtual void ApplyForce(Entity e, glm::vec2 vector, float amplitude) override;
+		virtual void ApplyImpulse(Entity e, glm::vec2 vector, float amplitude) override;
 		
 		// general
 		virtual void Shutdown() override;

@@ -166,6 +166,16 @@ namespace CSE
 		}
 	}
 	
+	void PhysicsProcessor::ApplyForce(Entity e, glm::vec2 vector, float amplitude)
+	{
+		m_API->ApplyForce(e, vector, amplitude);
+	}
+	
+	void PhysicsProcessor::ApplyImpulse(Entity e, glm::vec2 vector, float amplitude)
+	{
+		m_API->ApplyImpulse(e, vector, amplitude);
+	}
+	
 	void PhysicsProcessor::Move(Entity* A)
 	{
 		PhysicsComponent& physics = A->GetComponent<PhysicsComponent>();

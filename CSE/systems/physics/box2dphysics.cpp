@@ -55,8 +55,9 @@ namespace CSE
 			physics.position.y + m_WorldProperties.size.y/2
 			);
 		bodyDefinition.linearVelocity.Set(0, 0);
-		//bodyDefinition.allowSleep = false;
-		//bodyDefinition.awake = true;
+		bodyDefinition.allowSleep = false;
+		bodyDefinition.awake = true;
+		bodyDefinition.fixedRotation = true;
 		
 		b2Body* body = m_Box2DWorld->CreateBody(&bodyDefinition);
 		CSE_CORE_LOG("Do we even register anyfin?");
@@ -220,14 +221,14 @@ namespace CSE
 		// CSE_CORE_LOG("Box2D: General routine - Step");
 		
 		// update components
-		CSE_CORE_LOG("Box2D: General routine - update components data");
+		// CSE_CORE_LOG("Box2D: General routine - update components data");
 		glm::vec4 cameraArea = scene->GetActiveCamera()->GetTargetArea();
-		CSE_CORE_LOG("Box2D: camera at: (", cameraArea.x, "; ", cameraArea.y, "; ", cameraArea.z, "; ", cameraArea.w, ")");
+		// CSE_CORE_LOG("Box2D: camera at: (", cameraArea.x, "; ", cameraArea.y, "; ", cameraArea.z, "; ", cameraArea.w, ")");
 		for (b2Body* currentBody = m_Box2DWorld->GetBodyList(); currentBody; currentBody = currentBody->GetNext())
 		{
 			// fetch the corresponding entity - we gonna store user data somehow
 			e = {(entt::entity)(m_Bodies[currentBody]), scene};
-			CSE_CORE_LOG("Box2D: Entity \"", e.GetComponent<NameComponent>().value, "\"");
+			// CSE_CORE_LOG("Box2D: Entity \"", e.GetComponent<NameComponent>().value, "\"");
 			
 			PhysicsComponent &physics = e.GetComponent<PhysicsComponent>();
 			TransformComponent& transform = e.GetComponent<TransformComponent>();
@@ -235,7 +236,7 @@ namespace CSE
 			b2Vec2 bodyPosition = currentBody->GetPosition();
 			physics.position.x = bodyPosition.x - m_WorldProperties.size.x/2;
 			physics.position.y = bodyPosition.y - m_WorldProperties.size.y/2;
-			CSE_CORE_LOG("Box2D: position: (", physics.position.x, "; ", physics.position.y, ")");
+			// CSE_CORE_LOG("Box2D: position: (", physics.position.x, "; ", physics.position.y, ")");
 			
 			b2Vec2 bodyVelocity = currentBody->GetLinearVelocity();
 			physics.velocity.x = bodyVelocity.x;
@@ -254,12 +255,32 @@ namespace CSE
 				windowSize.x,
 				windowSize.y
 			});
-			CSE_CORE_LOG("Box2D: transform position: (", transform.position.x, "; ", transform.position.y, ")");
-			CSE_CORE_LOG("Box2D: transform position normalized: (", transform.positionNormalized.x, "; ", transform.positionNormalized.y, ")");
+			// CSE_CORE_LOG("Box2D: transform position: (", transform.position.x, "; ", transform.position.y, ")");
+			// CSE_CORE_LOG("Box2D: transform position normalized: (", transform.positionNormalized.x, "; ", transform.positionNormalized.y, ")");
 			
 		}
 
 		// CSE_CORE_LOG("Box2D: All bodies processed");
+	}
+	
+	void Box2DPhysics::ApplyForce(Entity e, glm::vec2 vector, float amplitude)
+	{
+		b2Body* body = m_Entities[(uint32_t)(e.GetID())];
+		b2Vec2 force = {
+			amplitude * vector.x,
+			amplitude * vector.y
+		};
+		body->ApplyForceToCenter(force, true);
+	}
+	
+	void Box2DPhysics::ApplyImpulse(Entity e, glm::vec2 vector, float amplitude)
+	{
+		b2Body* body = m_Entities[(uint32_t)(e.GetID())];
+		b2Vec2 impulse = {
+			amplitude * vector.x,
+			amplitude * vector.y
+		};
+		body->ApplyLinearImpulseToCenter(impulse, true);
 	}
 	
 	// general

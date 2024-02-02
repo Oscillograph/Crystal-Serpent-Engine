@@ -236,6 +236,7 @@ public:
 			physicsComponent.velocity = {0.0f, 0.0f};
 			physicsComponent.acceleration = {0.0f, 0.0f};
 			physicsComponent.mass = 1.0f;
+			physicsComponent.friction = 0.1f;
 			physicsComponent.bodyType = CSE::PhysicsDefines::BodyType::Dynamic;
 			GetPhysicsProcessor()->RegisterEntity(player1);
 		}
@@ -328,6 +329,7 @@ public:
 			physicsComponent.velocity = {0.0f, 0.0f};
 			physicsComponent.acceleration = {0.0f, 0.0f};
 			physicsComponent.mass = 1.0f;
+			physicsComponent.friction = 0.1f;
 			physicsComponent.bodyType = CSE::PhysicsDefines::BodyType::Dynamic;
 			GetPhysicsProcessor()->RegisterEntity(player2);
 		}
@@ -383,6 +385,7 @@ public:
 			physicsComponent.velocity = {0.0f, 0.0f};
 			physicsComponent.acceleration = {0.0f, 0.0f};
 			physicsComponent.mass = 1.0f;
+			physicsComponent.friction = 0.1f;
 			physicsComponent.bodyType = CSE::PhysicsDefines::BodyType::Static;
 			GetPhysicsProcessor()->RegisterEntity(grid);
 		}
@@ -424,7 +427,7 @@ public:
 			physicsComponent.velocity = {0.0f, 0.0f};
 			physicsComponent.acceleration = {0.0f, 0.0f};
 			physicsComponent.mass = 1.0f;
-			physicsComponent.friction = 0.0f;
+			physicsComponent.friction = 0.1f;
 			physicsComponent.bodyType = CSE::PhysicsDefines::BodyType::Static;
 			GetPhysicsProcessor()->RegisterEntity(floor);
 		}
@@ -435,6 +438,8 @@ public:
 	
 	void OnUpdate(CSE::TimeType timeFrame)
 	{
+		float maxSpeed = 20.0f;
+		
 		auto players = GetRegistry().view<CSE::KeyBoardComponent>();
 		for (auto& p : players)
 		{
@@ -453,6 +458,9 @@ public:
 			if (stateMachine.GetState()->data == CSE::EntityStates::STAND)
 			{
 				// change state
+				// physics.velocity.x = 0.0f;
+				// physics.velocity.y = 0.0f;
+				
 				if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Left]))
 					stateMachine.SetState(CSE::EntityStates::WALK);
 				if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Right]))
@@ -521,14 +529,16 @@ public:
 					if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Left]))
 					{
 						// physics.position.x -= 0.2f;
-						physics.velocity.x = -5;
+						// physics.velocity.x = -maxSpeed;
+						GetPhysicsProcessor()->ApplyForce(player, {-1.0f, 0.f}, maxSpeed);
 						//GetActiveCamera()->MoveBy({-0.2f, 0.0f});
 					}
 					
 					if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Right]))
 					{
 						// physics.position.x += 0.2f;
-						physics.velocity.x = 5;
+						// physics.velocity.x = maxSpeed;
+						GetPhysicsProcessor()->ApplyForce(player, {1.0f, 0.f}, maxSpeed);
 						//GetActiveCamera()->MoveBy({0.2f, 0.0f});
 					}
 					
@@ -543,10 +553,10 @@ public:
 			{
 				if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Jump]))
 				{
-					if (position.y > 0.75f)
+					if (physics.position.y > 140.0f)
 					{
 						// physics.position.y -= 0.2f;
-						physics.velocity.y = 5;
+						GetPhysicsProcessor()->ApplyForce(player, {0.0f, -1.0f}, maxSpeed);
 						//GetActiveCamera()->MoveBy({0.0f, -0.2f});
 					} else {
 						stateMachine.SetState(CSE::EntityStates::FLY);
@@ -558,7 +568,8 @@ public:
 				if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Left]))
 				{
 					// physics.position.x -= 0.2f;
-					physics.velocity.x = -5;
+					// physics.velocity.x = -maxSpeed;
+					GetPhysicsProcessor()->ApplyForce(player, {-1.0f, 0.f}, maxSpeed);
 					//GetActiveCamera()->MoveBy({-0.2f, 0.0f});
 					
 					// change animation if needed
@@ -572,7 +583,8 @@ public:
 				if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Right]))
 				{
 					// physics.position.x += 0.2f;
-					physics.velocity.x = 5;
+					// physics.velocity.x = maxSpeed;
+					GetPhysicsProcessor()->ApplyForce(player, {1.0f, 0.f}, maxSpeed);
 					//GetActiveCamera()->MoveBy({0.2f, 0.0f});
 					
 					// change animation if needed 
@@ -598,10 +610,13 @@ public:
 			
 			if (stateMachine.GetState()->data == CSE::EntityStates::FALL)
 			{
+				physics.velocity.y = maxSpeed;
+				
 				if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Left]))
 				{
 					// physics.position.x -= 0.2f;
-					physics.velocity.x = -5;
+					// physics.velocity.x = -maxSpeed;
+					GetPhysicsProcessor()->ApplyForce(player, {-1.0f, 0.f}, maxSpeed);
 					//GetActiveCamera()->MoveBy({-0.2f, 0.0f});
 					
 					// change animation if needed
@@ -615,7 +630,8 @@ public:
 				if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Right]))
 				{
 					// physics.position.x += 0.2f;
-					physics.velocity.x = 5;
+					// physics.velocity.x = maxSpeed;
+					GetPhysicsProcessor()->ApplyForce(player, {1.0f, 0.f}, maxSpeed);
 					//GetActiveCamera()->MoveBy({0.2f, 0.0f});
 					
 					// change animation if needed
@@ -626,9 +642,9 @@ public:
 					}
 				}
 				
-				if (position.y < 0.9f)
+				if (physics.position.y < 100.0f)
 				{
-					physics.velocity.y = -5;
+					// physics.velocity.y = maxSpeed;
 					// physics.position.y += 0.2f;
 					//GetActiveCamera()->MoveBy({0.0f, 0.2f});
 				} else {

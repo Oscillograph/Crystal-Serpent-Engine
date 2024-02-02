@@ -1,5 +1,7 @@
 #include <CSE/systems/physics/csephysics.h>
 
+#include <CSE/systems/entity.h>
+
 namespace CSE
 {
 	CSEPhysics::CSEPhysics()
@@ -47,6 +49,14 @@ namespace CSE
 	
 	// processors
 	void CSEPhysics::GeneralRoutine(Scene* scene, TimeType sceneTime) 
+	{
+	}
+	
+	void CSEPhysics::ApplyForce(Entity e, glm::vec2 vector, float amplitude)
+	{
+	}
+	
+	void CSEPhysics::ApplyImpulse(Entity e, glm::vec2 vector, float amplitude)
 	{
 	}
 	
