@@ -225,7 +225,8 @@ namespace CSE
 					// how many whole tiles there are?
 					xNum = (int)floorf((float)regionSize.x / (wholeTileSize.x * tilingFactor.x));
 					// and we need to know how big the remainder is
-					xMod = (int)floorf(regionSize.x - (xNum * wholeTileSize.x * tilingFactor.x)); 
+					xMod = (int)floorf(regionSize.x - (xNum * wholeTileSize.x * tilingFactor.x));
+					xMod = (int)(floorf)((float)xMod / tilingFactor.x);
 					if (xMod > 0)
 						xNum++;
 				} else { // not only prevent division by zero, but also allow no-tiling at all
@@ -239,7 +240,8 @@ namespace CSE
 					// how many whole tiles there are?
 					yNum = (int)floorf((float)regionSize.y / (wholeTileSize.y * tilingFactor.y)); 
 					// and we need to know how big the remainder is
-					yMod = (int)floorf(regionSize.y - (yNum * wholeTileSize.y * tilingFactor.y)); 
+					yMod = (int)floorf(regionSize.y - (yNum * wholeTileSize.y * tilingFactor.y));
+					yMod = (int)(floorf)((float)yMod / tilingFactor.y);
 					if (yMod > 0)
 						yNum++;
 				} else { // not only prevent division by zero, but also allow no-tiling at all
@@ -260,7 +262,7 @@ namespace CSE
 				{
 					if ((x == (xNum - 1)) && (xMod > 0))
 					{
-						currentTileSize.x = wholeTileSize.x - xMod;
+						currentTileSize.x = xMod; //wholeTileSize.x - xMod;
 					} else {
 						currentTileSize.x = wholeTileSize.x;
 					}
@@ -269,7 +271,7 @@ namespace CSE
 					{
 						if ((y == (yNum - 1)) && (yMod > 0))
 						{
-							currentTileSize.y = wholeTileSize.y - yMod;
+							currentTileSize.y = yMod; //wholeTileSize.y - yMod;
 						} else {
 							currentTileSize.y = wholeTileSize.y;
 						}
