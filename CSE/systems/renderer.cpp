@@ -54,7 +54,8 @@ namespace CSE
 			windowScale.x * m_CurrentScreen.z,
 			windowScale.y * m_CurrentScreen.w
 		};
-		SDL_RenderSetViewport(GetActiveRenderer(), &viewport);
+		// SDL_RenderSetViewport(GetActiveRenderer(), &viewport);
+		SDL_RenderSetClipRect(GetActiveRenderer(), &viewport);
 	}
 	
 	void Renderer::SetActiveScreenDefault()
@@ -78,7 +79,8 @@ namespace CSE
 			windowScale.x * m_CurrentScreen.z,
 			windowScale.y * m_CurrentScreen.w
 		};
-		SDL_RenderSetViewport(GetActiveRenderer(), &viewport);
+		// SDL_RenderSetViewport(GetActiveRenderer(), &viewport);
+		SDL_RenderSetClipRect(GetActiveRenderer(), &viewport);
 	}
 	
 	void Renderer::SetBackgroundColor(const glm::u8vec4& color)
@@ -176,8 +178,8 @@ namespace CSE
 			// CSE_CORE_LOG("Viewport (x; y): ", m_CurrentScreen.x, "; ", m_CurrentScreen.y);
 			*place = 
 			{ 
-				(int)floorf(windowScale.x * m_CurrentScreen.z * destRect->x), 
-				(int)floorf(windowScale.y * m_CurrentScreen.w * destRect->y), 
+				(int)floorf(windowScale.x * (m_CurrentScreen.x + m_CurrentScreen.z * destRect->x)), 
+				(int)floorf(windowScale.y * (m_CurrentScreen.y + m_CurrentScreen.w * destRect->y)), 
 				(int)floorf(windowScale.x * m_CurrentScreen.z * destRect->w), 
 				(int)floorf(windowScale.y * m_CurrentScreen.w * destRect->h) 
 			};
@@ -185,10 +187,10 @@ namespace CSE
 			// not making it NULL is important for the next step - tiling
 			*place = 
 			{ 
-				0, 
-				0, 
+				windowScale.x * m_CurrentScreen.x, 
+				windowScale.y * m_CurrentScreen.y, 
 				windowScale.x * m_CurrentScreen.z, 
-				windowScale.x * m_CurrentScreen.w 
+				windowScale.y * m_CurrentScreen.w 
 			};
 		}
 		
@@ -287,8 +289,8 @@ namespace CSE
 						
 						*newPlace = 
 						{
-							windowScale.x * currentTilePlace.x, 
-							windowScale.y * currentTilePlace.y,
+							windowScale.x * (m_CurrentScreen.x + currentTilePlace.x), 
+							windowScale.y * (m_CurrentScreen.y + currentTilePlace.y),
 							windowScale.x * currentTilePlace.z, 
 							windowScale.y * currentTilePlace.w 
 						};
@@ -344,8 +346,8 @@ namespace CSE
 		
 		SDL_FRect rect = 
 		{
-			windowScale.x * (m_CurrentScreen.z * (center.x - size.x/2)), 
-			windowScale.y * (m_CurrentScreen.w * (center.y - size.y/2)), 
+			windowScale.x * (m_CurrentScreen.x + m_CurrentScreen.z * (center.x - size.x/2)), 
+			windowScale.y * (m_CurrentScreen.y + m_CurrentScreen.w * (center.y - size.y/2)), 
 			windowScale.x * m_CurrentScreen.z * size.x, 
 			windowScale.y * m_CurrentScreen.w * size.y
 		};
@@ -371,24 +373,24 @@ namespace CSE
 		
 		SDL_Point points[5] = {
 			{
-				(int)roundf(windowScale.x * (m_CurrentScreen.z * p1.x)),
-				(int)roundf(windowScale.y * (m_CurrentScreen.w * p1.y)),
+				(int)roundf(windowScale.x * (m_CurrentScreen.x + m_CurrentScreen.z * p1.x)),
+				(int)roundf(windowScale.y * (m_CurrentScreen.y + m_CurrentScreen.w * p1.y)),
 			}, 
 			{
-				(int)roundf(windowScale.x * (m_CurrentScreen.z * p2.x)),
-				(int)roundf(windowScale.y * (m_CurrentScreen.w * p2.y)),
+				(int)roundf(windowScale.x * (m_CurrentScreen.x + m_CurrentScreen.z * p2.x)),
+				(int)roundf(windowScale.y * (m_CurrentScreen.y + m_CurrentScreen.w * p2.y)),
 			},  
 			{
-				(int)roundf(windowScale.x * (m_CurrentScreen.z * p3.x)),
-				(int)roundf(windowScale.y * (m_CurrentScreen.w * p3.y)),
+				(int)roundf(windowScale.x * (m_CurrentScreen.x + m_CurrentScreen.z * p3.x)),
+				(int)roundf(windowScale.y * (m_CurrentScreen.y + m_CurrentScreen.w * p3.y)),
 			}, 
 			{
-				(int)roundf(windowScale.x * (m_CurrentScreen.z * p4.x)),
-				(int)roundf(windowScale.y * (m_CurrentScreen.w * p4.y)),
+				(int)roundf(windowScale.x * (m_CurrentScreen.x + m_CurrentScreen.z * p4.x)),
+				(int)roundf(windowScale.y * (m_CurrentScreen.y + m_CurrentScreen.w * p4.y)),
 			},
 			{
-				(int)roundf(windowScale.x * (m_CurrentScreen.z * p1.x)),
-				(int)roundf(windowScale.y * (m_CurrentScreen.w * p1.y)),
+				(int)roundf(windowScale.x * (m_CurrentScreen.x + m_CurrentScreen.z * p1.x)),
+				(int)roundf(windowScale.y * (m_CurrentScreen.y + m_CurrentScreen.w * p1.y)),
 			}
 		};
 		

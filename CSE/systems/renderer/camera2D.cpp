@@ -153,7 +153,7 @@ namespace CSE
 	bool Camera2D::Sees(PhysicsComponent* physicsComponent)
 	{
 		// TODO: make sure the check is smooth
-		
+		/*
 		if ((physicsComponent->position.x >= m_TargetAreaBorder.x) &&
 			(physicsComponent->position.y >= m_TargetAreaBorder.y) &&
 			(physicsComponent->position.x <= m_TargetAreaBorder.z) &&
@@ -162,7 +162,7 @@ namespace CSE
 			return true;
 		}
 		return false;
-		
-		// return true;
+		*/
+		return true;
 	};
 }
