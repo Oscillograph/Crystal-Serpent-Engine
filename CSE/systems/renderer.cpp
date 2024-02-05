@@ -232,7 +232,6 @@ namespace CSE
 				} else { // not only prevent division by zero, but also allow no-tiling at all
 					xNum = 1;
 					xMod = 0;
-					tilingFactor.x = (windowSize.x / m_CurrentScreen.z) * (*destRect).w / wholeTileSize.x; // prevent multiplying by zero
 				}
 				
 				if (tilingFactor.y > 0.0f) // first of all, we need to know how many times to multiply the image
@@ -247,7 +246,6 @@ namespace CSE
 				} else { // not only prevent division by zero, but also allow no-tiling at all
 					yNum = 1;
 					yMod = 0;
-					tilingFactor.y = (windowSize.y / m_CurrentScreen.w) * (*destRect).h / wholeTileSize.y; // prevent multiplying by zero
 				}
 				
 				// CSE_LOG("xNum: ", xNum, "; yNum: ", yNum, "; xMod: ", xMod, "; yMod: ", yMod);
@@ -284,10 +282,23 @@ namespace CSE
 							currentTileSize.y 
 						};
 						
-						currentTilePlace.x = (windowSize.x * (*destRect).x + (x * wholeTileSize.x * tilingFactor.x)) * m_CurrentScreen.z / windowSize.x;
-						currentTilePlace.y = (windowSize.y * (*destRect).y + (y * wholeTileSize.y * tilingFactor.y)) * m_CurrentScreen.z / windowSize.x;
-						currentTilePlace.z = currentTileSize.x * tilingFactor.x * m_CurrentScreen.z / windowSize.x;
-						currentTilePlace.w = currentTileSize.y * tilingFactor.y * m_CurrentScreen.w / windowSize.y;
+						if (tilingFactor.x > 0.0f)
+						{
+							currentTilePlace.x = (windowSize.x * (*destRect).x + (x * wholeTileSize.x * tilingFactor.x)) * m_CurrentScreen.z / windowSize.x;
+							currentTilePlace.z = currentTileSize.x * tilingFactor.x * m_CurrentScreen.z / windowSize.x;
+						} else {
+							currentTilePlace.x = (m_CurrentScreen.z * (*destRect).x);
+							currentTilePlace.z = m_CurrentScreen.z * (*destRect).w;
+						}
+						
+						if (tilingFactor.y > 0.0f)
+						{
+							currentTilePlace.y = (windowSize.y * (*destRect).y + (y * wholeTileSize.y * tilingFactor.y)) * m_CurrentScreen.z / windowSize.x;
+							currentTilePlace.w = currentTileSize.y * tilingFactor.y * m_CurrentScreen.w / windowSize.y;
+						} else {
+							currentTilePlace.y = (m_CurrentScreen.w * (*destRect).y);
+							currentTilePlace.w = m_CurrentScreen.w * (*destRect).h;
+						}
 						
 						*newPlace = 
 						{

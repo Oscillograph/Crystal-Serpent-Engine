@@ -20,7 +20,7 @@ namespace CSE
 		: m_EntityID(entityID), m_Scene(scene)
 		{}
 		
-		~Entity()
+		virtual ~Entity()
 		{
 			m_Scene = nullptr;
 		}
@@ -79,7 +79,7 @@ namespace CSE
 			return !(*this == other);
 		};
 		
-	private:
+	protected:
 		entt::entity m_EntityID;
 		Scene* m_Scene = nullptr;
 	};

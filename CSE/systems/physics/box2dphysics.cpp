@@ -43,6 +43,7 @@ namespace CSE
 	
 	void Box2DPhysics::RegisterEntity(Entity* A) // make the entity seen by the physics processor
 	{
+		CSE_CORE_LOG("Box2D: Register entity");
 		PhysicsComponent& physics = A->GetComponent<PhysicsComponent>();
 		// PositionComponent& position = A->GetComponent<PositionComponent>();
 		TransformComponent& transform = A->GetComponent<TransformComponent>();
@@ -60,7 +61,7 @@ namespace CSE
 		bodyDefinition.fixedRotation = true;
 		
 		b2Body* body = m_Box2DWorld->CreateBody(&bodyDefinition);
-		CSE_CORE_LOG("Do we even register anyfin?");
+		
 		// TODO: implement hitbox children processing
 		for (int i = 0; i < physics.hitBoxes.size(); i++)
 		{

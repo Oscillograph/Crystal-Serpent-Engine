@@ -24,22 +24,13 @@ public:
 		// TODO: figure out how to de-initialize a scene for a proper scene unload mechanism
 		if (logo == nullptr)
 		{
-			logo = CreateEntity("CSE Logotype");
-			
-			// screen position
-			CSE::TransformComponent& transform = logo->AddComponent<CSE::TransformComponent>();
-			transform.position = {160, 120};
-			transform.size = {320, 240};
-			transform.Normalize({
-				GetLayer()->GetWindow()->GetPrefs().width,
-				GetLayer()->GetWindow()->GetPrefs().height,
-			});
-			
-			// sprite control
-			sprite = new CSE::Texture("./CSE/assets/CSE_logo.png", GetLayer()->GetWindow()->GetRenderer());
-			CSE::SpriteComponent& spriteComponent = logo->AddComponent<CSE::SpriteComponent>(sprite);
-			// spriteComponent.clip = {9000, 9000};
-			// spriteComponent.tilingFactor = {0.0f, 0.0f};
+			logo = new CSE::Arcade::Decoration(
+				this, 
+				"CSE Logotype",
+				"./CSE/assets/CSE_logo.png",
+				{160, 120},
+				{320, 240}
+				);
 		}
 	}
 	
@@ -92,344 +83,173 @@ public:
 		CSE_LOG("- background logo");
 		if (background == nullptr)
 		{
-			background = CreateEntity("Background");
-			
-			// screen representation
-			CSE::TransformComponent& transform = background->AddComponent<CSE::TransformComponent>();
-			transform.position = {80, 60}; // basically, the centre point
-			transform.size = {160, 120};
-			transform.Normalize({
-				GetLayer()->GetWindow()->GetPrefs().width,
-				GetLayer()->GetWindow()->GetPrefs().height,
-			});
-			
-			// sprite control
-			spriteBG = new CSE::Texture("./CSE/assets/CSE_logo.png", GetLayer()->GetWindow()->GetRenderer(), {0, 0, 0});
-			CSE::SpriteComponent& spriteComponent = background->AddComponent<CSE::SpriteComponent>(spriteBG);
-			spriteComponent.tilingFactor = {0.6f, 0.6f};
+			background = new CSE::Arcade::Decoration(
+				this, 
+				"Background",
+				"./CSE/assets/CSE_logo.png",
+				{80, 60},
+				{160, 120},
+				{0.6f, 0.6f},
+				{0, 0, 0}
+				);
 		}
 		
 		CSE_LOG("- background SDL");
 		if (backgroundSDL == nullptr)
 		{
-			backgroundSDL = CreateEntity("Background");
-			
-			// screen representation
-			CSE::TransformComponent& transform = backgroundSDL->AddComponent<CSE::TransformComponent>();
-			transform.position = {240, 60}; // basically, the centre point
-			transform.size = {160, 120};
-			transform.Normalize({
-				GetLayer()->GetWindow()->GetPrefs().width,
-				GetLayer()->GetWindow()->GetPrefs().height,
-			});
-			
-			// sprite control
-			spriteSDL = new CSE::Texture("./CSE/assets/SDL_logo.png", GetLayer()->GetWindow()->GetRenderer(), {0, 0, 0});
-			CSE::SpriteComponent& spriteComponent = backgroundSDL->AddComponent<CSE::SpriteComponent>(spriteSDL);
-			spriteComponent.tilingFactor = {0.4f, 0.4f};
+			backgroundSDL = new CSE::Arcade::Decoration(
+				this, 
+				"Background SDL",
+				"./CSE/assets/SDL_logo.png",
+				{240, 60},
+				{160, 120},
+				{0.4f, 0.4f},
+				{0, 0, 0}
+				);
 		}
 		
 		CSE_LOG("- player 1");
 		if (player1 == nullptr)
 		{
 			// a player1 entity on the screen
-			player1 = CreateEntity("Player 1");
-			
-			// physical position
-			CSE::PositionComponent& position = player1->AddComponent<CSE::PositionComponent>(10, 0);
-			position.direction = 1; // 1 means right, -1 means left
-			
-			// screen representation
-			CSE::TransformComponent& transform = player1->AddComponent<CSE::TransformComponent>();
-			transform.position = {240, 216};
-			transform.size = {32, 36};
-			transform.Normalize({
-				GetLayer()->GetWindow()->GetPrefs().width,
-				GetLayer()->GetWindow()->GetPrefs().height,
-			});
-			
-			// state machine setup
-			CSE::StateMachineComponent& stateMachine = player1->AddComponent<CSE::StateMachineComponent>();
-			CSE::State* walkState = stateMachine.AddState(CSE::EntityStates::WALK);
-			CSE::State* standState = stateMachine.AddState(CSE::EntityStates::STAND);
-			CSE::State* jumpState = stateMachine.AddState(CSE::EntityStates::JUMP);
-			CSE::State* flyState = stateMachine.AddState(CSE::EntityStates::FLY);
-			CSE::State* fallState = stateMachine.AddState(CSE::EntityStates::FALL);
-
-			walkState->AllowEntryFrom(standState->data);
-			walkState->AllowEntryFrom(fallState->data);
-			walkState->AllowExitTo(standState->data);
-			walkState->AllowExitTo(jumpState->data);
-			
-			standState->AllowEntryFrom(walkState->data);
-			standState->AllowEntryFrom(fallState->data);
-			standState->AllowExitTo(walkState->data);
-			standState->AllowExitTo(jumpState->data);
-			
-			jumpState->AllowEntryFrom(standState->data);
-			jumpState->AllowEntryFrom(walkState->data);
-			jumpState->AllowExitTo(flyState->data);
-			
-			flyState->AllowEntryFrom(jumpState->data);
-			flyState->AllowExitTo(fallState->data);
-			
-			fallState->AllowEntryFrom(flyState->data);
-			fallState->AllowExitTo(standState->data);
-			fallState->AllowExitTo(walkState->data);
-			
-			stateMachine.SetState(CSE::EntityStates::STAND);
-			
-			std::unordered_map<int, SDL_Keycode> player1KBControls = {
-				{CSE::Commands::KBCommand_Left, CSE::ScanCode::Left}, 
-				{CSE::Commands::KBCommand_Right, CSE::ScanCode::Right},
-				{CSE::Commands::KBCommand_Jump, CSE::ScanCode::Up},
-				{CSE::Commands::KBCommand_Down, CSE::ScanCode::Down}
-			};
-			
-			// controls setup
-			CSE::KeyBoardComponent& keyboard = player1->AddComponent<CSE::KeyBoardComponent>(player1KBControls);
-			
-			// sprite control
-			sprite = new CSE::Texture("./App/Sprites.png", GetLayer()->GetWindow()->GetRenderer(), {0, 0, 0});
-			CSE::SpriteComponent& spriteComponent = player1->AddComponent<CSE::SpriteComponent>(sprite);
-			
-			// animation addon to sprite control
-			CSE::AnimationComponent& animationComponent = player1->AddComponent<CSE::AnimationComponent>();
-			animationComponent.Add(
-				CSE::EntityStates::STAND1, 
-				new CSE::AnimationFrames( {80, 0}, {99, 29}, 20, 29, 4.0f, true)
-				);
-			animationComponent.Add(
-				CSE::EntityStates::STAND2, 
-				new CSE::AnimationFrames( {260, 0}, {279, 29}, 20, 29, 4.0f, true)
-				);
-			animationComponent.Add(
-				CSE::EntityStates::WALK1, 
-				new CSE::AnimationFrames( {80, 0}, {159, 29}, 20, 29, 20.0f, true)
-				);
-			animationComponent.Add(
-				CSE::EntityStates::WALK2, 
-				new CSE::AnimationFrames( {260, 0}, {200, 29}, -20, 29, 20.0f, true)
-				);
-			animationComponent.Add(
-				CSE::EntityStates::JUMP1, 
-				new CSE::AnimationFrames( {160, 0}, {179, 29}, 20, 29, 20.0f, true)
-				);
-			animationComponent.Add(
-				CSE::EntityStates::JUMP2, 
-				new CSE::AnimationFrames( {180, 0}, {199, 29}, 20, 29, 20.0f, true)
-				);
-			animationComponent.Set(CSE::EntityStates::STAND1);
-			animationComponent.Start();
-			
-			// physics setup
-			CSE::PhysicsComponent& physicsComponent = player1->AddComponent<CSE::PhysicsComponent>();
-			physicsComponent.position = {130, 100, 0};
-			
-			CSE::PhysicsHitBox hitbox;
-			hitbox.hitBoxType = CSE::PhysicsDefines::HitBoxType::Circle;
-			hitbox.points = {{0.0f, 0.0f}};
-			hitbox.radius = 1.0f;
-			
-			physicsComponent.entity = *player1;
-			physicsComponent.hitBoxes.push_back(hitbox);
-			physicsComponent.velocity = {0.0f, 0.0f};
-			physicsComponent.acceleration = {0.0f, 0.0f};
-			physicsComponent.mass = 1.0f;
-			physicsComponent.friction = 0.1f;
-			physicsComponent.bodyType = CSE::PhysicsDefines::BodyType::Dynamic;
-			GetPhysicsProcessor()->RegisterEntity(player1);
-		}
-		
-		CSE_LOG("- player 2");
-		if (player2 == nullptr)
-		{
-			// a player1 entity on the screen
-			player2 = CreateEntity("Player 2");
-			
-			// physical position
-			CSE::PositionComponent& position = player2->AddComponent<CSE::PositionComponent>(-10, 0);
-			position.direction = 1; // 1 means right, -1 means left
-			
-			// screen representation
-			CSE::TransformComponent& transform = player2->AddComponent<CSE::TransformComponent>();
-			transform.position = {80, 216};
-			transform.size = {32, 36};
-			transform.Normalize({
-				GetLayer()->GetWindow()->GetPrefs().width,
-				GetLayer()->GetWindow()->GetPrefs().height,
-			});
-			
-			// state machine setup
-			CSE::StateMachineComponent& stateMachine = player2->AddComponent<CSE::StateMachineComponent>();
-			CSE::State* player2WalkState = stateMachine.AddState(CSE::EntityStates::WALK);
-			CSE::State* player2StandState = stateMachine.AddState(CSE::EntityStates::STAND);
-			
-			player2WalkState->AllowEntryFrom(player2StandState->data); 
-			player2WalkState->AllowExitTo(player2StandState->data);
-			
-			player2StandState->AllowEntryFrom(player2WalkState->data);
-			player2StandState->AllowExitTo(player2WalkState->data);
-			stateMachine.SetState(CSE::EntityStates::STAND);
-			
-			std::unordered_map<int, SDL_Keycode> player2KBControls = {
+			CSE::KBControls player1KBControls = {
 				{CSE::Commands::KBCommand_Left, CSE::ScanCode::A}, 
 				{CSE::Commands::KBCommand_Right, CSE::ScanCode::D},
 				{CSE::Commands::KBCommand_Jump, CSE::ScanCode::W},
 				{CSE::Commands::KBCommand_Down, CSE::ScanCode::S}
 			};
 			
-			// controls setup
-			CSE::KeyBoardComponent& keyboard = player2->AddComponent<CSE::KeyBoardComponent>(player2KBControls);
+			player1 = new CSE::Arcade::Unit(
+				this,
+				"Player 1",
+				"./App/Volleyballist.png",
+				player1KBControls,
+				{80, 216},
+				{32, 36},
+				{0.0f, 0.0f},
+				{0, 0, 0},
+				{70, 170}
+				);
+			((CSE::Arcade::Unit*)(player1))->ChangeDirection(1);
 			
-			// sprite control
-			sprite = new CSE::Texture("./App/Sprites.png", GetLayer()->GetWindow()->GetRenderer(), {0, 0, 0});
-			CSE::SpriteComponent& spriteComponent = player2->AddComponent<CSE::SpriteComponent>(sprite);
+			((CSE::Arcade::Unit*)(player1))->SetAnimations(
+				{
+					CSE::EntityStates::STAND1,
+					CSE::EntityStates::STAND2,
+					CSE::EntityStates::WALK1,
+					CSE::EntityStates::WALK2,
+					CSE::EntityStates::JUMP1,
+					CSE::EntityStates::JUMP2
+				},
+				{20, 30},
+				15.0f,
+				true
+				);
+		}
+		
+		CSE_LOG("- player 2");
+		if (player2 == nullptr)
+		{
+			// a player1 entity on the screen
+			CSE::KBControls player2KBControls = {
+				{CSE::Commands::KBCommand_Left, CSE::ScanCode::Left}, 
+				{CSE::Commands::KBCommand_Right, CSE::ScanCode::Right},
+				{CSE::Commands::KBCommand_Jump, CSE::ScanCode::Up},
+				{CSE::Commands::KBCommand_Down, CSE::ScanCode::Down}
+			};
 			
-			// animation addon to sprite control
-			CSE::AnimationComponent& animationComponent = player2->AddComponent<CSE::AnimationComponent>();
-			animationComponent.Add(
-				CSE::EntityStates::STAND1, 
-				new CSE::AnimationFrames( {80, 0}, {99, 29}, 20, 29, 4.0f, true)
+			player2 = new CSE::Arcade::Unit(
+				this,
+				"Player 2",
+				"./App/Volleyballist.png",
+				player2KBControls,
+				{240, 216},
+				{32, 36},
+				{0.0f, 0.0f},
+				{0, 0, 0},
+				{130, 170}
 				);
-			animationComponent.Add(
-				CSE::EntityStates::STAND2, 
-				new CSE::AnimationFrames( {260, 0}, {279, 29}, 20, 29, 4.0f, true)
-				);
-			animationComponent.Add(
-				CSE::EntityStates::WALK1, 
-				new CSE::AnimationFrames( {80, 0}, {159, 29}, 20, 29, 20.0f, true)
-				);
-			animationComponent.Add(
-				CSE::EntityStates::WALK2, 
-				new CSE::AnimationFrames( {260, 0}, {200, 29}, -20, 29, 20.0f, true)
-				);
-			animationComponent.Add(
-				CSE::EntityStates::JUMP1, 
-				new CSE::AnimationFrames( {160, 0}, {179, 29}, 20, 29, 20.0f, true)
-				);
-			animationComponent.Add(
-				CSE::EntityStates::JUMP2, 
-				new CSE::AnimationFrames( {180, 0}, {199, 29}, 20, 29, 20.0f, true)
-				);
-			animationComponent.Set(CSE::EntityStates::STAND1);
-			animationComponent.Start();
+			((CSE::Arcade::Unit*)(player2))->ChangeDirection(-1);
 			
-			// physics setup
-			CSE::PhysicsComponent& physicsComponent = player2->AddComponent<CSE::PhysicsComponent>();
-			physicsComponent.position = {70, 100, 0};
-			
-			CSE::PhysicsHitBox hitbox;
-			hitbox.hitBoxType = CSE::PhysicsDefines::HitBoxType::Circle;
-			hitbox.points = {{0.0f, 0.0f}};
-			hitbox.radius = 1.0f;
-			
-			physicsComponent.entity = *player2;
-			physicsComponent.hitBoxes.push_back(hitbox);
-			physicsComponent.velocity = {0.0f, 0.0f};
-			physicsComponent.acceleration = {0.0f, 0.0f};
-			physicsComponent.mass = 1.0f;
-			physicsComponent.friction = 0.1f;
-			physicsComponent.bodyType = CSE::PhysicsDefines::BodyType::Dynamic;
-			GetPhysicsProcessor()->RegisterEntity(player2);
+			((CSE::Arcade::Unit*)(player2))->SetAnimations(
+				{
+					CSE::EntityStates::STAND1,
+					CSE::EntityStates::STAND2,
+					CSE::EntityStates::WALK1,
+					CSE::EntityStates::WALK2,
+					CSE::EntityStates::JUMP1,
+					CSE::EntityStates::JUMP2
+				},
+				{20, 30},
+				15.0f,
+				true
+				);
 		}
 		
 		CSE_LOG("- grid");
 		if (grid == nullptr)
 		{
 			// a player1 entity on the screen
-			grid = CreateEntity("Grid");
+			// grid = CreateEntity("Grid");
 			
-			// physical position
-			CSE::PositionComponent& position = grid->AddComponent<CSE::PositionComponent>(0, 0);
-			
-			// screen representation
-			CSE::TransformComponent& transform = grid->AddComponent<CSE::TransformComponent>();
-			transform.position = {160, 156};
-			transform.size = {12, 60};
-			transform.Normalize({
-				GetLayer()->GetWindow()->GetPrefs().width,
-				GetLayer()->GetWindow()->GetPrefs().height,
-			});
-			
-			// state machine setup
-			CSE::StateMachineComponent& stateMachine = grid->AddComponent<CSE::StateMachineComponent>();
-			stateMachine.AddState(CSE::EntityStates::STAND);
-			stateMachine.SetState(CSE::EntityStates::STAND);
-			
-			// sprite control
-			CSE::SpriteComponent& spriteComponent = grid->AddComponent<CSE::SpriteComponent>(sprite);
-			spriteComponent.tilingFactor = {0.0f, 4.0f};
-			
-			// animation addon to sprite control
-			CSE::AnimationComponent& animationComponent = grid->AddComponent<CSE::AnimationComponent>();
-			animationComponent.Add(
-				CSE::EntityStates::STAND1, 
-				new CSE::AnimationFrames( {72, 26}, {76, 29}, 5, 4, 4.0f, true)
+			grid = new CSE::Arcade::Doodad(
+				this,
+				"Grid",
+				"./App/Grid.png",
+				{},
+				{160, 186},
+				{10, 60},
+				{0.0f, 1.0f},
+				{0, 0, 0},
+				{100, 100},
+				{
+					{-0.01, 4}, 
+					{0.01, 4}, 
+					{0.01, 0}, 
+					{-0.01, 0}
+				}
 				);
-			animationComponent.Set(CSE::EntityStates::STAND1);
-			animationComponent.Start();
 			
-			// physics setup
-			
-			CSE::PhysicsComponent& physicsComponent = grid->AddComponent<CSE::PhysicsComponent>();
-			physicsComponent.position = {100, 100, 0};
-			
-			CSE::PhysicsHitBox hitbox; // match rectangle points coordinates to transform size
-			hitbox.hitBoxType = CSE::PhysicsDefines::HitBoxType::Rectangle;
-			hitbox.points = {{-0.01, 2}, {0.01, 2}, {0.01, 0}, {-0.01, 0}};
-			// hitbox.radius = 1.0f;
-			
-			physicsComponent.entity = *grid;
-			physicsComponent.hitBoxes.push_back(hitbox);
-			physicsComponent.velocity = {0.0f, 0.0f};
-			physicsComponent.acceleration = {0.0f, 0.0f};
-			physicsComponent.mass = 1.0f;
-			physicsComponent.friction = 0.1f;
-			physicsComponent.bodyType = CSE::PhysicsDefines::BodyType::Static;
-			GetPhysicsProcessor()->RegisterEntity(grid);
+			((CSE::Arcade::Doodad*)(grid))->SetAnimations(
+				{
+					CSE::EntityStates::STAND1,
+				},
+				{5, 4},
+				1.0f,
+				true
+				);
 		}
 		
 		CSE_LOG("- floor");
 		if (floor == nullptr)
 		{
 			// a player1 entity on the screen
-			floor = CreateEntity("Floor");
+			floor = new CSE::Arcade::Doodad(
+				this,
+				"Floor",
+				"",
+				{},
+				{160, 186},
+				{10, 60},
+				{0.0f, 0.0f},
+				{0, 0, 0},
+				{100, 178},
+				{
+					{-100,  0}, 
+					{ 100,  0}, 
+					{ 100, -2}, 
+					{-100, -2}
+				}
+				);
 			
-			// physical position
-			CSE::PositionComponent& position = floor->AddComponent<CSE::PositionComponent>(0, 0);
-			
-			// screen representation
-			CSE::TransformComponent& transform = floor->AddComponent<CSE::TransformComponent>();
-			transform.position = {160, 156};
-			transform.size = {12, 60};
-			transform.Normalize({
-				GetLayer()->GetWindow()->GetPrefs().width,
-				GetLayer()->GetWindow()->GetPrefs().height,
-			});
-			
-			// state machine setup
-			CSE::StateMachineComponent& stateMachine = floor->AddComponent<CSE::StateMachineComponent>();
-			stateMachine.AddState(CSE::EntityStates::STAND);
-			stateMachine.SetState(CSE::EntityStates::STAND);
-			
-			// physics setup
-			CSE::PhysicsComponent& physicsComponent = floor->AddComponent<CSE::PhysicsComponent>();
-			physicsComponent.position = {100, 143, 0};
-			
-			CSE::PhysicsHitBox hitbox; // match rectangle points coordinates to transform size
-			hitbox.hitBoxType = CSE::PhysicsDefines::HitBoxType::Rectangle;
-			hitbox.points = {{-100, 0}, {100, 0}, {100, -1}, {-100, -1}};
-			// hitbox.radius = 1.0f;
-			
-			physicsComponent.entity = *floor;
-			physicsComponent.hitBoxes.push_back(hitbox);
-			physicsComponent.velocity = {0.0f, 0.0f};
-			physicsComponent.acceleration = {0.0f, 0.0f};
-			physicsComponent.mass = 1.0f;
-			physicsComponent.friction = 0.1f;
-			physicsComponent.bodyType = CSE::PhysicsDefines::BodyType::Static;
-			GetPhysicsProcessor()->RegisterEntity(floor);
+			((CSE::Arcade::Doodad*)(floor))->SetAnimations(
+				{
+					CSE::EntityStates::STAND1,
+				},
+				{5, 4},
+				1.0f,
+				true
+				);
 		}
 		
 		// turn physics off temporarily
@@ -542,7 +362,7 @@ public:
 						//GetActiveCamera()->MoveBy({0.2f, 0.0f});
 					}
 					
-					CSE_LOG(player.GetComponent<CSE::NameComponent>().value, " coordinates: (", position.x, "; ", position.y, ")");
+					CSE_LOG(player.GetComponent<CSE::NameComponent>().value, " coordinates: (", physics.position.x, "; ", physics.position.y, ")");
 					CSE_LOG(player.GetComponent<CSE::NameComponent>().value, " size: (", transform.size.x, "; ", transform.size.y, ")");
 				} else {
 					stateMachine.SetState(CSE::EntityStates::STAND);

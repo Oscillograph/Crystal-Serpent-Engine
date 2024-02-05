@@ -174,13 +174,13 @@ namespace CSE
 	
 	void Scene::PhysicsOn()
 	{
-		CSE_CORE_LOG("Scene: physics turn OFF");
+		CSE_CORE_LOG("Scene: physics turn ON");
 		m_PhysicsOn = true;
 	}
 	
 	void Scene::PhysicsOff()
 	{
-		CSE_CORE_LOG("Scene: physics turn ON");
+		CSE_CORE_LOG("Scene: physics turn OFF");
 		m_PhysicsOn = false;
 	}
 	

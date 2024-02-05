@@ -209,7 +209,7 @@ namespace CSE
 		
 		// characteristics
 		int hitBoxType = PhysicsDefines::HitBoxType::Rectangle;
-		std::vector<SDL_FPoint> points; // meters
+		std::vector<glm::vec2> points; // meters
 		float radius = 0.0f; // meters, only used in Circle HitBoxes
 		
 		PhysicsHitBox();

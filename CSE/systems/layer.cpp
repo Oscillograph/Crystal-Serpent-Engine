@@ -263,7 +263,7 @@ namespace CSE
 			
 			Renderer::SetActiveScreen(viewportPlace);
 			
-			for (auto entity : GetScene()->GetRegistry().view<SpriteComponent>())
+			for (auto entity : GetScene()->GetRegistry().view<NameComponent>())
 			{
 				bool mayDrawPhysicalEntity = false;
 				Entity e = Entity(entity, GetScene());
@@ -342,7 +342,10 @@ namespace CSE
 								{
 								case PhysicsDefines::HitBoxType::Circle:
 									{
-										SDL_FPoint center = physicsComponent.hitBoxes[i].points[0];
+										SDL_FPoint center = {
+											physicsComponent.hitBoxes[i].points[0].x,
+											physicsComponent.hitBoxes[i].points[0].y
+										};
 										Renderer::DrawRect(
 											{
 												transform.positionNormalized.x - cameraPositionNormalized.x + center.x, 
