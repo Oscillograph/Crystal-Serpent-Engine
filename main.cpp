@@ -111,26 +111,22 @@ public:
 		CSE_LOG("- player 1");
 		if (player1 == nullptr)
 		{
-			// a player1 entity on the screen
-			CSE::KBControls player1KBControls = {
-				{CSE::Commands::KBCommand_Left, CSE::ScanCode::A}, 
-				{CSE::Commands::KBCommand_Right, CSE::ScanCode::D},
-				{CSE::Commands::KBCommand_Jump, CSE::ScanCode::W},
-				{CSE::Commands::KBCommand_Down, CSE::ScanCode::S}
-			};
-			
 			player1 = new CSE::Arcade::Unit(
 				this,
 				"Player 1",
 				"./App/Volleyballist.png",
-				player1KBControls,
+				{
+					{CSE::Commands::KBCommand_Left, CSE::ScanCode::A}, 
+					{CSE::Commands::KBCommand_Right, CSE::ScanCode::D},
+					{CSE::Commands::KBCommand_Jump, CSE::ScanCode::W},
+					{CSE::Commands::KBCommand_Down, CSE::ScanCode::S}
+				},
 				{80, 216},
 				{32, 36},
 				{0.0f, 0.0f},
 				{0, 0, 0},
 				{70, 170}
 				);
-			((CSE::Arcade::Unit*)(player1))->ChangeDirection(1);
 			
 			((CSE::Arcade::Unit*)(player1))->SetAnimations(
 				{
@@ -145,6 +141,8 @@ public:
 				15.0f,
 				true
 				);
+			
+			((CSE::Arcade::Unit*)(player1))->ChangeDirection(1);
 		}
 		
 		CSE_LOG("- player 2");

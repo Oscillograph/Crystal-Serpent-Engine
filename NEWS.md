@@ -14,6 +14,9 @@ Changelog:
 + Renderer supports tiling;
 + Engine draws Wireframes if necessary to debug rendering;
 + Each layer supports up to one viewport to look at a scene contents;
++ Added Box2D as one of physics processor implementations;
++ Scenes support cameras;
++ Added presets library to set up scenes via units, doodads and decorations one-line constructors;
 
 ## 0.2.2 ##
 Changelog:

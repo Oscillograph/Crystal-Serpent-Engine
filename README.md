@@ -8,7 +8,8 @@ Crystal Serpent Engine is aimed to be a game engine based on SDL.
 + Architecture (Engine core and utils -> Application -> Window -> Layer -> Scene -> ECS)
 + Command line logger with colors
 + Support for animations in spritesheet (animation can be played backwards through a hack)
-+ Support for 2D cameras
++ Support for 2D cameras and viewports to look into scenes
++ Presets for units, doodads and decorations to populate scenes
 
 ## Usage ##
 The engine is designed to be used through a header file. The common way to use it looks like this:
@@ -66,7 +67,7 @@ Includes directories should contain:
 - SDL2
 - Crystal Serpent Engine
 
-A precompiled header can dramatically decrease compile time:
+A precompiled header can dramatically decrease compilation time:
 Crystal Serpent Engine/CSE/common.h
 
 ## Tech Stack ##
