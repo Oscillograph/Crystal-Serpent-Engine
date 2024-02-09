@@ -62,6 +62,7 @@ namespace CSE
 		uint64_t m_TimeLastFrame = 0;
 		uint64_t m_TimeThisFrame = 0;
 		uint64_t fpsCount;
+		uint64_t m_frameCounter; // to know how many frames passed
 		float m_TimeDelta = 0;
 		float m_TimeDeltaLimit = 0.0f;
 		// float m_TimeDeltaLimit = CSE_FPS60;

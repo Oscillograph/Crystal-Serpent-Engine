@@ -17,6 +17,7 @@ Changelog:
 + Added Box2D as one of physics processor implementations;
 + Scenes support cameras;
 + Added presets library to set up scenes via units, doodads and decorations one-line constructors;
++ Added a simple resource manager static class with a garbage collector;
 
 ## 0.2.2 ##
 Changelog:

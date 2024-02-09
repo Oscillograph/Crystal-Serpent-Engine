@@ -1,4 +1,5 @@
 #include <CSE/systems/application.h>
+#include <CSE/systems/resourcemanager.h>
 
 namespace CSE
 {
@@ -32,6 +33,7 @@ namespace CSE
 		// some internal pointers memory deallocating
 		CSE_CORE_LOG("Internal systems pointers deleted.");
 		
+		ResourceManager::ShutDown();
 		Platform::Shutdown();
 		CSE_CORE_LOG("Platform shutdown complete.");
 	}
@@ -51,7 +53,9 @@ namespace CSE
 	int Application::Init()
 	{
 		CSE_CORE_ASSERT((m_ApplicationInstance == nullptr), "This application already exists!");
-		return Platform::InitDefault();
+		int platformInitResult = Platform::InitDefault();
+		ResourceManager::Init();
+		return platformInitResult;
 	}
 	
 	void Application::LimitFPS(float fps)
@@ -238,6 +242,13 @@ namespace CSE
 				// TODO: 10. File I/O system
 				// TODO: 11. Log system
 				// 12. FPS Count
+				if ((m_frameCounter % 60) == 0) // call garbage collector only once per 60 frames
+				{
+					CSE_CORE_LOG("Application: Resource Manager's Garbage collector called...");
+					ResourceManager::GarbageCollector();
+					m_frameCounter = 0;
+				}
+				m_frameCounter++;
 				m_TimeLastFrame = m_TimeThisFrame;
 			}
 			
