@@ -1,4 +1,9 @@
 #include <CSE/systems/resourcemanager.h>
+#include <CSE/systems/renderer/texture.h>
+#include <CSE/systems/scene.h>
+#include <CSE/systems/layer.h>
+#include <CSE/systems/window.h>
+#include <CSE/systems/renderer.h>
 
 namespace CSE
 {
@@ -65,8 +70,6 @@ namespace CSE
 					delete[] buffer;
 					resource->data = new Data::Text(contents);
 					
-					// printf("File contents:\n%s\n", ((Data::Text*)resource->data)->text.c_str());
-					
 					// close file
 					if (!m_FileInput.is_open())
 						m_FileInput.close();
@@ -75,7 +78,7 @@ namespace CSE
 				break;
 			case ResourceType::Texture:
 				{
-					// m_Cache[type][path]->data = new Texture(path, user->GetLayer()->GetWindow()->GetRenderer());
+					resource->data = new Texture(path, user->GetLayer()->GetWindow()->GetRenderer());
 				}
 				break;
 			default:
@@ -100,6 +103,17 @@ namespace CSE
 			CSE_CORE_LOG("Resource Manager: resource is loaded, its user is registered.");
 			return m_Cache[type][path];
 		}
+		
+		// register a new user if necessary
+		bool newUser = true;
+		for (auto usersIterator = (*it).second->users.begin(); usersIterator != (*it).second->users.end(); usersIterator++)
+		{
+			if ((*usersIterator) == user)
+				newUser = false; // false alarm: the user was registered before
+		}
+		if (newUser)
+			(*it).second->users.push_back(user);
+		
 		return (*it).second;
 	}
 	
@@ -117,7 +131,8 @@ namespace CSE
 			auto it = m_Cache[type].find(path);
 			if (it == m_Cache[type].end())
 				return -2; // couldn't find a resource
-			
+		
+			// unregister a user
 			for (auto it = m_Cache[type][path]->users.begin(); it != m_Cache[type][path]->users.end(); it++)
 			{
 				if ((*it) == user)
@@ -128,6 +143,7 @@ namespace CSE
 				}
 			}
 			
+			// if there are no users left, mark the resource for deletion
 			if (m_Cache[type][path]->users.size() == 0)
 			{
 				m_Cache[type][path]->deletionFlag = true;
@@ -158,6 +174,61 @@ namespace CSE
 		}
 		
 		return 0;
+	}
+	
+	int ResourceManager::LoadTexture(const std::string& path, const ResourceUser& user, const glm::vec3& colorKey)
+	{
+		ResourceType type = ResourceType::Texture;
+		
+		if (m_Cache.find(type) == m_Cache.end())
+		{
+			return -1; // no such resource type cache registered
+		} else {
+			auto it = m_Cache[type].find(path);
+			if (it != m_Cache[type].end())
+				return -2; // already exists
+			
+			Resource* resource = new Resource(
+				path,
+				type,
+				nullptr
+				);
+			
+			resource->data = new Texture(path, user->GetLayer()->GetWindow()->GetRenderer(), {colorKey.x, colorKey.y, colorKey.z});
+			
+			m_Cache[type][path] = resource;
+			
+		}
+		
+		return 0;
+	}
+	
+	Resource* ResourceManager::UseTexture(const std::string& path, const ResourceUser& user, const glm::vec3& colorKey)
+	{
+		ResourceType type = ResourceType::Texture;
+		CSE_CORE_LOG("Requesting a texture with path \"", path.c_str(), "\".");
+		auto it = m_Cache[type].find(path);
+		if (it == m_Cache[type].end())
+		{
+			CSE_CORE_LOG("Resource Manager: There is no such resource with path \"", path.c_str(), "\".");
+			CSE_CORE_LOG("Resource Manager: loading a resource...");
+			LoadTexture(path, user, colorKey);
+			m_Cache[type][path]->users.push_back(user);
+			CSE_CORE_LOG("Resource Manager: resource is loaded, its user is registered.");
+			return m_Cache[type][path];
+		}
+		
+		// register a new user if necessary
+		bool newUser = true;
+		for (auto usersIterator = (*it).second->users.begin(); usersIterator != (*it).second->users.end(); usersIterator++)
+		{
+			if ((*usersIterator) == user)
+				newUser = false; // false alarm: the user was registered before
+		}
+		if (newUser)
+			(*it).second->users.push_back(user);
+		
+		return (*it).second;
 	}
 	
 	void ResourceManager::Init()

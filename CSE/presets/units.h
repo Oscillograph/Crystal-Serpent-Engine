@@ -8,7 +8,7 @@
 namespace CSE
 {
 	class Scene;
-	class Texture;
+	class Resource;
 	
 	typedef std::unordered_map<int, SDL_Keycode> 	KBControls;
 	
@@ -44,7 +44,7 @@ namespace CSE
 			
 		protected:
 			Entity* m_Entity = nullptr;
-			Texture* m_SpriteTexture = nullptr;
+			Resource* m_SpriteTexture = nullptr;
 			glm::vec2 m_SpeedMax = {25.0f, 25.0f}; // meters per second
 		};
 		
@@ -79,7 +79,7 @@ namespace CSE
 			
 		protected:
 			Entity* m_Entity = nullptr;
-			Texture* m_SpriteTexture = nullptr;
+			Resource* m_SpriteTexture = nullptr;
 			glm::vec2 m_SpeedMax = {25.0f, 25.0f}; // meters per second
 		};
 		
@@ -109,7 +109,7 @@ namespace CSE
 			
 		protected:
 			Entity* m_Entity = nullptr;
-			Texture* m_SpriteTexture = nullptr;
+			Resource* m_SpriteTexture = nullptr;
 		};
 	}
 }

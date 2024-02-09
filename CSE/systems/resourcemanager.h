@@ -9,7 +9,7 @@ namespace CSE
 	class Scene; 
 	
 	// Resource management stuff
-	enum class ResourceType : int
+	enum class ResourceType
 	{
 		Unknown				= 0,
 		
@@ -89,6 +89,8 @@ namespace CSE
 		static int UnloadResource(ResourceType type, const std::string& path);
 		
 		// TODO: customizable routines to load textures with color keys, etc.
+		static int LoadTexture(const std::string& path, const ResourceUser& user, const glm::vec3& colorKey);
+		static Resource* UseTexture(const std::string& path, const ResourceUser& user, const glm::vec3& colorKey);
 		
 		static void Init();
 		static void InitCache(ResourceType type);

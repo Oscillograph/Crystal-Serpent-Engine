@@ -6,6 +6,7 @@
 #include <CSE/systems/components.h>
 #include <CSE/systems/renderer/texture.h>
 #include <CSE/systems/input.h>
+#include <CSE/systems/resourcemanager.h>
 
 namespace CSE
 {
@@ -77,11 +78,13 @@ namespace CSE
 			
 			// sprite control
 			if (spritePath.length() > 0){
-				m_SpriteTexture = new Texture(
-					spritePath, scene->GetLayer()->GetWindow()->GetRenderer(), 
+				m_SpriteTexture = ResourceManager::UseTexture(
+					spritePath, 
+					scene,
 					{spriteColorKey.x, spriteColorKey.y, spriteColorKey.z}
 					);
-				SpriteComponent& spriteComponent = m_Entity->AddComponent<SpriteComponent>(m_SpriteTexture);
+
+				SpriteComponent& spriteComponent = m_Entity->AddComponent<SpriteComponent>((Texture*)(m_SpriteTexture->data));
 				spriteComponent.tilingFactor = {spriteTilingFactor.x, spriteTilingFactor.y};
 			}
 			
@@ -106,13 +109,13 @@ namespace CSE
 		
 		Unit::~Unit()
 		{
+			if (m_SpriteTexture != nullptr)
+				ResourceManager::DropResource(m_SpriteTexture, m_Entity->GetScene());
+			m_SpriteTexture = nullptr;
+			
 			if (m_Entity != nullptr)
 				delete m_Entity;
 			m_Entity = nullptr;
-			
-			if (m_SpriteTexture != nullptr)
-				delete m_SpriteTexture;
-			m_SpriteTexture = nullptr;
 		}
 		
 		// animation addon to sprite control
@@ -135,7 +138,7 @@ namespace CSE
 			for (int i = 0; i < animationStates.size(); i++)
 			{
 				startPoint = {0, i * frameSize.y};
-				endPoint = {m_SpriteTexture->GetWidth(), (i * frameSize.y + frameSize.y)};
+				endPoint = {((Texture*)(m_SpriteTexture->data))->GetWidth(), (i * frameSize.y + frameSize.y)};
 				// CSE_CORE_LOG("Animation #", animationStates[i]);
 				// CSE_CORE_LOG("Start at: ", startPoint.x, "; ", startPoint.y);
 				// CSE_CORE_LOG("End at: ", endPoint.x, "; ", endPoint.y);
@@ -233,11 +236,12 @@ namespace CSE
 			
 			// sprite control
 			if (spritePath.length() > 1){
-				m_SpriteTexture = new Texture(
-					spritePath, scene->GetLayer()->GetWindow()->GetRenderer(), 
+				m_SpriteTexture = ResourceManager::UseTexture(
+					spritePath, 
+					scene, 
 					{spriteColorKey.x, spriteColorKey.y, spriteColorKey.z}
 					);
-				SpriteComponent& spriteComponent = m_Entity->AddComponent<SpriteComponent>(m_SpriteTexture);
+				SpriteComponent& spriteComponent = m_Entity->AddComponent<SpriteComponent>((Texture*)(m_SpriteTexture->data));
 				spriteComponent.tilingFactor = {spriteTilingFactor.x, spriteTilingFactor.y};
 				// CSE_CORE_LOG("Sprite added");
 			} else {
@@ -265,13 +269,13 @@ namespace CSE
 		
 		Doodad::~Doodad()
 		{
+			if (m_SpriteTexture != nullptr)
+				ResourceManager::DropResource(m_SpriteTexture, m_Entity->GetScene());
+			m_SpriteTexture = nullptr;
+			
 			if (m_Entity != nullptr)
 				delete m_Entity;
 			m_Entity = nullptr;
-			
-			if (m_SpriteTexture != nullptr)
-				delete m_SpriteTexture;
-			m_SpriteTexture = nullptr;
 		}
 		
 		// animation addon to sprite control
@@ -296,7 +300,7 @@ namespace CSE
 				if (m_SpriteTexture != nullptr)
 				{
 					startPoint = {0, i * frameSize.y};
-					endPoint = {m_SpriteTexture->GetWidth(), (i * frameSize.y + frameSize.y)};
+					endPoint = {((Texture*)(m_SpriteTexture->data))->GetWidth(), (i * frameSize.y + frameSize.y)};
 				}
 				
 				// CSE_CORE_LOG("Animation #", animationStates[i]);
@@ -353,20 +357,24 @@ namespace CSE
 			});
 			
 			// sprite control
-			m_SpriteTexture = new Texture(spritePath, scene->GetLayer()->GetWindow()->GetRenderer(), {colorKey.x, colorKey.y, colorKey.z});
-			SpriteComponent& sprite = m_Entity->AddComponent<SpriteComponent>(m_SpriteTexture);
+			m_SpriteTexture = ResourceManager::UseTexture(
+				spritePath, 
+				scene, 
+				{colorKey.x, colorKey.y, colorKey.z}
+				);
+			SpriteComponent& sprite = m_Entity->AddComponent<SpriteComponent>((Texture*)(m_SpriteTexture->data));
 			sprite.tilingFactor = {tilingFactor.x, tilingFactor.y};
 		}
 		
 		Decoration::~Decoration()
 		{
+			if (m_SpriteTexture != nullptr)
+				ResourceManager::DropResource(m_SpriteTexture, m_Entity->GetScene());
+			m_SpriteTexture = nullptr;
+			
 			if (m_Entity != nullptr)
 				delete m_Entity;
 			m_Entity = nullptr;
-			
-			if (m_SpriteTexture != nullptr)
-				delete m_SpriteTexture;
-			m_SpriteTexture = nullptr;
 		}
 		
 		void Decoration::ChangeAppearance(
