@@ -109,12 +109,11 @@ namespace CSE
 		
 		Unit::~Unit()
 		{
-			if (m_SpriteTexture != nullptr)
-				ResourceManager::DropResource(m_SpriteTexture, m_Entity->GetScene());
+			ResourceManager::DropResource(m_SpriteTexture, m_Entity->GetScene());
 			m_SpriteTexture = nullptr;
 			
-			if (m_Entity != nullptr)
-				delete m_Entity;
+			CSE_CORE_ASSERT(m_Entity, "Unit destructor: m_Entity was a null pointer.");
+			delete m_Entity;
 			m_Entity = nullptr;
 		}
 		
@@ -269,12 +268,11 @@ namespace CSE
 		
 		Doodad::~Doodad()
 		{
-			if (m_SpriteTexture != nullptr)
-				ResourceManager::DropResource(m_SpriteTexture, m_Entity->GetScene());
+			ResourceManager::DropResource(m_SpriteTexture, m_Entity->GetScene());
 			m_SpriteTexture = nullptr;
 			
-			if (m_Entity != nullptr)
-				delete m_Entity;
+			CSE_CORE_ASSERT(m_Entity, "Doodad destructor: m_Entity was a null pointer.");
+			delete m_Entity;
 			m_Entity = nullptr;
 		}
 		
@@ -368,12 +366,11 @@ namespace CSE
 		
 		Decoration::~Decoration()
 		{
-			if (m_SpriteTexture != nullptr)
-				ResourceManager::DropResource(m_SpriteTexture, m_Entity->GetScene());
+			ResourceManager::DropResource(m_SpriteTexture, m_Entity->GetScene());
 			m_SpriteTexture = nullptr;
 			
-			if (m_Entity != nullptr)
-				delete m_Entity;
+			CSE_CORE_ASSERT(m_Entity, "Decoration destructor: m_Entity was a null pointer.");
+			delete m_Entity;
 			m_Entity = nullptr;
 		}
 		

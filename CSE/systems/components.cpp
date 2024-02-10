@@ -84,8 +84,7 @@ namespace CSE
 	{
 		for (int i = 0; i < States.size(); i++)
 		{
-			if (States[i] != nullptr)
-				delete States[i];
+			delete States[i];
 			States[i] = nullptr;
 		}
 		m_CurrentState = nullptr;
@@ -230,11 +229,8 @@ namespace CSE
 	{
 		for (int i = EntityStates::BEGIN+1; i < EntityStates::TOTAL; i++)
 		{
-			if (frames[i] != nullptr)
-			{
-				delete frames[i];
-				frames[i] = nullptr;
-			}
+			delete frames[i];
+			frames[i] = nullptr;
 		}
 	}
 	

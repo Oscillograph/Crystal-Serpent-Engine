@@ -29,8 +29,8 @@ namespace CSE
 	{
 		m_Layer = nullptr;
 		
-		if (m_SceneCamera != nullptr)
-			delete m_SceneCamera;
+		CSE_CORE_ASSERT(m_SceneCamera, "Scene destructor: m_SceneCamera was a null pointer.");
+		delete m_SceneCamera;
 		m_SceneCamera = nullptr;
 	}
 	

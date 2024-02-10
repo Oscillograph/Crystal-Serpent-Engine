@@ -61,8 +61,8 @@ namespace CSE
 	{
 		m_Window = nullptr;
 		
-		if (m_Viewport != nullptr)
-			delete m_Viewport;
+		CSE_CORE_ASSERT(m_Viewport, "Layer destructor: m_Viewport was a null pointer.");
+		delete m_Viewport;
 		m_Viewport = nullptr;
 	}
 	

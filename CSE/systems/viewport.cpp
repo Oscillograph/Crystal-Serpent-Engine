@@ -21,8 +21,8 @@ namespace CSE
 	{
 		if (m_UseOwnCamera)
 		{
-			if (m_Camera != nullptr)
-				delete m_Camera;
+			CSE_CORE_ASSERT(m_Camera, "Viewport destructor: m_Camera was a null pointer.");
+			delete m_Camera;
 		}
 		m_Camera = nullptr;
 	}

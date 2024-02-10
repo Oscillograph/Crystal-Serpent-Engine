@@ -131,15 +131,15 @@ namespace CSE
 	
 	void WindowStack::Pop(Window* window)
 	{
-		auto it = std::find(m_Windows.begin(), m_Windows.end(), window);
-		if (it != m_Windows.end())
+		if (window != nullptr)
 		{
-			m_Windows.erase(it);
-			if (window != nullptr)
+			auto it = std::find(m_Windows.begin(), m_Windows.end(), window);
+			if (it != m_Windows.end())
 			{
+				m_Windows.erase(it);
 				delete window;
+				m_WindowInsertIndex--;
 			}
-			m_WindowInsertIndex--;
 		}
 	}
 }

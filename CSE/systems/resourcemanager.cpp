@@ -119,7 +119,10 @@ namespace CSE
 	
 	int ResourceManager::DropResource(Resource* resource, const ResourceUser& user)
 	{
-		DropResource(resource->type, resource->path, user);
+		if (resource != nullptr)
+		{
+			DropResource(resource->type, resource->path, user);
+		}
 	}
 	
 	int ResourceManager::DropResource(ResourceType type, const std::string& path, const ResourceUser& user)
@@ -133,21 +136,24 @@ namespace CSE
 				return -2; // couldn't find a resource
 		
 			// unregister a user
-			for (auto it = m_Cache[type][path]->users.begin(); it != m_Cache[type][path]->users.end(); it++)
+			if (m_Cache[type][path] != nullptr)
 			{
-				if ((*it) == user)
+				for (auto it = m_Cache[type][path]->users.begin(); it != m_Cache[type][path]->users.end(); it++)
 				{
-					(*it) = nullptr;
-					m_Cache[type][path]->users.erase(it);
-					break;
+					if ((*it) == user)
+					{
+						(*it) = nullptr;
+						m_Cache[type][path]->users.erase(it);
+						break;
+					}
 				}
-			}
-			
-			// if there are no users left, mark the resource for deletion
-			if (m_Cache[type][path]->users.size() == 0)
-			{
-				m_Cache[type][path]->deletionFlag = true;
-				CSE_CORE_LOG("Flagged resource \"", path.c_str(), "\" for deletion.");
+				
+				// if there are no users left, mark the resource for deletion
+				if (m_Cache[type][path]->users.size() == 0)
+				{
+					m_Cache[type][path]->deletionFlag = true;
+					CSE_CORE_LOG("Flagged resource \"", path.c_str(), "\" for deletion.");
+				}
 			}
 		}
 		
@@ -314,7 +320,10 @@ namespace CSE
 				// for every resource of the selected type do
 				for (auto cacheIterator = m_Cache[(ResourceType)i].begin(); cacheIterator != m_Cache[(ResourceType)i].end(); cacheIterator++)
 				{
-					(*cacheIterator).second->deletionFlag = true;
+					if ((*cacheIterator).second)
+					{
+						(*cacheIterator).second->deletionFlag = true;
+					}
 				}
 			}
 		}

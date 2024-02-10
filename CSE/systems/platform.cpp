@@ -119,11 +119,8 @@ namespace CSE
 	
 	int Platform::Shutdown()
 	{
-		if (m_EventListener != nullptr)
-		{
-			delete m_EventListener;
-			m_EventListener = nullptr;
-		}
+		delete m_EventListener;
+		m_EventListener = nullptr;
 		
 		// quit systems
 		Mix_Quit();

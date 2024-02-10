@@ -225,18 +225,16 @@ namespace CSE
 		CSE_CORE_LOG("- delete worlds...");
 		for (uint32_t i = 0; i < m_Worlds.size(); i++)
 		{
-			if (m_Worlds[i] != nullptr)
-			{
-				// delete box2DWorld
-				CSE_CORE_LOG("- deleting a world #", i);
-				// delete CSE physics world
-				delete m_Worlds[i];
-			}
+			// delete box2DWorld
+			CSE_CORE_LOG("- deleting a world #", i);
+			// delete CSE physics world
+			CSE_CORE_ASSERT(m_Worlds[i], "PhysicsProcessor Shutdown: world #", i, " was a null pointer.");
+			delete m_Worlds[i];
 			m_Worlds[i] = nullptr;
 		}
 		CSE_CORE_LOG("- delete physics API...");
-		if (m_API != nullptr)
-			delete m_API;
+		CSE_CORE_ASSERT(m_API, "PhysicsProcessor Shutdown: m_API was a null pointer.");
+		delete m_API;
 		m_API = nullptr;
 	}
 	
