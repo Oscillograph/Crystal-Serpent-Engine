@@ -233,7 +233,7 @@ namespace CSE
 			m_Worlds[i] = nullptr;
 		}
 		CSE_CORE_LOG("- delete physics API...");
-		CSE_CORE_ASSERT(m_API, "PhysicsProcessor Shutdown: m_API was a null pointer.");
+		// CSE_CORE_ASSERT(m_API, "PhysicsProcessor Shutdown: m_API was a null pointer.");
 		delete m_API;
 		m_API = nullptr;
 	}
