@@ -11,11 +11,10 @@ public:
 	
 	~SceneLogo()
 	{
-		if (sprite != nullptr)
-			delete sprite;
+		delete sprite;
 		sprite = nullptr;
-		if (logo != nullptr)
-			delete logo;
+		
+		delete logo;
 		logo = nullptr;
 	}
 	
@@ -49,32 +48,31 @@ public:
 	
 	~SceneGame()
 	{
-		if (sprite != nullptr)
-			delete sprite;
+		delete sprite;
 		sprite = nullptr;
-		if (spriteBG != nullptr)
-			delete spriteBG;
+		
+		delete spriteBG;
 		spriteBG = nullptr;
-		if (spriteSDL != nullptr)
-			delete spriteSDL;
+		
+		delete spriteSDL;
 		spriteSDL = nullptr;
-		if (player1 != nullptr)
-			delete player1;
+		
+		delete player1;
 		player1 = nullptr;
-		if (player2 != nullptr)
-			delete player2;
+		
+		delete player2;
 		player2 = nullptr;
-		if (floor != nullptr)
-			delete floor;
+		
+		delete floor;
 		floor = nullptr;
-		if (grid != nullptr)
-			delete grid;
+		
+		delete grid;
 		grid = nullptr;
-		if (background != nullptr)
-			delete background;
+		
+		delete background;
 		background = nullptr;
-		if (backgroundSDL != nullptr)
-			delete backgroundSDL;
+		
+		delete backgroundSDL;
 		backgroundSDL = nullptr;
 	}
 	
@@ -347,16 +345,16 @@ public:
 					if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Left]))
 					{
 						// physics.position.x -= 0.2f;
-						// physics.velocity.x = -maxSpeed;
-						GetPhysicsProcessor()->ApplyForce(player, {-1.0f, 0.f}, maxSpeed);
+						physics.velocity.x = -maxSpeed;
+						// GetPhysicsProcessor()->ApplyForce(player, {-1.0f, 0.f}, maxSpeed);
 						//GetActiveCamera()->MoveBy({-0.2f, 0.0f});
 					}
 					
 					if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Right]))
 					{
 						// physics.position.x += 0.2f;
-						// physics.velocity.x = maxSpeed;
-						GetPhysicsProcessor()->ApplyForce(player, {1.0f, 0.f}, maxSpeed);
+						physics.velocity.x = maxSpeed;
+						// GetPhysicsProcessor()->ApplyForce(player, {1.0f, 0.f}, maxSpeed);
 						//GetActiveCamera()->MoveBy({0.2f, 0.0f});
 					}
 					
@@ -374,7 +372,8 @@ public:
 					if (physics.position.y > 140.0f)
 					{
 						// physics.position.y -= 0.2f;
-						GetPhysicsProcessor()->ApplyForce(player, {0.0f, -1.0f}, maxSpeed);
+						physics.velocity.y = -maxSpeed;
+						// GetPhysicsProcessor()->ApplyForce(player, {0.0f, -1.0f}, maxSpeed);
 						//GetActiveCamera()->MoveBy({0.0f, -0.2f});
 					} else {
 						stateMachine.SetState(CSE::EntityStates::FLY);
@@ -386,8 +385,8 @@ public:
 				if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Left]))
 				{
 					// physics.position.x -= 0.2f;
-					// physics.velocity.x = -maxSpeed;
-					GetPhysicsProcessor()->ApplyForce(player, {-1.0f, 0.f}, maxSpeed);
+					physics.velocity.x = -maxSpeed;
+					// GetPhysicsProcessor()->ApplyForce(player, {-1.0f, 0.f}, maxSpeed);
 					//GetActiveCamera()->MoveBy({-0.2f, 0.0f});
 					
 					// change animation if needed
@@ -401,8 +400,8 @@ public:
 				if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Right]))
 				{
 					// physics.position.x += 0.2f;
-					// physics.velocity.x = maxSpeed;
-					GetPhysicsProcessor()->ApplyForce(player, {1.0f, 0.f}, maxSpeed);
+					physics.velocity.x = maxSpeed;
+					// GetPhysicsProcessor()->ApplyForce(player, {1.0f, 0.f}, maxSpeed);
 					//GetActiveCamera()->MoveBy({0.2f, 0.0f});
 					
 					// change animation if needed 
@@ -433,8 +432,8 @@ public:
 				if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Left]))
 				{
 					// physics.position.x -= 0.2f;
-					// physics.velocity.x = -maxSpeed;
-					GetPhysicsProcessor()->ApplyForce(player, {-1.0f, 0.f}, maxSpeed);
+					physics.velocity.x = -maxSpeed;
+					// GetPhysicsProcessor()->ApplyForce(player, {-1.0f, 0.f}, maxSpeed);
 					//GetActiveCamera()->MoveBy({-0.2f, 0.0f});
 					
 					// change animation if needed
@@ -448,8 +447,8 @@ public:
 				if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Right]))
 				{
 					// physics.position.x += 0.2f;
-					// physics.velocity.x = maxSpeed;
-					GetPhysicsProcessor()->ApplyForce(player, {1.0f, 0.f}, maxSpeed);
+					physics.velocity.x = maxSpeed;
+					// GetPhysicsProcessor()->ApplyForce(player, {1.0f, 0.f}, maxSpeed);
 					//GetActiveCamera()->MoveBy({0.2f, 0.0f});
 					
 					// change animation if needed
@@ -495,17 +494,16 @@ public:
 	
 	~Layer1() 
 	{
-		if (sceneLogo != nullptr)
-			delete sceneLogo;
+		delete sceneLogo;
 		sceneLogo = nullptr;
-		if (scene != nullptr)
-			delete scene;
+		
+		delete scene;
 		scene = nullptr;
-		if (viewport != nullptr)
-			delete viewport;
+		
+		delete viewport;
 		viewport = nullptr;
-		if (camera != nullptr)
-			delete camera;
+		
+		delete camera;
 		camera = nullptr;
 	};
 	

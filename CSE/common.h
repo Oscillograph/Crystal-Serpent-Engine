@@ -44,13 +44,6 @@
 
 namespace CSE
 {
-	namespace EngineInfo 
-	{
-		const std::string Name = "Crystal Serpent Engine";
-		const std::string Version = "0.2.3";
-		const std::string Author = "ТехнОкраТ";
-	};
-	
 	// smart pointers aliases
 	template <typename T>
 	using Scope = std::unique_ptr<T>;

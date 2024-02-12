@@ -21,6 +21,13 @@
 
 namespace CSE
 {
+	namespace EngineInfo 
+	{
+		const std::string Name = "Crystal Serpent Engine";
+		const std::string Version = "0.2.3";
+		const std::string Author = "ТехнОкраТ";
+	};
+	
 	// Main CSE application which can have windows
 	class Application
 	{
