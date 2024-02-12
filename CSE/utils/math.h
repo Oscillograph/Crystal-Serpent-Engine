@@ -22,14 +22,33 @@ namespace CSE
 			
 			real x, y, z;
 			
+			inline bool operator==(const real& rhs)
+			{
+				return ((x == rhs.x) && (y == rhs.y) && (z == rhs.z));
+			}
+			
+			inline bool operator!=(const real& rhs)
+			{
+				return !((*this) == rhs);
+			}
+			
+			// addition
 			inline vec3 operator+(const real& rhs)
 			{
-				return vec3(x + rhs, y + rhs, z + rhs.z);
+				return vec3(
+					x + rhs, 
+					y + rhs, 
+					z + rhs.z
+					);
 			}
 			
 			inline vec3 operator+(const vec3& rhs)
 			{
-				return vec3(x + rhs.x, y + rhs.y, z + rhs.z);
+				return vec3(
+					x + rhs.x, 
+					y + rhs.y, 
+					z + rhs.z
+					);
 			}
 			
 			inline void operator+=(const vec3& rhs)
@@ -39,14 +58,23 @@ namespace CSE
 				z += rhs.z;
 			}
 			
+			// subtraction
 			inline vec3 operator-(const real& rhs)
 			{
-				return vec3(x - rhs, y - rhs, z - rhs.z);
+				return vec3(
+					x - rhs, 
+					y - rhs, 
+					z - rhs.z
+					);
 			}
 			
 			inline vec3 operator-(const vec3& rhs)
 			{
-				return vec3(x - rhs.x, y - rhs.y, z - rhs.z);
+				return vec3(
+					x - rhs.x, 
+					y - rhs.y, 
+					z - rhs.z
+					);
 			}
 			
 			inline void operator-=(const vec3& rhs)
@@ -59,7 +87,11 @@ namespace CSE
 			// scale by a scalar
 			inline vec3 operator*(const real& rhs)
 			{
-				return vec3(x * rhs, y * rhs, z * rhs.z);
+				return vec3(
+					x * rhs, 
+					y * rhs, 
+					z * rhs.z
+					);
 			}
 			
 			inline void operator*=(const real& rhs)
@@ -71,7 +103,11 @@ namespace CSE
 			
 			inline vec3 operator/(const real& rhs)
 			{
-				return vec3((real)x / rhs, (real)y / rhs, (real)z / rhs.z);
+				return vec3(
+					(real)x / rhs, 
+					(real)y / rhs, 
+					(real)z / rhs.z
+					);
 			}
 			
 			inline void operator/=(const real& rhs)
@@ -90,7 +126,11 @@ namespace CSE
 			// component product
 			inline vec3 ComponentProduct(const vec3& rhs)
 			{
-				return vec3(x * rhs.x, y * rhs.y, z * rhs.z);
+				return vec3(
+					x * rhs.x, 
+					y * rhs.y, 
+					z * rhs.z
+					);
 			}
 			
 			// vector product
@@ -146,6 +186,8 @@ namespace CSE
 					return 0; // success
 				} else {
 					return -1; // failure
+					// this failure can occur when either "a" or "b" is a null vector
+					// or both of them are collinear
 				}
 			}
 		};

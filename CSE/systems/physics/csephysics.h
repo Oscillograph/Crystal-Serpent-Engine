@@ -41,6 +41,18 @@ namespace CSE
 		
 	private:
 		// CSEWorld* m_Box2DWorld = nullptr; // according to the tutorial, Box2D world must be in scope as it is defined in the stack, we just follow the example here until we feel strong enough to create our own magic
+		
+		float m_TimeStep = 0.01f; // in seconds
+		float m_TimeBuffer = 0.0f; // where the unprocessed time is stored
+		float m_TimePassedTotal = 0.0f; // how much time has passed since Physics turned on
+		float m_TimeAcceleration = 1; // multiply m_TimeStep to slow things down or rush
+		// WARNING! Setting acceleration to values bigger than 1 might invoke tunnel effect
+		// Use this feature only to slow things down and back to normal
+		
+		inline float TimeTypeToSeconds(TimeType sceneTime) 
+		{
+			return (float)sceneTime / 1000; // sceneTime is in milliseconds, return seconds
+		}
 	};
 }
 

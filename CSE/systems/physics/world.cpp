@@ -23,8 +23,7 @@ namespace CSE
 	{
 		for (Entity* e : entities)
 		{
-			if (e != nullptr)
-				delete e;
+			delete e;
 			e = nullptr;
 		}
 	}
