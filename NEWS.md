@@ -1,3 +1,7 @@
+## 0.2.4 ##
+Changelog:
++ Started development of a custom math library from a simple vec3 struct;
+
 ## 0.2.3 ##
 Changelog:
 + Moved LayerStack to the Window class so that each window can have its own pack of layers;
