@@ -42,7 +42,7 @@ class SceneGame : public CSE::Scene
 {
 public:
 	SceneGame()
-		: CSE::Scene(CSE::PhysicsSystem::Box2D)
+		: CSE::Scene(CSE::PhysicsSystem::CSE)
 	{
 	};
 	

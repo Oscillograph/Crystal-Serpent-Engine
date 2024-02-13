@@ -313,13 +313,25 @@ namespace CSE
 						}
 						
 						// CSE_CORE_LOG("Camera Position Normalized: ", cameraPositionNormalized.x, "; ", cameraPositionNormalized.y);
-						place = 
+						if (e.HasComponent<PhysicsComponent>())
 						{
-							transform.positionNormalized.x - cameraPositionNormalized.x - transform.sizeNormalized.x/2, 
-							transform.positionNormalized.y - cameraPositionNormalized.y - transform.sizeNormalized.y/2,
-							transform.sizeNormalized.x,
-							transform.sizeNormalized.y,
-						};
+							PhysicsComponent& physics = e.GetComponent<PhysicsComponent>();
+							place = 
+							{
+								physics.positionNormalized.x - cameraPositionNormalized.x - transform.sizeNormalized.x/2, 
+								physics.positionNormalized.y - cameraPositionNormalized.y - transform.sizeNormalized.y/2,
+								transform.sizeNormalized.x,
+								transform.sizeNormalized.y
+							};
+						} else {
+							place = 
+							{
+								transform.positionNormalized.x - cameraPositionNormalized.x - transform.sizeNormalized.x/2, 
+								transform.positionNormalized.y - cameraPositionNormalized.y - transform.sizeNormalized.y/2,
+								transform.sizeNormalized.x,
+								transform.sizeNormalized.y
+							};
+						}
 						
 						// CSE_CORE_LOG("Entity ", e.GetComponent<CSE::NameComponent>().value);
 						Renderer::DrawTiledTexture(
@@ -342,27 +354,39 @@ namespace CSE
 								{
 								case PhysicsDefines::HitBoxType::Circle:
 									{
-										SDL_FPoint center = {
-											physicsComponent.hitBoxes[i].points[0].x,
-											physicsComponent.hitBoxes[i].points[0].y
-										};
 										Renderer::DrawRect(
 											{
-												transform.positionNormalized.x - cameraPositionNormalized.x + center.x, 
-												transform.positionNormalized.y - cameraPositionNormalized.y + center.y
+												physicsComponent.positionNormalized.x - cameraPositionNormalized.x + physicsComponent.hitBoxes[i].pointsNormalized[0].x, 
+												physicsComponent.positionNormalized.y - cameraPositionNormalized.y + physicsComponent.hitBoxes[i].pointsNormalized[0].y
 											}, 
-											{transform.sizeNormalized.x, transform.sizeNormalized.y},
+											{
+												2 * physicsComponent.hitBoxes[i].radiusNormalized,
+												2 * physicsComponent.hitBoxes[i].radiusNormalized
+											},
 											{128, 255, 255, 255}
 											);
+										// CSE_CORE_LOG("Entity ", e.GetComponent<NameComponent>().value, "- hitbox radius: ", physicsComponent.hitBoxes[i].radiusNormalized);
 									}
 									break;
 								case PhysicsDefines::HitBoxType::Rectangle:
 									{
 										Renderer::DrawRect(
-											{transform.positionNormalized.x - cameraPositionNormalized.x + physicsComponent.hitBoxes[i].points[0].x, transform.positionNormalized.y - cameraPositionNormalized.y + physicsComponent.hitBoxes[i].points[0].y},
-											{transform.positionNormalized.x - cameraPositionNormalized.x + physicsComponent.hitBoxes[i].points[1].x, transform.positionNormalized.y - cameraPositionNormalized.y + physicsComponent.hitBoxes[i].points[1].y},
-											{transform.positionNormalized.x - cameraPositionNormalized.x + physicsComponent.hitBoxes[i].points[2].x, transform.positionNormalized.y - cameraPositionNormalized.y + physicsComponent.hitBoxes[i].points[2].y},
-											{transform.positionNormalized.x - cameraPositionNormalized.x + physicsComponent.hitBoxes[i].points[3].x, transform.positionNormalized.y - cameraPositionNormalized.y + physicsComponent.hitBoxes[i].points[3].y},
+											{
+												physicsComponent.positionNormalized.x - cameraPositionNormalized.x + physicsComponent.hitBoxes[i].pointsNormalized[0].x, 
+												physicsComponent.positionNormalized.y - cameraPositionNormalized.y + physicsComponent.hitBoxes[i].pointsNormalized[0].y
+											},
+											{
+												physicsComponent.positionNormalized.x - cameraPositionNormalized.x + physicsComponent.hitBoxes[i].pointsNormalized[1].x, 
+												physicsComponent.positionNormalized.y - cameraPositionNormalized.y + physicsComponent.hitBoxes[i].pointsNormalized[1].y
+											},
+											{
+												physicsComponent.positionNormalized.x - cameraPositionNormalized.x + physicsComponent.hitBoxes[i].pointsNormalized[2].x, 
+												physicsComponent.positionNormalized.y - cameraPositionNormalized.y + physicsComponent.hitBoxes[i].pointsNormalized[2].y
+											},
+											{
+												physicsComponent.positionNormalized.x - cameraPositionNormalized.x + physicsComponent.hitBoxes[i].pointsNormalized[3].x, 
+												physicsComponent.positionNormalized.y - cameraPositionNormalized.y + physicsComponent.hitBoxes[i].pointsNormalized[3].y
+											},
 											{255, 255, 128, 255}
 											);
 									}
@@ -371,8 +395,8 @@ namespace CSE
 									// unknown hitbox
 									Renderer::DrawRect(
 										{
-											transform.positionNormalized.x - cameraPositionNormalized.x, 
-											transform.positionNormalized.y - cameraPositionNormalized.y
+											physicsComponent.positionNormalized.x - cameraPositionNormalized.x, 
+											physicsComponent.positionNormalized.y - cameraPositionNormalized.y
 										}, 
 										{transform.sizeNormalized.x, transform.sizeNormalized.y}, 
 										{255, 255, 255, 255}

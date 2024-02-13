@@ -209,8 +209,10 @@ namespace CSE
 		
 		// characteristics
 		int hitBoxType = PhysicsDefines::HitBoxType::Rectangle;
-		std::vector<glm::vec2> points; // meters
+		std::vector<glm::vec2> points = {}; // meters
+		std::vector<glm::vec2> pointsNormalized = {}; // normalize to world size
 		float radius = 0.0f; // meters, only used in Circle HitBoxes
+		float radiusNormalized = 0.0f; // normalize to world size
 		
 		PhysicsHitBox();
 		PhysicsHitBox(const PhysicsHitBox&) = default;
@@ -230,14 +232,17 @@ namespace CSE
 		// translational movement
 		glm::vec2 velocity = glm::vec2(0.0f); // m/s
 		glm::vec2 velocityBackup = glm::vec2(0.0f);
+		glm::vec2 velocityNormalized = glm::vec2(0.0f); // normalize to world size
 		glm::vec2 acceleration = glm::vec2(0.0f); // m/s^2
 		glm::vec2 accelerationBackup = glm::vec2(0.0f);
+		glm::vec2 accelerationNormalized = glm::vec2(0.0f); // normalize to world size
 		
 		// characteristics
 		float mass = 0.0f; // kg
 		float friction = 0.5f; 
 		glm::vec3 position = {0.0f, 0.0f, 0.0f}; // meters in XYZ space coordinates
 		glm::vec3 positionBackup = {0.0f, 0.0f, 0.0f};
+		glm::vec3 positionNormalized = {0.0f, 0.0f, 0.0f}; // normalize to world size
 		
 		bool restoreBackup = false;
 		

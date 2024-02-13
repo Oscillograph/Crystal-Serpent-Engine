@@ -94,8 +94,9 @@ namespace CSE
 			
 			PhysicsHitBox hitbox;
 			hitbox.hitBoxType = PhysicsDefines::HitBoxType::Circle;
-			hitbox.points = {{0.0f, 0.0f}};
-			hitbox.radius = 1.0f;
+			hitbox.points = {{0.0f, -5.0f}};
+			hitbox.pointsNormalized = {{0.0f, 0.0f}};
+			hitbox.radius = 10.0f;
 			
 			physicsComponent.entity = *m_Entity;
 			physicsComponent.hitBoxes.push_back(hitbox);
@@ -255,6 +256,7 @@ namespace CSE
 			PhysicsHitBox hitbox;
 			hitbox.hitBoxType = PhysicsDefines::HitBoxType::Rectangle;
 			hitbox.points = hitboxPoints;
+			hitbox.pointsNormalized = hitboxPoints;
 			
 			physicsComponent.entity = *m_Entity;
 			physicsComponent.hitBoxes.push_back(hitbox);

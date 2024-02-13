@@ -6,6 +6,7 @@
 
 namespace CSE
 {
+	class Scene;
 	
 	// native physics system
 	
@@ -41,7 +42,8 @@ namespace CSE
 		
 	private:
 		// CSEWorld* m_Box2DWorld = nullptr; // according to the tutorial, Box2D world must be in scope as it is defined in the stack, we just follow the example here until we feel strong enough to create our own magic
-		
+		Scene* m_LastScene = nullptr;
+		WorldProperties m_World;
 		float m_TimeStep = 0.01f; // in seconds
 		float m_TimeBuffer = 0.0f; // where the unprocessed time is stored
 		float m_TimePassedTotal = 0.0f; // how much time has passed since Physics turned on
@@ -53,6 +55,8 @@ namespace CSE
 		{
 			return (float)sceneTime / 1000; // sceneTime is in milliseconds, return seconds
 		}
+		
+		void NormalizePhysics(Entity* A);
 	};
 }
 

@@ -14,20 +14,26 @@ namespace CSE
 	{
 		typedef float real; // to allow an easy change from float to double in future
 		
+		inline real Square(const real& x)
+		{
+			return x*x;
+		};
+		
 		struct vec3
 		{
-			vec3() : x(0), y(0), z(0);
+			vec3() : x(0), y(0), z(0) {};
 			vec3(real _x) : x(_x), y(_x), z(_x) {};
+			vec3(real _x, real _y) : x(_x), y(_y), z(0) {};
 			vec3(real _x, real _y, real _z) : x(_x), y(_y), z(_z) {};
 			
 			real x, y, z;
 			
-			inline bool operator==(const real& rhs)
+			inline bool operator==(const vec3& rhs)
 			{
 				return ((x == rhs.x) && (y == rhs.y) && (z == rhs.z));
 			}
 			
-			inline bool operator!=(const real& rhs)
+			inline bool operator!=(const vec3& rhs)
 			{
 				return !((*this) == rhs);
 			}
@@ -38,7 +44,7 @@ namespace CSE
 				return vec3(
 					x + rhs, 
 					y + rhs, 
-					z + rhs.z
+					z + rhs
 					);
 			}
 			
@@ -64,7 +70,7 @@ namespace CSE
 				return vec3(
 					x - rhs, 
 					y - rhs, 
-					z - rhs.z
+					z - rhs
 					);
 			}
 			
@@ -90,7 +96,7 @@ namespace CSE
 				return vec3(
 					x * rhs, 
 					y * rhs, 
-					z * rhs.z
+					z * rhs
 					);
 			}
 			
@@ -106,7 +112,7 @@ namespace CSE
 				return vec3(
 					(real)x / rhs, 
 					(real)y / rhs, 
-					(real)z / rhs.z
+					(real)z / rhs
 					);
 			}
 			

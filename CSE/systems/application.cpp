@@ -186,7 +186,8 @@ namespace CSE
 						{
 							if (layer->HasScene())
 							{
-								layer->Update(m_TimeThisFrame);
+								// layer->Update(m_TimeThisFrame);
+								layer->Update(m_TimeThisFrame - m_TimeLastFrame);
 							}
 						}
 					}
