@@ -109,6 +109,7 @@ public:
 		CSE_LOG("- player 1");
 		if (player1 == nullptr)
 		{
+			// a player1 entity on the screen
 			player1 = new CSE::Arcade::Unit(
 				this,
 				"Player 1",
@@ -146,7 +147,7 @@ public:
 		CSE_LOG("- player 2");
 		if (player2 == nullptr)
 		{
-			// a player1 entity on the screen
+			// a player2 entity on the screen
 			CSE::KBControls player2KBControls = {
 				{CSE::Commands::KBCommand_Left, CSE::ScanCode::Left}, 
 				{CSE::Commands::KBCommand_Right, CSE::ScanCode::Right},
@@ -186,23 +187,21 @@ public:
 		if (grid == nullptr)
 		{
 			// a player1 entity on the screen
-			// grid = CreateEntity("Grid");
-			
 			grid = new CSE::Arcade::Doodad(
 				this,
 				"Grid",
 				"./App/Grid.png",
 				{},
 				{160, 186},
-				{10, 60},
+				{4, 60},
 				{0.0f, 1.0f},
 				{0, 0, 0},
-				{100, 100},
+				{100, 180},
 				{
-					{-0.01, 4}, 
-					{0.01, 4}, 
-					{0.01, 0}, 
-					{-0.01, 0}
+					{-1, 30}, 
+					{1, 30}, 
+					{1, -30}, 
+					{-1, -30}
 				}
 				);
 			
