@@ -3,6 +3,7 @@
 namespace CSE
 {
 	std::unordered_multimap<CanbanEvents, Entity*> Canban::board;
+	std::vector<CanbanEvent> Canban::advancedBoard;
 	
 	bool Canban::GetTask(CanbanEvents event, Entity* entity)
 	{
