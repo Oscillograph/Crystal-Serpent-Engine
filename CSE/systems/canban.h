@@ -18,15 +18,16 @@ namespace CSE
 		Clear					= 2,
 		Physics_ChangeType		= 3,
 	};
-	
+	/*
 	enum class CanbanReceiver
 	{
 		None					= 0,
-		Layer					= 1,
-		Scene					= 2,
-		Physics					= 3,
-		Renderer				= 4,
-		App						= 5,
+		Anyone					= 1,
+		Layer					= 2,
+		Scene					= 3,
+		Physics					= 4,
+		Renderer				= 5,
+		App						= 6,
 	};
 	
 	struct CanbanEvent
@@ -37,11 +38,11 @@ namespace CSE
 		int keyStatus = 0; // 1 - Up, 2 - Down
 		CanbanReceiver receiver = CanbanReceiver::None;
 	};
-	
+	*/
 	struct Canban
 	{
 		static std::unordered_multimap<CanbanEvents, Entity*> board;
-		static std::vector<CanbanEvent> advancedBoard;
+		// static std::vector<CanbanEvent> advancedBoard;
 		
 		static bool GetTask(CanbanEvents event, Entity* entity);
 		static void PutTask(CanbanEvents event, Entity* entity);

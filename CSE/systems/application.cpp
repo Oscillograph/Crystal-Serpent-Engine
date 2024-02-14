@@ -101,17 +101,29 @@ namespace CSE
 						break;
 					}
 					
+					if (event.type == SDL_KEYDOWN)
+					{
+						Input::PutEvent({event.key.keysym.sym, event.key.keysym.scancode, KeyStatus::Pressed});
+						// testing purposes
+						// InputKeyEvent keyEvent = Input::PopEvent();
+						// CSE_CORE_LOG("Input Event. Key: ", (int)keyEvent.keyCode, "; Scan: ", (int)keyEvent.scanCode, "; Status: ", (int)keyEvent.status);
+					}
+					
 					if (event.type == SDL_KEYUP)
 					{
+						Input::PutEvent({event.key.keysym.sym, event.key.keysym.scancode, KeyStatus::Released});
+						// testing purposes
+						// InputKeyEvent keyEvent = Input::PopEvent();
+						// CSE_CORE_LOG("Input Event. Key: ", (int)keyEvent.keyCode, "; Scan: ", (int)keyEvent.scanCode, "; Status: ", (int)keyEvent.status);
+						
+						// exit
 						if (event.key.keysym.scancode == ScanCode::Esc)
 						{
 							m_Running = false;
 							break;
 						}
-					}
-					
-					if (event.type == SDL_KEYUP)
-					{
+						
+						// draw wireframes
 						if (event.key.keysym.scancode == ScanCode::Tilde)
 						{
 							m_RenderWireframes = !m_RenderWireframes;

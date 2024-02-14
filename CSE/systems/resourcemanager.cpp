@@ -262,17 +262,17 @@ namespace CSE
 		for (auto typeIterator = m_Cache.begin(); typeIterator != m_Cache.end(); typeIterator++)
 		{
 			type = (*typeIterator).first;
-			CSE_CORE_LOG("- choosing resource category ", (int)type, "...");
+			// CSE_CORE_LOG("- choosing resource category ", (int)type, "...");
 			if (m_Cache.find(type) != m_Cache.end())
 			{
-				CSE_CORE_LOG("- walking through resource category ", (int)type, "...");
+				// CSE_CORE_LOG("- walking through resource category ", (int)type, "...");
 				// for every resource of the selected type do
 				for (auto cacheIterator = m_Cache[type].begin(); cacheIterator != m_Cache[type].end(); )
 				{
-					CSE_CORE_LOG("- - selected a resource \"", (*cacheIterator).second->path.c_str(), "\"...");
+					// CSE_CORE_LOG("- - selected a resource \"", (*cacheIterator).second->path.c_str(), "\"...");
 					if ((*cacheIterator).second == nullptr)
 					{
-						CSE_CORE_LOG("- - resource was deleted before...");
+						// CSE_CORE_LOG("- - resource was deleted before...");
 						cacheIterator = m_Cache[type].erase(cacheIterator);
 					} else {
 						// when do we delete a resource from the cache?
@@ -281,13 +281,13 @@ namespace CSE
 							((*cacheIterator).second->users.size() == 0) // when there are no users
 							)
 						{
-							CSE_CORE_LOG("- - resource is flagged for deletion...");
+							// CSE_CORE_LOG("- - resource is flagged for deletion...");
 							// nullify all users
 							for (auto usersIterator = (*cacheIterator).second->users.begin(); usersIterator != (*cacheIterator).second->users.end(); usersIterator++)
 							{
 								(*usersIterator) = nullptr;
 							}
-							CSE_CORE_LOG("- - users list cleared...");
+							// CSE_CORE_LOG("- - users list cleared...");
 							
 							// delete the resource data
 							if ((*cacheIterator).second->data != nullptr)
@@ -298,7 +298,7 @@ namespace CSE
 							delete (*cacheIterator).second;
 							(*cacheIterator).second = nullptr;
 							cacheIterator = m_Cache[type].erase(cacheIterator);
-							CSE_CORE_LOG("- - resource deleted...");
+							// CSE_CORE_LOG("- - resource deleted...");
 						} else {
 							cacheIterator++;
 						}
