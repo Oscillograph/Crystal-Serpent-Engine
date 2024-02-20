@@ -1,6 +1,7 @@
 #include <CSE/systems/renderer.h>
 #include <CSE/systems/application.h>
 #include <CSE/systems/scene.h>
+#include <CSE/systems/renderer/camera2d.h>
 
 namespace CSE
 {

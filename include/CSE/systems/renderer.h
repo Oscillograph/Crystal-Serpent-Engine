@@ -6,13 +6,14 @@
 
 // bricks of the renderer system
 #include <CSE/systems/renderer/texture.h>
-#include <CSE/systems/renderer/camera2d.h>
+// #include <CSE/systems/renderer/camera2d.h>
 
 // TODO: Consider developing Render class into a per-scene object instead of a static global
 
 namespace CSE
 {
 	class Scene;
+	class Camera2D;
 	
 	// TODO: Draw graphic primitives
 	// TODO: Draw text messages using raster fonts
