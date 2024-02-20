@@ -1,3 +1,7 @@
+## 0.3.0 ##
+Changelog:
++ Changed the project files organization structure to match "common" style;
+
 ## 0.2.4 ##
 Changelog:
 + Started development of a custom math library from a simple vec3 struct;
