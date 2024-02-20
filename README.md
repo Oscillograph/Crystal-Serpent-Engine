@@ -12,9 +12,27 @@ Crystal Serpent Engine is aimed to be a game engine based on SDL.
 + Presets for units, doodads and decorations to populate scenes
 + Simple resource manager with a garbage collector
 
+## Project files organization ##
++ /bin - for binaries meant to be dynamically linked
++ /build - for binaries during the build process
++ /data - various assets required by the engine systems
++ /doc - documentation (TODO: use doxygen)
++ /examples - example apps using CSE
++ /include/CSE - header files
++ /release - output .exe here
++ /src/CSE - source files
++ /tests - tests (TODO: implement them)
++ /tools - various CSE-specific tools, including scene editor, asset editor, etc. (TODO: develop them)
++ /vendor - external libraries developed by someone else
++ LICENSE.md - current license is creative commons
++ NEWS.md - recent updates
++ README.md - this document
+
+Repository development strategy is yet to be devised.
+
 ## Usage ##
 The engine is designed to be used through a header file. The common way to use it looks like this:
-1. Include "./cse.h"
+1. Include <CSE/cse.h>
 2. Set up layers:
 ```
 class Layer1 : public CSE::Layer
