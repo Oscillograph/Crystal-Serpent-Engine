@@ -9,8 +9,8 @@
 *.exe
 /app.ico
 *.layout
-/Crystal_Serpent_Engine_private.h
-/Crystal_Serpent_Engine_private.rc
-/Crystal_Serpent_Engine_private.res
+/Crystal_Serpent_Engine_0_private.h
+/Crystal_Serpent_Engine_0_private.rc
+/Crystal_Serpent_Engine_0_private.res
 /main.s
 
