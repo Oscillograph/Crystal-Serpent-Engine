@@ -3,10 +3,10 @@
 
 #include <CSE/core.h>
 
-#include <CSE/systems/platform.h>
-#include <CSE/systems/physics.h>
+// #include <CSE/systems/platform.h>
+#include <CSE/systems/physics.h> // PhysicSystem enum, PhysicsProcessor
 
-#include <entt/entt.hpp>
+#include <entt/entt.hpp> // entt::registry
 
 namespace CSE
 {
