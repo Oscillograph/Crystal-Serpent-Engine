@@ -2,6 +2,7 @@
 #define CSE_UTILS_H
 
 #include <CSE/protocore.h>
+#include <chrono>
 
 namespace CSE
 {
@@ -23,7 +24,7 @@ namespace CSE
 		
 		namespace UUID {
 			static std::random_device g_RandomDevice;
-			static std::mt19937_64 g_RandomEngine(g_RandomDevice());
+			static std::mt19937 g_RandomEngine(g_RandomDevice());
 			static std::uniform_int_distribution<uint64_t> g_UniformDistribution;
 			
 			static uint64_t Generate() {

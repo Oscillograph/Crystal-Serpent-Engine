@@ -141,7 +141,12 @@ namespace CSE
 							{
 								if (event.window.windowID == window->GetNativeWindowID())
 								{
-									m_WindowStack.Pop(window);
+									if (GetWindows().Size() == 1)
+									{
+										m_Running = false;
+									} else {
+										m_WindowStack.Pop(window);
+									}
 									break; // this event should not go into OnEvent mechanism
 								}
 							}
