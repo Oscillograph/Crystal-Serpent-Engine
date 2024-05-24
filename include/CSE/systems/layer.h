@@ -1,8 +1,8 @@
 #ifndef CSE_LAYER_H
 #define CSE_LAYER_H
 
-#include <CSE/core.h>
-#include <CSE/systems/platform.h>
+#include <CSE/core.h> // STL, basic CSE level
+#include <CSE/systems/platform.h> // SDL_Event
 // #include <CSE/systems/input.h>
 
 namespace CSE

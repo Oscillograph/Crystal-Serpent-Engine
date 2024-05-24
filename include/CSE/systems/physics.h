@@ -2,11 +2,11 @@
 #define CSE_PHYSICS_H
 
 #include <CSE/core.h>
-#include <CSE/systems/physics/world.h>
+#include <CSE/systems/physics/world.h> // World
 
 // implementation-specific
-#include <CSE/systems/physics/physicsAPI.h>
-#include <CSE/systems/platform.h>
+#include <CSE/systems/physics/physicsAPI.h> //PhysicsSystem, PhysicsAPI
+// #include <CSE/systems/platform.h>
 
 namespace CSE
 {
