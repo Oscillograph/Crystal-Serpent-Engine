@@ -27,10 +27,13 @@ namespace CSE
 			)
 		{
 			m_Entity = scene->CreateEntity(name);
+			m_EntityID = m_Entity->GetID();
+			m_Scene = scene;
 			
 			// physical position
 			PositionComponent& position = m_Entity->AddComponent<PositionComponent>(10, 0);
 			position.direction = 1; // 1 means right, -1 means left
+			CSE_CORE_LOG("Entity ID: ", (uint32_t)(m_Entity->GetID()), "\; Position: ", m_Entity->GetComponent<PositionComponent>().x, ", ", m_Entity->GetComponent<PositionComponent>().y);
 			
 			// screen representation
 			TransformComponent& transform = m_Entity->AddComponent<TransformComponent>();

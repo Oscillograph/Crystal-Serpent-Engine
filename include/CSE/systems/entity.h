@@ -31,14 +31,14 @@ namespace CSE
 		template <typename T, typename... Args>
 		T& AddComponent(Args&&... args)
 		{
-			CSE_CORE_ASSERT(!HasComponent<T>(), "Entity # already has the component.");
+			CSE_CORE_ASSERT(!HasComponent<T>(), "Entity # already has the component \"", typeid(T).name(), "\"");
 			return m_Scene->GetRegistry().emplace<T>(this->m_EntityID, std::forward<Args>(args)...);
 		}
 		
 		template <typename T>
 		T& GetComponent()
 		{
-			// BSE_ASSERT(HasComponent<T>(), "Entity doesn't have the component.");
+			CSE_CORE_ASSERT(HasComponent<T>(), "Entity doesn't have the component \"", typeid(T).name(), "\"");
 			return m_Scene->GetRegistry().get<T>(this->m_EntityID);
 		}
 		
@@ -51,7 +51,7 @@ namespace CSE
 		template <typename T>
 		void RemoveComponent()
 		{
-			CSE_CORE_ASSERT(HasComponent<T>(), "Entity doesn't have the component.");
+			CSE_CORE_ASSERT(HasComponent<T>(), "Entity doesn't have the component \"", typeid(T).name(), "\"");
 			return m_Scene->GetRegistry().erase<T>(this->m_EntityID);
 		}
 		
