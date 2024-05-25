@@ -9,6 +9,11 @@ namespace CSE
 	{
 	}
 	
+	WorldProperties::WorldProperties(const vec2& worldSize)
+		: size(worldSize)
+	{
+	}
+	
 	// World Collection
 	World::World()
 	{

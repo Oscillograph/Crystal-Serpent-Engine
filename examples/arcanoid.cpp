@@ -6,7 +6,7 @@ class SceneGame : public CSE::Scene
 {
 public:
 	SceneGame()
-		: CSE::Scene(CSE::PhysicsSystem::CSE)
+		: CSE::Scene(CSE::PhysicsSystem::None)
 	{
 		CSE_LOG("SceneGame init");
 	};
@@ -169,6 +169,17 @@ private:
 		bool paused = false;
 		bool over = false;
 		float maxSpeed = 2.0f;
+		
+		int level[8][10] = {
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+			1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+			0, 1, 1, 1, 1, 1, 1, 1, 1, 0,
+			0, 0, 0, 1, 1, 1, 1, 0, 0, 0,
+			0, 0, 0, 0, 1, 1, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+		};
 	};
 	GameStruct game;
 };
