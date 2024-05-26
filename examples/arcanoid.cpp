@@ -32,6 +32,34 @@ public:
 	
 	void OnInit()
 	{
+		if (playerEntity == nullptr)
+		{
+			playerEntity = new CSE::Arcade::SpriteUnit(
+				this,
+				"Player",
+				"./arcanoid/assets/player.png",
+				{
+					{ CSE::Commands::KBCommand_Left, CSE::ScanCode::Left },
+					{ CSE::Commands::KBCommand_Right, CSE::ScanCode::Right },
+					{ CSE::Commands::KBCommand_Space, CSE::ScanCode::Space },
+				},
+				{160, 220},
+				{80, 20}
+				);
+		}
+		
+		if (ballEntity == nullptr)
+		{
+			ballEntity = new CSE::Arcade::SpriteUnit(
+				this,
+				"Ball",
+				"./arcanoid/assets/ball.png",
+				{},
+				{160, 200},
+				{20, 20}
+				);
+		}
+		
 		if (backgroundEntity == nullptr)
 		{
 			backgroundEntity = new CSE::Arcade::Decoration(
@@ -41,42 +69,6 @@ public:
 				{160, 120},
 				{320, 240}
 				);
-		}
-		
-		if (playerEntity == nullptr)
-		{
-			playerEntity = new CSE::Arcade::Unit(
-				this,
-				"Player",
-				"./arcanoid/assets/player.png",
-				{
-					{ CSE::Commands::KBCommand_Left, CSE::ScanCode::Left },
-					{ CSE::Commands::KBCommand_Right, CSE::ScanCode::Right },
-					{ CSE::Commands::KBCommand_Space, CSE::ScanCode::Space },
-				},
-				{160, 120},
-				{80, 20}
-				);
-			
-			CSE::PositionComponent& position = playerEntity->GetComponent<CSE::PositionComponent>();
-			position.x = 160;
-			position.y = 210;
-		}
-		
-		if (ballEntity == nullptr)
-		{
-			ballEntity = new CSE::Arcade::Unit(
-				this,
-				"Ball",
-				"./arcanoid/assets/ball.png",
-				{},
-				{160, 120},
-				{5, 5}
-				);
-			
-			CSE::PositionComponent& position = ballEntity->GetComponent<CSE::PositionComponent>();
-			position.x = 160;
-			position.y = 200;
 		}
 		
 		game.started = true;
@@ -97,7 +89,6 @@ public:
 					CSE::KeyBoardComponent& keyBoard = player.GetComponent<CSE::KeyBoardComponent>();
 //					CSE::AnimationComponent& animation = player.GetComponent<CSE::AnimationComponent>();
 					CSE::PositionComponent& position = player.GetComponent<CSE::PositionComponent>();
-					CSE::PhysicsComponent& physics = player.GetComponent<CSE::PhysicsComponent>();
 					CSE::TransformComponent& transform = player.GetComponent<CSE::TransformComponent>();
 					CSE::StateMachineComponent& stateMachine = player.GetComponent<CSE::StateMachineComponent>();
 					

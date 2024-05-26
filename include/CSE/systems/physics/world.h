@@ -15,7 +15,7 @@ namespace CSE
 		glm::vec2 size = {1000.0f, 1000.0f}; // in meters
 		
 		WorldProperties();
-		WorldProperties(const vec2& worldSize);
+		WorldProperties(const glm::vec2& worldSize);
 	};
 	
 	struct World

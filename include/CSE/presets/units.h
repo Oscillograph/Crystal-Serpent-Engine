@@ -48,6 +48,39 @@ namespace CSE
 			glm::vec2 m_SpeedMax = {25.0f, 25.0f}; // meters per second
 		};
 		
+		// ================== SpriteUnit - can be controlled and interacted with, has no physics
+		
+		class SpriteUnit : public Entity
+		{
+		public:
+			SpriteUnit() = default;
+			SpriteUnit(
+				Scene* scene,
+				const std::string& name,
+				const std::string& spritePath,
+				const KBControls& keyboardControls,
+				const glm::vec2& transformPosition,
+				const glm::vec2& transformSize,
+				const glm::vec2& spriteTilingFactor = {0.0f, 0.0f},
+				const glm::uvec3& spriteColorKey = {0, 0, 0}
+				);
+			~SpriteUnit();
+			
+			void SetAnimations(
+				std::vector<int> animationStates, 
+				glm::uvec2 frameSize, 
+				float framesPerSecond = 20.0f,
+				bool loopAnimations = true
+				);
+			void ChangeDirection(int direction);
+			void ChangePhysics(const glm::vec2& speedMax);
+			
+		protected:
+			Entity* m_Entity = nullptr;
+			Resource* m_SpriteTexture = nullptr;
+			glm::vec2 m_SpeedMax = {25.0f, 25.0f}; // meters per second
+		};
+		
 		// ================== Doodad - can't be controlled, but can be interacted with
 		
 		class Doodad : public Entity

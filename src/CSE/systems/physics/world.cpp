@@ -9,7 +9,7 @@ namespace CSE
 	{
 	}
 	
-	WorldProperties::WorldProperties(const vec2& worldSize)
+	WorldProperties::WorldProperties(const glm::vec2& worldSize)
 		: size(worldSize)
 	{
 	}
