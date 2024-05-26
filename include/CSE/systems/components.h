@@ -61,6 +61,9 @@ namespace CSE
 		void Normalize(glm::vec2 limit);
 		glm::vec2 GetPositionNormalized(Window* window);
 		glm::vec2 GetSizeNormalized(Window* window);
+		
+		void MoveBy(const glm::vec2& coordinates);
+		void MoveByAndNormalizeToWindow(const glm::vec2& coordinates, Window* window);
 	};
 	
 	struct UUIDComponent 

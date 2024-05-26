@@ -58,6 +58,9 @@ public:
 				{160, 200},
 				{20, 20}
 				);
+			
+			CSE::PositionComponent& position = ballEntity->GetComponent<CSE::PositionComponent>();
+			position.x = 50;
 		}
 		
 		if (backgroundEntity == nullptr)
@@ -114,21 +117,19 @@ public:
 						{
 							if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Left]))
 							{
-								transform.position.x += -game.maxSpeed;
+								transform.MoveByAndNormalizeToWindow(
+									{-game.maxSpeed, 0}, 
+									GetLayer()->GetWindow()
+									);
 							}
 							
 							if (CSE::Input::IsButtonPressed(keyBoard.controls[CSE::Commands::KBCommand_Right]))
 							{
-								transform.position.x += game.maxSpeed;
+								transform.MoveByAndNormalizeToWindow(
+									{game.maxSpeed, 0}, 
+									GetLayer()->GetWindow()
+									);
 							}
-							
-							glm::vec2 windowSize = {
-								GetLayer()->GetWindow()->GetPrefs().width,
-								GetLayer()->GetWindow()->GetPrefs().height
-							};
-							
-							transform.Normalize({windowSize.x, windowSize.y});
-							
 						} else {
 							stateMachine.SetState(CSE::EntityStates::STAND);
 						}

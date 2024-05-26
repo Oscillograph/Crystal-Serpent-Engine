@@ -62,6 +62,21 @@ namespace CSE
 		return sizeNormalized;
 	}
 	
+	void TransformComponent::MoveBy(const glm::vec2& coordinates)
+	{
+		position.x += coordinates.x;
+		position.y += coordinates.y;
+	}
+	
+	void TransformComponent::MoveByAndNormalizeToWindow(const glm::vec2& coordinates, Window* window)
+	{
+		MoveBy(coordinates);
+		Normalize({
+			window->GetPrefs().width,
+			window->GetPrefs().height
+		});
+	}
+	
 	// Sprite Component
 	SpriteComponent::SpriteComponent(Texture* value)
 		: texture(value), tilingFactor(glm::vec2(0.0f))
