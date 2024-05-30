@@ -41,6 +41,11 @@ namespace CSE
 		
 		// multiple windows functionality
 		inline WindowStack& GetWindows() { return m_WindowStack; }
+		Window* NewWindow(const WindowPrefs& prefs) { Window* window = new CSE::Window(prefs); GetWindows().Push(window); return window; }
+		
+		// multiple scenes functionality
+		inline SceneStack& GetScenes() { return m_SceneStack; }
+		Scene* NewScene() { Scene* scene = nullptr; return scene; } // TODO: 
 		
 		// only one application allowed to run at a time
 		inline static Application* Get() { return m_ApplicationInstance; }
@@ -55,6 +60,7 @@ namespace CSE
 		bool m_Running = true;
 		bool m_TaskToDo = false;
 		WindowStack m_WindowStack;
+		SceneStack m_SceneStack;
 		
 	protected:
 		static Application* m_ApplicationInstance;

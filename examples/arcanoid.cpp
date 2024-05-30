@@ -226,15 +226,10 @@ public:
 		CSE_LOG("App constructor");
 		CSE::Ref<CSE::Layer> layer1(new Layer1());
 		
-		GetWindows().Push(new CSE::Window(prefs));
-		// m_WindowStack.Push(new CSE::Window({"CSE: Второе окно", 400, 100, 320, 240}));
-		CSE_LOG("Total windows in App's WindowStack: ", GetWindows().Size());
-		
-		for (CSE::Window* window : GetWindows())
-		{
-			AttachLayer(window, layer1);
-			CSE_LOG("Layer ", layer1.get()->GetName(), " attached to window #", window->GetNativeWindowID());
-		}
+		CSE::Window* window = NewWindow(prefs);
+		AttachLayer(window, layer1);
+		CSE_LOG("Layer ", layer1.get()->GetName(), " attached to window #", window->GetNativeWindowID());
+		window = nullptr;
 		
 		// LimitFPS(CSE_FPS60);
 		// LimitFPS(CSE_FPSNOLIMIT);
