@@ -15,17 +15,9 @@ namespace CSE
 	Application::Application(const WindowPrefs& prefs)
 	{
 		Init();
+		
+		NewWindow(prefs);
 		LimitFPS(CSE_FPS60);
-		
-		// m_WindowStack.Push(new Window(prefs));
-		
-		// initialize randomizer
-		tm randomTime;
-		srand(
-			randomTime.tm_sec + 60*randomTime.tm_min + 
-			60*60*randomTime.tm_hour + 60*60*24*randomTime.tm_mday + 
-			60*60*24*30*randomTime.tm_mon + 60*60*24*30*12*randomTime.tm_year
-			);
 	}
 	
 	Application::~Application()
@@ -55,6 +47,15 @@ namespace CSE
 		CSE_CORE_ASSERT((m_ApplicationInstance == nullptr), "This application already exists!");
 		int platformInitResult = Platform::InitDefault();
 		ResourceManager::Init();
+		
+		// initialize randomizer
+		tm randomTime;
+		srand(
+			randomTime.tm_sec + 60*randomTime.tm_min + 
+			60*60*randomTime.tm_hour + 60*60*24*randomTime.tm_mday + 
+			60*60*24*30*randomTime.tm_mon + 60*60*24*30*12*randomTime.tm_year
+			);
+		
 		return platformInitResult;
 	}
 	

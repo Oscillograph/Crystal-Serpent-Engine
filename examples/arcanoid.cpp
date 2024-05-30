@@ -220,18 +220,18 @@ public:
 class App : public CSE::Application
 {
 public:
-	App(const CSE::WindowPrefs& prefs)
-		: CSE::Application(prefs) 
+	App()
+		: CSE::Application() 
 	{
 		CSE_LOG("App constructor");
 		CSE::Ref<CSE::Layer> layer1(new Layer1());
 		
-		CSE::Window* window = NewWindow(prefs);
+		CSE::Window* window = NewWindow({"CSE: Тест", 100, 100, 320, 240});
 		AttachLayer(window, layer1);
 		CSE_LOG("Layer ", layer1.get()->GetName(), " attached to window #", window->GetNativeWindowID());
 		window = nullptr;
 		
-		// LimitFPS(CSE_FPS60);
+		LimitFPS(CSE_FPS60);
 		// LimitFPS(CSE_FPSNOLIMIT);
 	};
 	~App() 
@@ -241,6 +241,6 @@ public:
 
 CSE::Application* CSE::CreateApplication()
 {
-	return new App({"CSE: Тест", 100, 100, 320, 240});
+	return new App();
 	// return new App();
 }

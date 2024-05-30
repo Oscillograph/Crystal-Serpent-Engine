@@ -3,7 +3,6 @@
 
 #include <CSE/core.h> // STL, basic CSE level
 #include <CSE/systems/platform.h> // SDL_Event
-// #include <CSE/systems/input.h>
 
 namespace CSE
 {
@@ -67,25 +66,6 @@ namespace CSE
 		Window* m_Window = nullptr;
 		Scene* m_Scene = nullptr;
 		Viewport* m_Viewport = nullptr; // TODO: allow a collection of viewports be set up for a single layer
-	};
-	
-	class LayerStack
-	{
-	public:
-		LayerStack();
-		~LayerStack();
-		
-		bool Attach(Ref<Layer> layer);
-		bool Detach(Ref<Layer> layer);
-		
-		inline const std::vector<Ref<Layer>>& GetContents() const { return m_Layers; }
-		
-		std::vector<Ref<Layer>>::iterator begin() { return m_Layers.begin(); }
-		std::vector<Ref<Layer>>::iterator end()   { return m_Layers.end();   }
-		
-	protected:
-		std::vector<Ref<Layer>> m_Layers;
-		uint32_t m_LayerInsertIndex = 0;
 	};
 }
 

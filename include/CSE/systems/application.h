@@ -6,12 +6,13 @@
 // platform-dependent systems
 #include <CSE/systems/platform.h> // SDL
 #include <CSE/systems/window.h> // CSE interfaces are based on gui
+#include <CSE/systems/windowstack.h> // WindowStack
 #include <CSE/systems/renderer.h> // graphics
 #include <CSE/systems/input.h> // keyboard and other manipulators input
 
 // architecture abstractions
 #include <CSE/systems/layer.h>
-#include <CSE/systems/scene.h>
+#include <CSE/systems/scenestack.h> // SceneStack
 #include <CSE/systems/viewport.h>
 
 #include <CSE/systems/entity.h>
@@ -21,12 +22,14 @@
 
 namespace CSE
 {
+	class Scene;
+	
 	// Main CSE application which can have windows
 	class Application
 	{
 	public:
 		Application();
-		Application(const WindowPrefs& prefs = {CSE::EngineInfo::Name, 0, 0, 620, 480});
+		Application(const WindowPrefs& prefs);
 		virtual ~Application();
 		
 		int Init();
@@ -45,7 +48,7 @@ namespace CSE
 		
 		// multiple scenes functionality
 		inline SceneStack& GetScenes() { return m_SceneStack; }
-		Scene* NewScene() { Scene* scene = nullptr; return scene; } // TODO: 
+		Scene* NewScene() { Scene* scene = nullptr; return scene; } // TODO: Application::NewScene())
 		
 		// only one application allowed to run at a time
 		inline static Application* Get() { return m_ApplicationInstance; }
