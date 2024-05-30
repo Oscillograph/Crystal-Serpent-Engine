@@ -1,3 +1,7 @@
+## 0.4.0 ##
+Changelog:
++ Changed the architecture vision: Scenes should be as independent objects as windows;
+
 ## 0.3.0 ##
 Changelog:
 + Changed the project files organization structure to match "common" style;
