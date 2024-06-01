@@ -74,75 +74,13 @@ namespace CSE
 	
 	bool Layer::Update(TimeType time)
 	{
-		if (m_Scene != nullptr)
-		{
-			m_Scene->Update(time); // user-defined update scene function
-		}
-		return true;
-	}
-	
-	bool Layer::LoadScene(Scene* scene)
-	{
-		CSE_CORE_LOG("Layer: Load scene...");
-		m_Scene = scene;
-		m_Scene->SetLayer(this);
-		if (!m_Scene->IsInitialized())
-		{
-			CSE_CORE_LOG("- initialize a scene");
-			m_Scene->Init();
-		}
-		CSE_CORE_LOG("- scene load method call");
-		m_Scene->Load();
-		
-		// CSE_CORE_LOG("Layer ", m_Name, " attached.");
-		CSE_CORE_LOG("- layer-level viewport setup");
-		if (m_Scene->GetPhysicsSystem() == PhysicsSystem::None)
-		{
-			if (m_Viewport == nullptr)
-			{
-				m_Viewport = new Viewport(m_Scene->GetActiveCamera(), {0, 0, GetWindow()->GetPrefs().width, GetWindow()->GetPrefs().height});
-				m_Viewport->SetScene(m_Scene);
-			} else {
-				m_Viewport->SetScene(m_Scene);
-			}
-		} else {
-			if (m_Viewport == nullptr)
-			{
-				// m_Viewport = new Viewport(m_Scene->GetActiveCamera(), {GetWindow()->GetPrefs().width / 4, GetWindow()->GetPrefs().height / 4, GetWindow()->GetPrefs().width / 2, GetWindow()->GetPrefs().height / 2});
-				// m_Viewport = new Viewport(m_Scene->GetActiveCamera(), {0, 0, GetWindow()->GetPrefs().width, GetWindow()->GetPrefs().height});
-				m_Viewport = new Viewport(m_Scene->GetActiveCamera(), {80, 60, 160, 120});
-				m_Viewport->SetScene(m_Scene);
-			} else {
-				m_Viewport->SetScene(m_Scene);
-			}
-		}
-		
-		return true;
-	}
-	
-	bool Layer::UnloadScene(Scene* scene)
-	{
-		CSE_CORE_LOG("Layer: Unload a scene...");
-		scene->SetLayer(nullptr);
-		m_Scene = nullptr;
-		CSE_CORE_LOG("- scene unload method call");
-		scene->Unload();
-		
-		CSE_CORE_LOG("- delete a layer-level viewport");
-		if (m_Viewport != nullptr)
-			delete m_Viewport;
-		m_Viewport = nullptr;
-		
 		return true;
 	}
 	
 	bool Layer::Detach()
 	{
 		if (OnDetach())
-		{
-			// CSE_CORE_LOG("Layer ", m_Name, " detached.");
-			UnloadScene(m_Scene);
-			
+		{	
 			return true;
 		}
 		
@@ -192,6 +130,8 @@ namespace CSE
 					}
 				}
 			});
+		} else {
+			CSE_CORE_LOG("Layer: Animate() - m_Viewport is nullptr");
 		}
 	}
 	
@@ -199,6 +139,7 @@ namespace CSE
 	{
 		if (m_Viewport != nullptr)
 		{
+			Renderer::SetActiveLayer(this);
 			Renderer::SetActiveScene(m_Viewport->GetScene());
 			Renderer::SetActiveCamera(m_Viewport->GetCamera());
 			
@@ -229,10 +170,10 @@ namespace CSE
 			
 			Renderer::SetActiveScreen(viewportPlace);
 			
-			for (auto entity : GetScene()->GetRegistry().view<NameComponent>())
+			for (auto entity : m_Viewport->GetScene()->GetRegistry().view<NameComponent>())
 			{
 				bool mayDrawPhysicalEntity = false;
-				Entity e = Entity(entity, GetScene());
+				Entity e = Entity(entity, m_Viewport->GetScene());
 				
 				// Draw a physical entity only if the camera "sees" it
 				if (e.HasComponent<PhysicsComponent>())
@@ -247,6 +188,15 @@ namespace CSE
 				if (!(e.HasComponent<PhysicsComponent>() && !mayDrawPhysicalEntity))
 				{
 					TransformComponent& transform = e.GetComponent<TransformComponent>();
+					
+					if (transform.GetNormalizationWindow() != GetWindow())
+					{
+						transform.SetNormalizationWindow(GetWindow());
+						transform.Normalize({
+							GetWindow()->GetPrefs().width,
+							GetWindow()->GetPrefs().height,
+						});
+					}
 					
 					if (e.HasComponent<SpriteComponent>())
 					{
@@ -396,7 +346,37 @@ namespace CSE
 					{255, 128, 128, 255}
 					);
 			}
+		} else {
+			CSE_CORE_LOG("Layer: Draw() - m_Viewport is nullptr");
 		}
+	}
+	
+	void Layer::SetViewport(Viewport* viewport)
+	{
+		m_Viewport = viewport;
+		m_Viewport->SetLayer(this);
+	}
+	
+	void Layer::SetViewportDefault(Scene* scene)
+	{
+		if (scene != nullptr)
+		{
+			if (m_Viewport == nullptr)
+			{
+				m_Viewport = new Viewport(scene->GetActiveCamera(), {0, 0, GetWindow()->GetPrefs().width, GetWindow()->GetPrefs().height});
+				m_Viewport->SetScene(scene);
+			} else {
+				CSE_CORE_LOG("Layer: SetViewportDefault() - m_Viewport is not nullptr");
+				m_Viewport->SetScene(scene);
+			}
+		} else {
+			CSE_CORE_LOG("Layer: SetViewportDefault() - scene is nullptr");
+		}
+	}
+	
+	Viewport* Layer::GetViewport()
+	{
+		return m_Viewport;
 	}
 }
 

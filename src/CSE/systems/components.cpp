@@ -62,6 +62,16 @@ namespace CSE
 		return sizeNormalized;
 	}
 	
+	void TransformComponent::SetNormalizationWindow(Window* window)
+	{
+		m_Window = window;
+	}
+	
+	Window* TransformComponent::GetNormalizationWindow()
+	{
+		return m_Window;
+	}
+	
 	void TransformComponent::MoveBy(const glm::vec2& coordinates)
 	{
 		position.x += coordinates.x;
@@ -71,10 +81,15 @@ namespace CSE
 	void TransformComponent::MoveByAndNormalizeToWindow(const glm::vec2& coordinates, Window* window)
 	{
 		MoveBy(coordinates);
-		Normalize({
-			window->GetPrefs().width,
-			window->GetPrefs().height
-		});
+		if (window != nullptr)
+		{
+			Normalize({
+				window->GetPrefs().width,
+				window->GetPrefs().height
+			});
+		} else {
+			CSE_CORE_LOG("TransformComponent: MoveByAndNormalizeToWindow() - window is nullptr");
+		}
 	}
 	
 	// Sprite Component

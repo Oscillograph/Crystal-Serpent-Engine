@@ -6,7 +6,9 @@
 namespace CSE
 {
 	// forward declaration
-	class Scene; 
+	class Scene;
+	class Layer;
+	class Window;
 	
 	// Resource management stuff
 	enum class ResourceType
@@ -34,7 +36,7 @@ namespace CSE
 		Text_YAML			= 22
 	};
 	
-	typedef Scene* ResourceUser;
+	typedef Window* ResourceUser;
 	
 	struct Resource
 	{

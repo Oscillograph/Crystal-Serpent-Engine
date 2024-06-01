@@ -31,8 +31,6 @@ namespace CSE
 		virtual bool OnEvent(InputKeyEvent* event);
 		virtual bool OnUpdate(TimeType time);
 		bool Update(TimeType time);
-		bool LoadScene(Scene* scene);
-		bool UnloadScene(Scene* scene);
 		virtual bool OnDetach();
 		bool Detach();
 		
@@ -51,21 +49,18 @@ namespace CSE
 		inline void SetWindow(Window* window) { m_Window = window; }
 		inline Window* GetWindow() { return m_Window; }
 		
-		inline bool HasScene() { return (m_Scene != nullptr); }
-		inline Scene* GetScene() { return m_Scene; }
-		inline void SetScene(Scene* scene) { m_Scene = scene; }
 		inline bool IsEnabled() { return m_Enabled; }
 		inline void Enable() { m_Enabled = true; }
 		inline void Disable() { m_Enabled = false; }
 		
-		inline void SetViewport(Viewport* viewport) { m_Viewport = viewport; }
-		inline Viewport* GetViewport() { return m_Viewport; }
+		void SetViewport(Viewport* viewport);
+		void SetViewportDefault(Scene* scene);
+		Viewport* GetViewport();
 	protected:
 		std::string m_Name;
 		bool m_Enabled;
 		Window* m_Window = nullptr;
-		Scene* m_Scene = nullptr;
-		Viewport* m_Viewport = nullptr; // TODO: allow a collection of viewports be set up for a single layer
+		Viewport* m_Viewport = nullptr; // One viewport per layer. Period.
 	};
 }
 

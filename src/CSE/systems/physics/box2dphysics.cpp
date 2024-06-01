@@ -3,7 +3,6 @@
 #include <CSE/systems/physics/box2dphysics.h>
 
 #include <CSE/systems/window.h>
-#include <CSE/systems/layer.h>
 #include <CSE/systems/scene.h>
 #include <CSE/systems/viewport.h>
 #include <CSE/systems/renderer/camera2d.h>
@@ -244,9 +243,10 @@ namespace CSE
 			physics.velocity.y = bodyVelocity.y;
 			// CSE_CORE_LOG("Box2D: velocity: (", physics.velocity.x, "; ", physics.velocity.y, ")");
 			
+			// TODO: fix windowSize to be of the current layer's window size
 			glm::vec2 windowSize = {
-				scene->GetLayer()->GetWindow()->GetPrefs().width,
-				scene->GetLayer()->GetWindow()->GetPrefs().height
+				640,
+				480
 			};
 			transform.position = {
 				windowSize.x * ((physics.position.x / (cameraArea.z - cameraArea.x))),

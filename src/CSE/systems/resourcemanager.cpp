@@ -78,7 +78,7 @@ namespace CSE
 				break;
 			case ResourceType::Texture:
 				{
-					resource->data = new Texture(path, user->GetLayer()->GetWindow()->GetRenderer());
+					resource->data = new Texture(path, user->GetRenderer());
 				}
 				break;
 			default:
@@ -121,29 +121,42 @@ namespace CSE
 	{
 		if (resource != nullptr)
 		{
-			DropResource(resource->type, resource->path, user);
+			return DropResource(resource->type, resource->path, user);
+		} else {
+			CSE_CORE_LOG("Asking to drop a resource which is nullptr!");
+			return -1; // resource is nullptr
 		}
 	}
 	
 	int ResourceManager::DropResource(ResourceType type, const std::string& path, const ResourceUser& user)
 	{
+		CSE_CORE_LOG("Resource dropping procedure...");
 		if (m_Cache.find(type) == m_Cache.end())
 		{
+			CSE_CORE_LOG("resource type not found");
 			return -1; // no such resource type cache registered
 		} else {
+			CSE_CORE_LOG("resource type found");
 			auto it = m_Cache[type].find(path);
 			if (it == m_Cache[type].end())
+			{
+				CSE_CORE_LOG("resource not found");
 				return -2; // couldn't find a resource
+			}
 		
 			// unregister a user
 			if (m_Cache[type][path] != nullptr)
 			{
+				CSE_CORE_LOG("m_Cache[type][path] != nullptr");
 				for (auto it = m_Cache[type][path]->users.begin(); it != m_Cache[type][path]->users.end(); it++)
 				{
+					CSE_CORE_LOG(*it, " ", user);
 					if ((*it) == user)
 					{
+						CSE_CORE_LOG("resource user found");
 						(*it) = nullptr;
 						m_Cache[type][path]->users.erase(it);
+						CSE_CORE_LOG("user unregistered");
 						break;
 					}
 				}
@@ -154,6 +167,8 @@ namespace CSE
 					m_Cache[type][path]->deletionFlag = true;
 					CSE_CORE_LOG("Flagged resource \"", path.c_str(), "\" for deletion.");
 				}
+			} else {
+				CSE_CORE_LOG("m_Cache[type][path] == nullptr");
 			}
 		}
 		
@@ -200,7 +215,8 @@ namespace CSE
 				nullptr
 				);
 			
-			resource->data = new Texture(path, user->GetLayer()->GetWindow()->GetRenderer(), {colorKey.x, colorKey.y, colorKey.z});
+			// TODO: monitor layers among users
+			resource->data = new Texture(path, user->GetRenderer(), {colorKey.x, colorKey.y, colorKey.z});
 			
 			m_Cache[type][path] = resource;
 			

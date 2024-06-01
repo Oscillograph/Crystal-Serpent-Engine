@@ -13,21 +13,26 @@ public:
 	
 	~SceneGame()
 	{
+		CSE_LOG("SceneGame shutdown begin");
 		delete backgroundEntity;
 		backgroundEntity = nullptr;
+		CSE_LOG("+ backgroundEntity");
 		
 		delete playerEntity;
 		playerEntity = nullptr;
+		CSE_LOG("+ playerEntity");
 		
 		delete ballEntity;
 		ballEntity = nullptr;
+		CSE_LOG("+ ballEntity");
 		
 		for (CSE::Entity* e : bricksEntities)
 		{
 			delete e;
 			e = nullptr;
 		}
-		
+		CSE_LOG("+ bricksEntities");
+		CSE_LOG("SceneGame shutdown complete");
 	}
 	
 	void OnInit()
@@ -119,7 +124,7 @@ public:
 							{
 								transform.MoveByAndNormalizeToWindow(
 									{-game.maxSpeed, 0}, 
-									GetLayer()->GetWindow()
+									transform.GetNormalizationWindow()
 									);
 							}
 							
@@ -127,7 +132,7 @@ public:
 							{
 								transform.MoveByAndNormalizeToWindow(
 									{game.maxSpeed, 0}, 
-									GetLayer()->GetWindow()
+									transform.GetNormalizationWindow()
 									);
 							}
 						} else {
@@ -197,13 +202,7 @@ public:
 	};
 	
 	bool OnAttach()
-	{
-		// TODO: Automated Scene collection to make loading/unloading routine easier 
-		arcanoidScene = new SceneGame();
-		
-		LoadScene(arcanoidScene);
-		CSE_LOG("Scene \"Arcanoid\" has been created and loaded.");
-		
+	{	
 		return true;
 	}
 	
@@ -227,6 +226,11 @@ public:
 		CSE::Ref<CSE::Layer> layer1(new Layer1());
 		
 		CSE::Window* window = NewWindow({"CSE: Тест", 100, 100, 320, 240});
+		CSE::Renderer::SetActiveWindow(window);
+		
+		NewScene(new SceneGame());
+		CSE_LOG("Scene \"Arcanoid\" has been created and loaded.");
+		
 		AttachLayer(window, layer1);
 		CSE_LOG("Layer ", layer1.get()->GetName(), " attached to window #", window->GetNativeWindowID());
 		window = nullptr;
@@ -236,6 +240,7 @@ public:
 	};
 	~App() 
 	{
+		// CSE::Renderer::SetActiveWindow(nullptr);
 	};
 };
 

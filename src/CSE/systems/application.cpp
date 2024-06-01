@@ -1,5 +1,6 @@
 #include <CSE/systems/application.h>
 #include <CSE/systems/resourcemanager.h>
+#include <CSE/systems/scenestack.h> // SceneStack
 
 namespace CSE
 {
@@ -25,7 +26,10 @@ namespace CSE
 		// some internal pointers memory deallocating
 		CSE_CORE_LOG("Internal systems pointers deleted.");
 		
+		delete m_SceneStack;
+		
 		ResourceManager::ShutDown();
+		Renderer::SetActiveWindow(nullptr);
 		Platform::Shutdown();
 		CSE_CORE_LOG("Platform shutdown complete.");
 	}
@@ -42,11 +46,19 @@ namespace CSE
 		return window->DetachLayer(layer);
 	}
 	
+	Scene* Application::NewScene(Scene* scene)
+	{
+		m_SceneStack->Load(scene);
+		return scene; 
+	}
+	
 	int Application::Init()
 	{
 		CSE_CORE_ASSERT((m_ApplicationInstance == nullptr), "This application already exists!");
 		int platformInitResult = Platform::InitDefault();
 		ResourceManager::Init();
+		
+		m_SceneStack = new SceneStack();
 		
 		// initialize randomizer
 		tm randomTime;
@@ -202,19 +214,9 @@ namespace CSE
 				// TODO: 5. World progress system
 				// 		- physics and other world rules subsystems management
 				//    control time flow and then update world
-				for (Window* window : m_WindowStack)
+				for (Scene* scene : *m_SceneStack)
 				{
-					for (Ref<Layer> layer : window->GetLayers())
-					{
-						if (layer->IsEnabled())
-						{
-							if (layer->HasScene())
-							{
-								// layer->Update(m_TimeThisFrame);
-								layer->Update(m_TimeThisFrame - m_TimeLastFrame);
-							}
-						}
-					}
+					scene->Update(m_TimeThisFrame - m_TimeLastFrame);
 				}
 				
 				// TODO: 6. Asset management system
@@ -257,10 +259,7 @@ namespace CSE
 							{
 								if (layer->IsEnabled())
 								{
-									if (layer->HasScene())
-									{
-										layer->Display();
-									}
+									layer->Display();
 								}
 							}
 							Renderer::ShowFrame();

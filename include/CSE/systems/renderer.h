@@ -14,6 +14,8 @@ namespace CSE
 {
 	class Scene;
 	class Camera2D;
+	class Layer;
+	class Window;
 	
 	// TODO: Draw graphic primitives
 	// TODO: Draw text messages using raster fonts
@@ -26,8 +28,12 @@ namespace CSE
 		static void SetActiveRenderer(SDL_Renderer* renderer);
 		inline static SDL_Renderer* GetActiveRenderer() { return m_Renderer; }
 		static void SetActiveScene(Scene* scene);
-		inline static Scene* GetActiveScene() { return m_Scene; }
+		inline static Scene* GetActiveScene() { return m_ActiveScene; }
 		static void SetActiveCamera(Camera2D* camera);
+		inline static Layer* GetActiveLayer() { return m_ActiveLayer; }
+		static void SetActiveLayer(Layer* layer);
+		inline static Window* GetActiveWindow() { return m_ActiveWindow; }
+		static void SetActiveWindow(Window* window);
 		inline static Camera2D* GetActiveCamera() { return m_ActiveCamera; };
 		static void SetActiveScreen(const glm::uvec4& screen);
 		static void SetActiveScreenDefault();
@@ -53,7 +59,9 @@ namespace CSE
 		
 	private:
 		static SDL_Renderer* m_Renderer;
-		static Scene* m_Scene;
+		static Scene* m_ActiveScene;
+		static Layer* m_ActiveLayer;
+		static Window* m_ActiveWindow;
 		static Camera2D* m_ActiveCamera;
 
 		static glm::uvec4 m_CurrentScreen; // contains rect properties of a current viewport

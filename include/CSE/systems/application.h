@@ -12,7 +12,6 @@
 
 // architecture abstractions
 #include <CSE/systems/layer.h>
-#include <CSE/systems/scenestack.h> // SceneStack
 #include <CSE/systems/viewport.h>
 
 #include <CSE/systems/entity.h>
@@ -23,6 +22,7 @@
 namespace CSE
 {
 	class Scene;
+	class SceneStack;
 	
 	// Main CSE application which can have windows
 	class Application
@@ -47,8 +47,8 @@ namespace CSE
 		Window* NewWindow(const WindowPrefs& prefs) { Window* window = new CSE::Window(prefs); GetWindows().Push(window); return window; }
 		
 		// multiple scenes functionality
-		inline SceneStack& GetScenes() { return m_SceneStack; }
-		Scene* NewScene() { Scene* scene = nullptr; return scene; } // TODO: Application::NewScene())
+		inline SceneStack* GetScenes() { return m_SceneStack; }
+		Scene* NewScene(Scene* scene);
 		
 		// only one application allowed to run at a time
 		inline static Application* Get() { return m_ApplicationInstance; }
@@ -63,7 +63,7 @@ namespace CSE
 		bool m_Running = true;
 		bool m_TaskToDo = false;
 		WindowStack m_WindowStack;
-		SceneStack m_SceneStack;
+		SceneStack* m_SceneStack = nullptr;
 		
 	protected:
 		static Application* m_ApplicationInstance;

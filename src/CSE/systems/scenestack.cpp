@@ -13,6 +13,7 @@ namespace CSE
 		for (Scene* scene : m_Scenes)
 		{
 			delete scene;
+			scene = nullptr;
 		}
 	}
 	

@@ -1,12 +1,16 @@
 #include <CSE/systems/renderer.h>
 #include <CSE/systems/application.h>
 #include <CSE/systems/scene.h>
+#include <CSE/systems/layer.h>
+#include <CSE/systems/window.h>
 #include <CSE/systems/renderer/camera2d.h>
 
 namespace CSE
 {
 	SDL_Renderer* Renderer::m_Renderer = nullptr;
-	Scene* Renderer::m_Scene = nullptr;
+	Scene* Renderer::m_ActiveScene = nullptr;
+	Layer* Renderer::m_ActiveLayer = nullptr;
+	Window* Renderer::m_ActiveWindow = nullptr;
 	Camera2D* Renderer::m_ActiveCamera = nullptr;
 	
 	glm::uvec4 Renderer::m_CurrentScreen = glm::u8vec4(1.0f);
@@ -23,12 +27,22 @@ namespace CSE
 	
 	void Renderer::SetActiveScene(Scene* scene)
 	{
-		m_Scene = scene;
+		m_ActiveScene = scene;
 		
 		int newWidth, newHeight;
-		SDL_GetWindowSize(m_Scene->GetLayer()->GetWindow()->GetNativeWindow(), &newWidth, &newHeight);
-		m_PixelSize.x = (float)newWidth / m_Scene->GetLayer()->GetWindow()->GetPrefs().width;
-		m_PixelSize.y = (float)newHeight / m_Scene->GetLayer()->GetWindow()->GetPrefs().height;
+		SDL_GetWindowSize(GetActiveWindow()->GetNativeWindow(), &newWidth, &newHeight);
+		m_PixelSize.x = (float)newWidth / GetActiveWindow()->GetPrefs().width;
+		m_PixelSize.y = (float)newHeight / GetActiveWindow()->GetPrefs().height;
+	}
+	
+	void Renderer::SetActiveLayer(Layer* layer)
+	{
+		m_ActiveLayer = layer;
+	}
+	
+	void Renderer::SetActiveWindow(Window* window)
+	{
+		m_ActiveWindow = window;
 	}
 	
 	void Renderer::SetActiveCamera(Camera2D* camera)
@@ -44,8 +58,8 @@ namespace CSE
 		m_CurrentScreen = screen;
 		
 		glm::vec2 windowScale = {
-			m_Scene->GetLayer()->GetWindow()->GetScale().x,
-			m_Scene->GetLayer()->GetWindow()->GetScale().y
+			GetActiveWindow()->GetScale().x,
+			GetActiveWindow()->GetScale().y
 		};
 		
 		SDL_Rect viewport;
@@ -62,15 +76,15 @@ namespace CSE
 	void Renderer::SetActiveScreenDefault()
 	{ 
 		glm::vec2 windowScale = {
-			m_Scene->GetLayer()->GetWindow()->GetScale().x,
-			m_Scene->GetLayer()->GetWindow()->GetScale().y
+			GetActiveWindow()->GetScale().x,
+			GetActiveWindow()->GetScale().y
 		};
 		
 		m_CurrentScreen = {
 			0,
 			0,
-			m_Scene->GetLayer()->GetWindow()->GetPrefs().width,
-			m_Scene->GetLayer()->GetWindow()->GetPrefs().height,
+			GetActiveWindow()->GetPrefs().width,
+			GetActiveWindow()->GetPrefs().height,
 		};
 		
 		SDL_Rect viewport;
@@ -151,13 +165,13 @@ namespace CSE
 		
 		// TODO: find out why Application::Get()->GetWindows() is not allowed to be accessed from here
 		glm::vec2 windowScale = {
-			m_Scene->GetLayer()->GetWindow()->GetScale().x,
-			m_Scene->GetLayer()->GetWindow()->GetScale().y
+			GetActiveWindow()->GetScale().x,
+			GetActiveWindow()->GetScale().y
 		};
 		
 		glm::vec2 windowSize = {
-			m_Scene->GetLayer()->GetWindow()->GetPrefs().width,
-			m_Scene->GetLayer()->GetWindow()->GetPrefs().height,
+			GetActiveWindow()->GetPrefs().width,
+			GetActiveWindow()->GetPrefs().height,
 		};
 		
 		// correct the source rectangle
@@ -349,13 +363,13 @@ namespace CSE
 		// float scaleX = m_CurrentScreen.z * m_Scene->GetLayer()->GetWindow()->GetScale().x;
 		// float scaleY = m_CurrentScreen.w * m_Scene->GetLayer()->GetWindow()->GetScale().y;
 		glm::vec2 windowScale = {
-			m_Scene->GetLayer()->GetWindow()->GetScale().x,
-			m_Scene->GetLayer()->GetWindow()->GetScale().y
+			GetActiveWindow()->GetScale().x,
+			GetActiveWindow()->GetScale().y
 		};
 		
 		glm::vec2 windowSize = {
-			m_Scene->GetLayer()->GetWindow()->GetPrefs().width,
-			m_Scene->GetLayer()->GetWindow()->GetPrefs().height
+			GetActiveWindow()->GetPrefs().width,
+			GetActiveWindow()->GetPrefs().height
 		};
 		
 		SDL_FRect rect = 
@@ -376,13 +390,13 @@ namespace CSE
 		// float scaleX = m_CurrentScreen.z * m_Scene->GetLayer()->GetWindow()->GetScale().x;
 		// float scaleY = m_CurrentScreen.w * m_Scene->GetLayer()->GetWindow()->GetScale().y;
 		glm::vec2 windowScale = {
-			m_Scene->GetLayer()->GetWindow()->GetScale().x,
-			m_Scene->GetLayer()->GetWindow()->GetScale().y
+			GetActiveWindow()->GetScale().x,
+			GetActiveWindow()->GetScale().y
 		};
 		
 		glm::vec2 windowSize = {
-			m_Scene->GetLayer()->GetWindow()->GetPrefs().width,
-			m_Scene->GetLayer()->GetWindow()->GetPrefs().height
+			GetActiveWindow()->GetPrefs().width,
+			GetActiveWindow()->GetPrefs().height
 		};
 		
 		SDL_Point points[5] = {

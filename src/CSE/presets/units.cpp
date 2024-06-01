@@ -7,6 +7,7 @@
 #include <CSE/systems/renderer/texture.h>
 #include <CSE/systems/input.h>
 #include <CSE/systems/resourcemanager.h>
+#include <CSE/systems/renderer.h>
 
 namespace CSE
 {
@@ -39,10 +40,6 @@ namespace CSE
 			TransformComponent& transform = m_Entity->AddComponent<TransformComponent>();
 			transform.position = transformPosition;
 			transform.size = transformSize;
-			transform.Normalize({
-				scene->GetLayer()->GetWindow()->GetPrefs().width,
-				scene->GetLayer()->GetWindow()->GetPrefs().height,
-			});
 			
 			// state machine setup
 			// TODO: Allow set up states manually
@@ -83,7 +80,7 @@ namespace CSE
 			if (spritePath.length() > 0){
 				m_SpriteTexture = ResourceManager::UseTexture(
 					spritePath, 
-					scene,
+					Renderer::GetActiveWindow(),
 					{spriteColorKey.x, spriteColorKey.y, spriteColorKey.z}
 					);
 
@@ -113,7 +110,7 @@ namespace CSE
 		
 		Unit::~Unit()
 		{
-			ResourceManager::DropResource(m_SpriteTexture, m_Entity->GetScene());
+			ResourceManager::DropResource(m_SpriteTexture, Renderer::GetActiveWindow());
 			m_SpriteTexture = nullptr;
 			
 			CSE_CORE_ASSERT(m_Entity, "Unit destructor: m_Entity was a null pointer.");
@@ -198,10 +195,6 @@ namespace CSE
 			TransformComponent& transform = m_Entity->AddComponent<TransformComponent>();
 			transform.position = transformPosition;
 			transform.size = transformSize;
-			transform.Normalize({
-				scene->GetLayer()->GetWindow()->GetPrefs().width,
-				scene->GetLayer()->GetWindow()->GetPrefs().height,
-			});
 			
 			// state machine setup
 			// TODO: Allow set up states manually
@@ -242,7 +235,7 @@ namespace CSE
 			if (spritePath.length() > 0){
 				m_SpriteTexture = ResourceManager::UseTexture(
 					spritePath, 
-					scene,
+					Renderer::GetActiveWindow(),
 					{spriteColorKey.x, spriteColorKey.y, spriteColorKey.z}
 					);
 				
@@ -253,7 +246,7 @@ namespace CSE
 		
 		SpriteUnit::~SpriteUnit()
 		{
-			ResourceManager::DropResource(m_SpriteTexture, m_Entity->GetScene());
+			ResourceManager::DropResource(m_SpriteTexture, Renderer::GetActiveWindow());
 			m_SpriteTexture = nullptr;
 			
 			CSE_CORE_ASSERT(m_Entity, "Unit destructor: m_Entity was a null pointer.");
@@ -337,10 +330,6 @@ namespace CSE
 			TransformComponent& transform = m_Entity->AddComponent<TransformComponent>();
 			transform.position = transformPosition;
 			transform.size = transformSize;
-			transform.Normalize({
-				scene->GetLayer()->GetWindow()->GetPrefs().width,
-				scene->GetLayer()->GetWindow()->GetPrefs().height,
-			});
 			
 			// state machine setup
 			// TODO: Allow set up states manually
@@ -381,7 +370,7 @@ namespace CSE
 			if (spritePath.length() > 1){
 				m_SpriteTexture = ResourceManager::UseTexture(
 					spritePath, 
-					scene, 
+					Renderer::GetActiveWindow(), 
 					{spriteColorKey.x, spriteColorKey.y, spriteColorKey.z}
 					);
 				SpriteComponent& spriteComponent = m_Entity->AddComponent<SpriteComponent>((Texture*)(m_SpriteTexture->data));
@@ -413,7 +402,7 @@ namespace CSE
 		
 		Doodad::~Doodad()
 		{
-			ResourceManager::DropResource(m_SpriteTexture, m_Entity->GetScene());
+			ResourceManager::DropResource(m_SpriteTexture, Renderer::GetActiveWindow());
 			m_SpriteTexture = nullptr;
 			
 			CSE_CORE_ASSERT(m_Entity, "Doodad destructor: m_Entity was a null pointer.");
@@ -494,15 +483,11 @@ namespace CSE
 			TransformComponent& transform = m_Entity->AddComponent<TransformComponent>();
 			transform.position = {place.x, place.y};
 			transform.size = {size.x, size.y};
-			transform.Normalize({
-				scene->GetLayer()->GetWindow()->GetPrefs().width,
-				scene->GetLayer()->GetWindow()->GetPrefs().height,
-			});
 			
 			// sprite control
 			m_SpriteTexture = ResourceManager::UseTexture(
 				spritePath, 
-				scene, 
+				Renderer::GetActiveWindow(), 
 				{colorKey.x, colorKey.y, colorKey.z}
 				);
 			SpriteComponent& sprite = m_Entity->AddComponent<SpriteComponent>((Texture*)(m_SpriteTexture->data));
@@ -511,12 +496,16 @@ namespace CSE
 		
 		Decoration::~Decoration()
 		{
-			ResourceManager::DropResource(m_SpriteTexture, m_Entity->GetScene());
+			CSE_CORE_LOG("Decoration destructor begin");
+			ResourceManager::DropResource(m_SpriteTexture, Renderer::GetActiveWindow());
 			m_SpriteTexture = nullptr;
+			CSE_CORE_LOG("- resource released");
 			
 			CSE_CORE_ASSERT(m_Entity, "Decoration destructor: m_Entity was a null pointer.");
 			delete m_Entity;
 			m_Entity = nullptr;
+			CSE_CORE_LOG("- entity deleted");
+			CSE_CORE_LOG("Decoration destructor end");
 		}
 		
 		void Decoration::ChangeAppearance(
