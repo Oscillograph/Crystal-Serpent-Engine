@@ -1,4 +1,5 @@
 #include <CSE/systems/window.h>
+#include <CSE/systems/renderer.h>
 
 namespace CSE
 {
@@ -49,6 +50,9 @@ namespace CSE
 		// m_Events = Platform::GetEventListener();
 		m_Events = nullptr;
 		m_NativeWindowID = SDL_GetWindowID(m_NativeWindow);
+		
+		Renderer::SetActiveRenderer(m_Renderer);
+		Renderer::SetBackgroundColor({60, 30, 50, 255});
 		
 		CSE_CORE_LOG("Window opened.");
 	}

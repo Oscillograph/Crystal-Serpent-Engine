@@ -4,6 +4,7 @@
 #include <CSE/core.h>
 
 // platform-dependent systems
+#include <CSE/systems/event.h>
 #include <CSE/systems/platform.h> // SDL
 #include <CSE/systems/window.h> // CSE interfaces are based on gui
 #include <CSE/systems/windowstack.h> // WindowStack
@@ -23,6 +24,7 @@ namespace CSE
 {
 	class Scene;
 	class SceneStack;
+//	class Event;
 	
 	// Main CSE application which can have windows
 	class Application
@@ -36,6 +38,9 @@ namespace CSE
 		int Run();
 		
 		void LimitFPS(float fps);
+		
+		// Events processing
+		void EventProcessor(Event* event);
 		
 		// layers functionality
 		// TODO: DANGER! one layer can be attached to two different windows. Need smart pointers.
